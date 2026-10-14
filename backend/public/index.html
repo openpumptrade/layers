@@ -305,7 +305,7 @@
             <button class="key green" id="parentOk" style="margin-top:10px" disabled><span data-ico="check"></span>GROW ON THIS COIN</button>
           </div>
           <form id="g-form" hidden onsubmit="return false">
-            <div class="drop" id="logoDrop"><img id="logoPrev" src="" alt="" hidden><div><div class="lbl">LOGO</div><span class="muted" style="font-size:14px">png / jpg / webp, up to 3MB — click to pick</span></div><input type="file" id="logo" accept="image/*" hidden></div>
+            <div class="drop" id="logoDrop"><img id="logoPrev" src="" alt="" hidden><div><div class="lbl">LOGO</div><span class="muted" style="font-size:14px">png / jpg / webp, up to 3MB — click to pick</span></div><input type="file" id="logoFile" accept="image/*" hidden></div>
             <div class="grid2" style="gap:12px">
               <label class="f">Name<input class="well" id="name" type="text" maxlength="32" placeholder="Twig"></label>
               <label class="f">Ticker<input class="well" id="symbol" type="text" maxlength="13" placeholder="TWIG" style="text-transform:uppercase"></label>
@@ -699,9 +699,9 @@ function openModal() {
 }
 $("connect").addEventListener("click", openModal); $("modalClose").addEventListener("click", () => $("modal").classList.remove("on"));
 // logo
-$("logoDrop").addEventListener("click", () => $("logo").click());
-$("logo").addEventListener("change", async () => {
-  const f = $("logo").files[0]; if (!f) return;
+$("logoDrop").addEventListener("click", () => $("logoFile").click());
+$("logoFile").addEventListener("change", async () => {
+  const f = $("logoFile").files[0]; if (!f) return;
   if (f.size > 3 * 1024 * 1024) return showErr("logo over 3MB");
   const data = await new Promise((res) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.readAsDataURL(f); });
   try { const r = await fetch("/api/upload", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ data, mime: f.type }) }); const j = await r.json(); if (!r.ok) throw new Error(j.error); logoId = j.id; $("logoPrev").src = j.url; $("logoPrev").hidden = false; showErr(""); }
