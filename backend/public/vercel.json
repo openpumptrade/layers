@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://REPLACE-WITH-RAILWAY-URL.up.railway.app/api/$1" },
+    { "source": "/l/(.*)", "destination": "https://REPLACE-WITH-RAILWAY-URL.up.railway.app/l/$1" },
+    { "source": "/c/(.*)", "destination": "/index.html" },
+    { "source": "/(grow|coins|sap|docs)", "destination": "/index.html" }
+  ],
+  "headers": [
+    { "source": "/(.*)", "headers": [{ "key": "cache-control", "value": "no-store" }] }
+  ]
+}

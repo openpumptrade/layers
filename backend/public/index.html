@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROOT · a launchpad where every coin grows on another coin</title>
+<meta name="description" content="ROOT is a launchpad on pump.fun. $ROOT is the trunk, paired with SOL. Every coin grown here is paired with a coin already on the tree — depth 1, depth 2 — and pays a tax in the coin it grows on. Every run: half buys the coin back and burns it, half burns the coin below. Sap flows down.">
+<meta property="og:title" content="ROOT · a launchpad where every coin grows on another coin">
+<meta property="og:description" content="pump.fun coins paired with pump.fun coins. Every buy up the tree buys every coin below it. Every run burns the coin and the coin it stands on. Sap flows down to $ROOT.">
+<link rel="icon" href="/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="/icon.png">
+<meta property="og:image" content="/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<script type="module">
+  // esm.sh bundles the Buffer polyfill the browser lacks (the IIFE build throws "Buffer is not defined")
+  import * as w3 from "https://esm.sh/@solana/web3.js@1.98.0";
+  window.solanaWeb3 = w3; window.dispatchEvent(new Event("w3ready"));
+</script>
+<style>
+  :root {
+    --bg: #12231a; --bg2: #172d21; --deep: #0a1510;
+    --cream: #fff6d6; --cream2: #f4e8c1; --well: #fbf2d8; --ink: #2a2823; --muted: #6f6551; --line: #d9cb9f;
+    --gold: #f7c948; --gold2: #d9a521; --red: #e5473f; --red2: #b8322b; --green: #7ccf6a; --green2: #4f9e40; --blue: #62a8ea; --blue2: #3b7fc4; --purple: #b58cf0; --purple2: #8a5fd1; --bark: #9a6b3c; --bark2: #5e3f22; --leaf: #63c15a;
+    --pix: "Pixelify Sans", "Silkscreen", monospace; --key: "Silkscreen", "Pixelify Sans", monospace; --num: "VT323", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body { margin: 0; color: var(--ink); font-family: var(--pix); font-size: 17px; line-height: 1.35; background-color: var(--bg); background-image: repeating-conic-gradient(var(--bg2) 0 25%, transparent 0 50%); background-size: 16px 16px; image-rendering: pixelated; -webkit-font-smoothing: none; }
+  a { color: inherit; text-decoration: none; }
+  button, input, textarea, select { font: inherit; }
+  canvas, img { image-rendering: pixelated; image-rendering: crisp-edges; }
+  .wrap { width: min(1140px, calc(100vw - 32px)); margin: 0 auto; }
+
+  /* header */
+  .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px 0 14px; flex-wrap: wrap; }
+  .wordmark { display: flex; align-items: center; gap: 12px; }
+  .wordmark canvas { width: 72px; height: 72px; }
+  .wordmark h1 { margin: 0; font-family: var(--key); font-weight: 700; font-size: 52px; line-height: 1; letter-spacing: -1px; color: var(--leaf); text-shadow: 3px 0 var(--ink), -3px 0 var(--ink), 0 3px var(--ink), 0 -3px var(--ink), 3px 3px var(--ink), -3px -3px var(--ink), 3px -3px var(--ink), -3px 3px var(--ink), 7px 7px 0 var(--deep); }
+  .wordmark small { display: block; font-family: var(--pix); font-size: 15px; color: var(--cream); margin-top: 8px; text-shadow: 2px 2px 0 var(--deep); }
+  .keys { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+  .key { display: inline-flex; align-items: center; gap: 8px; font-family: var(--key); font-size: 12.5px; text-transform: uppercase; color: var(--ink); background: var(--cream); border: 3px solid var(--ink); padding: 8px 12px; cursor: pointer; white-space: nowrap; box-shadow: 3px 3px 0 var(--ink); user-select: none; line-height: 1; }
+  .key.small { font-size: 11px; padding: 7px 10px; }
+  .key:active, .key.down { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .key.on { background: var(--green); }
+  .key.yellow { background: var(--gold); } .key.red { background: var(--red); color: var(--cream); } .key.blue { background: var(--blue); } .key.green { background: var(--green); } .key.purple { background: var(--purple); } .key.bark { background: var(--bark); color: var(--cream); }
+  .key[disabled] { opacity: .5; cursor: default; }
+  .key svg, .tab svg, .chip svg, .kv svg, .lbl svg, .ico { width: 16px; height: 16px; vertical-align: -3px; flex: none; }
+  .chip svg { width: 12px; height: 12px; vertical-align: -2px; margin-right: 3px; }
+  .kv td svg { margin-right: 6px; }
+  .key .n { background: var(--ink); color: var(--cream); padding: 2px 5px; margin-left: -4px; }
+  .levels { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .lv { text-align: center; border: 3px solid var(--line); padding: 6px 2px 4px; background: var(--well); }
+  .lv.on { border-color: var(--ink); background: var(--gold); box-shadow: 3px 3px 0 var(--ink); }
+  .lv.locked { opacity: .55; }
+  .lv canvas { width: 64px; height: 56px; }
+  .lv .n { font-family: var(--key); font-size: 9px; text-transform: uppercase; display: block; margin-top: 2px; }
+  .lv .v { font-family: var(--num); font-size: 16px; display: block; }
+  @media (max-width: 900px) { .levels { grid-template-columns: repeat(4, 1fr); } }
+
+  /* panels */
+  .card { position: relative; isolation: isolate; padding: 18px 16px 16px; margin-top: 22px; background: transparent; }
+  .card::before, .card::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--cream); border: 4px solid var(--ink); clip-path: polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px), 0 4px, 4px 4px); }
+  .card::after { z-index: -2; background: var(--deep); border-color: var(--deep); transform: translate(6px, 6px); }
+  .card.tight::after { transform: translate(4px, 4px); }
+  .card.dark { color: var(--cream); } .card.dark::before { background: var(--deep); }
+  .tab { position: absolute; top: -18px; left: -4px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--key); font-size: 12px; text-transform: uppercase; background: var(--gold); border: 4px solid var(--ink); padding: 5px 12px 4px; line-height: 1; color: var(--ink); box-shadow: 3px 3px 0 var(--deep); }
+  .tab.red { background: var(--red); color: var(--cream); } .tab.green { background: var(--green); } .tab.blue { background: var(--blue); } .tab.purple { background: var(--purple); } .tab.cream { background: var(--cream2); } .tab.bark { background: var(--bark); color: var(--cream); }
+  .card.has-tab { padding-top: 26px; }
+  .card h3 { font-family: var(--key); font-size: 12px; text-transform: uppercase; margin: 0 0 8px; }
+  .card p { margin: 6px 0; font-size: 16px; }
+  .muted { color: var(--muted); }
+  .lbl { font-family: var(--key); font-size: 10.5px; text-transform: uppercase; color: var(--ink); }
+  .num { font-family: var(--num); font-size: 30px; line-height: 1; }
+  .num.big { font-size: 46px; }
+  .well { background: var(--well); border: 3px solid var(--ink); padding: 8px 10px; font-family: var(--num); font-size: 20px; line-height: 1.1; word-break: break-all; box-shadow: inset 3px 3px 0 var(--cream2); }
+  .well.inset { box-shadow: inset 3px 3px 0 #e9dcb0; }
+  input.well, textarea.well { width: 100%; outline: none; font-family: var(--pix); font-size: 16px; }
+  input.well:focus, textarea.well:focus { border-color: var(--blue2); }
+  textarea.well { resize: vertical; min-height: 70px; }
+  label.f { display: block; font-family: var(--key); font-size: 10px; text-transform: uppercase; margin-top: 10px; }
+  label.f > * { margin-top: 4px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .kv { width: 100%; border-collapse: collapse; }
+  .kv td { padding: 5px 0; border-bottom: 2px dotted var(--line); vertical-align: middle; font-size: 15px; }
+  .kv td:last-child { text-align: right; font-family: var(--num); font-size: 21px; }
+  .kv tr:last-child td { border-bottom: 0; }
+  .bar { height: 14px; border: 3px solid var(--ink); background: var(--well); position: relative; }
+  .bar > i { position: absolute; inset: 0; width: 0; background: var(--green); background-image: repeating-linear-gradient(90deg, transparent 0 6px, rgba(255,255,255,.25) 6px 8px); }
+  .bar.gold > i { background-color: var(--gold); } .bar.red > i { background-color: var(--red); }
+  .chip { display: inline-block; font-family: var(--key); font-size: 10px; text-transform: uppercase; border: 2px solid var(--ink); padding: 3px 6px; background: var(--cream2); line-height: 1; }
+  .chip.green { background: var(--green); } .chip.red { background: var(--red); color: var(--cream); } .chip.gold { background: var(--gold); } .chip.blue { background: var(--blue); } .chip.purple { background: var(--purple); } .chip.bark { background: var(--bark); color: var(--cream); }
+  .chip.d0 { background: var(--bark); color: var(--cream); } .chip.d1 { background: var(--green); } .chip.d2 { background: var(--gold); } .chip.d3, .chip.d4, .chip.d5 { background: var(--purple); }
+  .txs a { font-family: var(--key); font-size: 10px; text-transform: uppercase; border-bottom: 2px solid var(--ink); margin-right: 10px; }
+  .crumbs { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-family: var(--key); font-size: 11px; text-transform: uppercase; }
+  .crumbs .arrow { color: var(--muted); }
+  .crumbs a.c { display: inline-flex; align-items: center; gap: 5px; border: 2px solid var(--ink); background: var(--cream2); padding: 3px 6px; }
+  .crumbs a.c img { width: 14px; height: 14px; border: 1px solid var(--ink); }
+  .crumbs a.c.me { background: var(--gold); }
+
+  /* layout */
+  .grid { display: grid; grid-template-columns: 300px 1fr; gap: 22px; align-items: start; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 22px; }
+  @media (max-width: 900px) { .grid, .grid2, .grid3 { grid-template-columns: 1fr; } .wordmark h1 { font-size: 40px; } .card::after { transform: translate(4px, 4px); } }
+  .view { display: none; } .view.on { display: block; }
+
+  /* scene */
+  .scene { background: var(--deep); border: 4px solid var(--ink); position: relative; overflow: hidden; }
+  .scene canvas { display: block; width: 100%; height: auto; }
+  .scene .hud { position: absolute; left: 10px; top: 8px; font-family: var(--key); font-size: 11px; color: var(--cream); text-transform: uppercase; text-shadow: 2px 2px 0 var(--deep); }
+  .scene .hud b { color: var(--gold); }
+  .scene .hud2 { position: absolute; right: 10px; top: 8px; text-align: right; font-family: var(--key); font-size: 11px; color: var(--cream); text-transform: uppercase; text-shadow: 2px 2px 0 var(--deep); }
+  .scene .cap { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; font-family: var(--pix); font-size: 15px; color: var(--cream); text-shadow: 2px 2px 0 var(--deep); padding: 0 10px; }
+  .coinico { width: 44px; height: 44px; border: 3px solid var(--ink); background: var(--well); object-fit: cover; }
+  .coinico.big { width: 64px; height: 64px; }
+
+  /* coin cards */
+  .cc { cursor: pointer; }
+  .cc .head { display: flex; gap: 10px; align-items: center; }
+  .cc .head .t { flex: 1; min-width: 0; }
+  .cc .head .t b { display: block; font-family: var(--key); font-size: 13px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cc .head .t span { font-size: 13px; color: var(--muted); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cc:hover::before { background: var(--well); }
+  .parents { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-height: 320px; overflow: auto; padding: 4px; }
+  .pp { border: 3px solid var(--line); background: var(--well); padding: 8px; cursor: pointer; display: flex; gap: 8px; align-items: center; }
+  .pp.on { border-color: var(--ink); background: var(--gold); box-shadow: 3px 3px 0 var(--ink); }
+  .pp img { width: 28px; height: 28px; border: 2px solid var(--ink); }
+  .pp b { font-family: var(--key); font-size: 11px; text-transform: uppercase; display: block; }
+  .pp small { font-family: var(--num); font-size: 15px; display: block; }
+  .steps { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+  .steps .chip { opacity: .5; } .steps .chip.on { opacity: 1; background: var(--gold); }
+  .chips button { font-family: var(--key); font-size: 10px; border: 2px solid var(--ink); background: var(--cream2); padding: 5px 8px; cursor: pointer; margin: 4px 4px 0 0; text-transform: uppercase; }
+  .chips button.on { background: var(--green); }
+  .drop { border: 3px dashed var(--ink); background: var(--well); padding: 10px; display: flex; gap: 10px; align-items: center; cursor: pointer; }
+  .drop img { width: 56px; height: 56px; border: 3px solid var(--ink); object-fit: cover; }
+  .err { display: none; background: var(--red); color: var(--cream); border: 3px solid var(--ink); padding: 8px 10px; font-size: 14px; margin-top: 10px; }
+  .err.on { display: block; }
+  .modal { position: fixed; inset: 0; background: rgba(10,21,16,.8); display: none; place-items: center; z-index: 30; }
+  .modal.on { display: grid; }
+  .modal .box { background: var(--cream); border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--deep); padding: 18px; width: min(380px, 92vw); }
+  .modal .w { display: flex; gap: 10px; align-items: center; width: 100%; margin: 6px 0; }
+  .modal .w img { width: 20px; height: 20px; }
+
+  /* tables */
+  table.log { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  table.log th { font-family: var(--key); font-size: 10px; text-transform: uppercase; text-align: left; padding: 6px 6px; border-bottom: 4px solid var(--ink); white-space: nowrap; }
+  table.log td { padding: 6px 6px; border-bottom: 2px dotted var(--line); font-family: var(--num); font-size: 19px; line-height: 1; white-space: nowrap; vertical-align: middle; }
+  table.log td.t { font-family: var(--pix); font-size: 14px; white-space: normal; }
+  table.log tr.click { cursor: pointer; } table.log tr.click:hover td { background: var(--cream2); }
+  table.log td.r, table.log th.r { text-align: right; }
+  table.log img { width: 18px; height: 18px; border: 2px solid var(--ink); vertical-align: -4px; margin-right: 4px; }
+  .scroll { overflow-x: auto; }
+  .empty { font-size: 15px; color: var(--muted); padding: 8px 0; }
+  .cd { font-family: var(--num); font-size: 44px; line-height: 1; }
+
+  /* docs */
+  .docs h4 { font-family: var(--key); font-size: 12px; text-transform: uppercase; margin: 22px 0 8px; padding-bottom: 6px; border-bottom: 4px solid var(--ink); }
+  .docs h4:first-child { margin-top: 0; }
+  .docs p, .docs li { font-size: 16px; }
+  .docs b { color: var(--green2); }
+  .docs table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 15px; }
+  .docs th { font-family: var(--key); font-size: 10px; text-transform: uppercase; text-align: left; border-bottom: 3px solid var(--ink); padding: 4px 6px; }
+  .docs td { border-bottom: 2px dotted var(--line); padding: 5px 6px; vertical-align: top; }
+  .docs td:first-child { font-family: var(--key); font-size: 11px; text-transform: uppercase; white-space: nowrap; }
+  .index a { display: block; font-family: var(--key); font-size: 11px; text-transform: uppercase; color: var(--green2); padding: 6px 0; border-bottom: 2px dotted var(--line); }
+  .index a::before { content: "■ "; color: var(--ink); }
+  .foot { text-align: center; color: var(--cream); font-size: 14px; padding: 36px 0 24px; text-shadow: 2px 2px 0 var(--deep); }
+  .foot a { border-bottom: 2px solid var(--cream); }
+  .blink { animation: blink 1s steps(2) infinite; }
+  @keyframes blink { to { visibility: hidden; } }
+  .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--cream); font-family: var(--key); font-size: 11px; text-transform: uppercase; padding: 8px 12px; border: 3px solid var(--cream); display: none; z-index: 20; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="wordmark" href="#tree"><canvas id="logo" width="64" height="64"></canvas><div><h1>ROOT</h1><small>a launchpad where every coin grows on another coin</small></div></a>
+    <nav class="keys" id="nav">
+      <a class="key small" href="#tree" data-view="tree"><span class="n">1</span><span data-ico="tree"></span>TREE</a>
+      <a class="key small" href="#grow" data-view="grow"><span class="n">2</span><span data-ico="sprout"></span>GROW</a>
+      <a class="key small" href="#coins" data-view="coins"><span class="n">3</span><span data-ico="leaf"></span>COINS</a>
+      <a class="key small" href="#sap" data-view="sap"><span class="n">4</span><span data-ico="drop"></span>SAP</a>
+      <a class="key small" href="#docs" data-view="docs"><span class="n">5</span><span data-ico="book"></span>DOCS</a>
+      <a class="key small yellow" id="buyKey" href="https://pump.fun" target="_blank" rel="noopener"><span data-ico="coin"></span>BUY $ROOT</a>
+    </nav>
+  </header>
+
+  <!-- ================= VIEW 1: TREE ================= -->
+  <section class="view on" id="view-tree">
+    <div class="grid">
+      <div>
+        <div class="card has-tab">
+          <div class="tab bark"><span data-ico="root"></span><span id="rootTabTxt">$ROOT · THE TRUNK</span></div>
+          <div class="row" style="align-items:flex-start">
+            <img class="coinico" id="rootImg" alt="" src="/icon.png" onerror="this.src='/icon.png'">
+            <div style="flex:1;min-width:0">
+              <div class="lbl">RINGS <span class="num" id="lvl" style="font-size:28px">1</span> <span class="muted" style="font-family:var(--pix);font-size:13px;text-transform:none" id="lvlName">seed</span></div>
+              <div class="lbl" style="margin-top:6px">SAP BURNED <span class="muted" id="xpTxt" style="font-family:var(--pix);font-size:12px;text-transform:none"></span></div>
+              <div class="bar gold" style="margin-top:4px"><i id="xp"></i></div>
+            </div>
+          </div>
+          <p id="rootBlurb">$ROOT is a pump.fun coin paired with SOL: the trunk. Every coin grown here is paired with a coin on the tree and pays a tax in it. Every run: half buys the coin back and burns it, half burns the coin below. Sap flows down to the root.</p>
+          <div class="row" style="margin-top:8px">
+            <div class="well inset" id="ca" style="flex:1;min-width:0;font-size:17px">not planted yet</div>
+            <button class="key yellow" id="copyKey"><span data-ico="copy"></span>COPY</button>
+          </div>
+          <a class="key green" id="growKey" href="#grow" style="width:100%;justify-content:center;margin-top:12px;font-size:14px"><span data-ico="sprout"></span>GROW A COIN ON THE TREE</a>
+          <a class="key red" id="buyKey2" href="https://pump.fun" target="_blank" rel="noopener" style="width:100%;justify-content:center;margin-top:8px;font-size:14px"><span data-ico="coin"></span>BUY $ROOT</a>
+          <div class="row" style="margin-top:12px" id="socials"></div>
+        </div>
+
+        <div class="card has-tab">
+          <div class="tab blue"><span data-ico="clock"></span>NEXT</div>
+          <div class="lbl"><span data-ico="drop"></span>NEXT SAP RUN <span class="chip gold" id="runMode">every 10 min</span></div>
+          <div class="cd" id="runCd">--:--</div>
+          <p class="muted" id="runNote" style="font-size:14px">every coin: claim → buy back + burn → burn the coin below</p>
+          <div class="lbl" style="margin-top:12px"><span data-ico="tree"></span>DEPTH GATE</div>
+          <div class="num" id="depthGate">—</div>
+          <p class="muted" id="depthNote" style="font-size:14px">how deep pump.fun lets the tree grow right now</p>
+        </div>
+
+        <div class="card has-tab">
+          <div class="tab green"><span data-ico="chart"></span>STATZ</div>
+          <table class="kv">
+            <tr><td><span data-ico="coin"></span>Tax on grown coins</td><td id="stTax">1%</td></tr>
+            <tr><td><span data-ico="clock"></span>Sap run every</td><td id="stIv">10 min</td></tr>
+            <tr><td><span data-ico="fire"></span>→ buy back + burn</td><td id="stSelf">50%</td></tr>
+            <tr><td><span data-ico="down"></span>→ burn the coin below</td><td id="stDown">50%</td></tr>
+            <tr><td><span data-ico="skull"></span>Team cut</td><td id="stOps">0%</td></tr>
+            <tr><td><span data-ico="lock"></span>Sap sold</td><td>never</td></tr>
+          </table>
+        </div>
+
+        <div class="card has-tab">
+          <div class="tab cream"><span data-ico="bolt"></span>MARKET</div>
+          <table class="kv">
+            <tr><td><span data-ico="bolt"></span>$ROOT price</td><td id="mkPrice">—</td></tr>
+            <tr><td><span data-ico="chart"></span>Market cap</td><td id="mkMcap">—</td></tr>
+            <tr><td><span data-ico="leaf"></span>Coins on the tree</td><td id="mkCoins">—</td></tr>
+            <tr><td><span data-ico="fire"></span>$ROOT burned</td><td id="mkBurned">—</td></tr>
+            <tr><td><span data-ico="drop"></span>Sap burned (all)</td><td id="mkSap">—</td></tr>
+            <tr><td><span data-ico="star"></span>Status</td><td id="mkStatus" style="font-family:var(--pix);font-size:14px">—</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="card has-tab" style="padding:26px 12px 12px">
+          <div class="tab"><span data-ico="gif"></span>THE GROVE</div>
+          <div class="scene">
+            <canvas id="scene" width="640" height="300"></canvas>
+            <div class="hud">SAP BURNED <b id="hudUsd">$0</b></div>
+            <div class="hud2" id="hudStatus">SEED</div>
+            <div class="cap" id="sceneCap">the seed is in the soil — $ROOT has not been planted yet</div>
+          </div>
+          <div class="row" style="justify-content:space-between;margin-top:10px">
+            <div class="lbl"><span data-ico="gem"></span>RINGS <span class="muted" style="font-family:var(--pix);font-size:12px;text-transform:none">· the tree grows with the sap burned and the coins on it</span></div>
+            <div class="row"><button class="key small purple" id="sapKey"><span data-ico="drop"></span>SAP</button><button class="key small blue" id="birdKey"><span data-ico="bird"></span>BIRD</button><a class="key small" href="/root.gif" download="root.gif"><span data-ico="gif"></span>SAVE GIF</a></div>
+          </div>
+          <div class="levels" id="levels" style="margin-top:8px"></div>
+        </div>
+
+        <div class="grid2">
+          <div class="card has-tab">
+            <div class="tab green"><span data-ico="sprout"></span>LATEST GROWTH</div>
+            <div id="latestCoins" class="empty">nothing has grown yet</div>
+          </div>
+          <div class="card has-tab">
+            <div class="tab purple"><span data-ico="drop"></span>LATEST SAP</div>
+            <div id="latestRuns" class="empty">no sap run yet</div>
+          </div>
+        </div>
+
+        <div class="card has-tab">
+          <div class="tab cream"><span data-ico="chart"></span>CHART</div>
+          <div class="row" style="justify-content:space-between">
+            <div class="lbl">$ROOT price (USD) · <span style="color:var(--purple2)">♦ sap runs</span></div>
+            <div class="row" id="rangeKeys"><button class="key small on" data-r="24h">24h</button><button class="key small" data-r="7d">7d</button></div>
+          </div>
+          <div class="scene" style="margin-top:8px;background:var(--well)"><canvas id="chart" width="640" height="200"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VIEW 2: GROW ================= -->
+  <section class="view" id="view-grow">
+    <div class="grid" style="grid-template-columns:1fr 300px">
+      <div>
+        <div class="card has-tab">
+          <div class="tab green"><span data-ico="sprout"></span>GROW A COIN</div>
+          <div class="steps" id="steps"><span class="chip on">1 · wallet</span><span class="chip">2 · pick a parent</span><span class="chip">3 · the coin</span><span class="chip">4 · send SOL</span><span class="chip">5 · live</span></div>
+          <div id="g-wallet">
+            <p>Connect the Solana wallet that will receive the dev buy (Phantom, Solflare, Backpack…). Your wallet never signs the launch itself: it only sends SOL.</p>
+            <button class="key" id="connect"><span data-ico="wallet"></span>CONNECT WALLET</button>
+          </div>
+          <div id="g-parent" hidden>
+            <p>Pick the coin your coin grows on. Its children are one level deeper. <span class="muted" id="parentGateTxt"></span></p>
+            <div class="parents" id="parents"></div>
+            <div class="well inset" id="parentChain" style="margin-top:10px;font-family:var(--pix);font-size:14px">pick a parent</div>
+            <button class="key green" id="parentOk" style="margin-top:10px" disabled><span data-ico="check"></span>GROW ON THIS COIN</button>
+          </div>
+          <form id="g-form" hidden onsubmit="return false">
+            <div class="drop" id="logoDrop"><img id="logoPrev" src="" alt="" hidden><div><div class="lbl">LOGO</div><span class="muted" style="font-size:14px">png / jpg / webp, up to 3MB — click to pick</span></div><input type="file" id="logo" accept="image/*" hidden></div>
+            <div class="grid2" style="gap:12px">
+              <label class="f">Name<input class="well" id="name" type="text" maxlength="32" placeholder="Twig"></label>
+              <label class="f">Ticker<input class="well" id="symbol" type="text" maxlength="13" placeholder="TWIG" style="text-transform:uppercase"></label>
+            </div>
+            <label class="f">Description<textarea class="well" id="desc" maxlength="500" placeholder="what this coin is about"></textarea></label>
+            <div class="grid2" style="gap:12px">
+              <label class="f">X (optional)<input class="well" id="twitter" type="text" placeholder="https://x.com/…"></label>
+              <label class="f">Telegram (optional)<input class="well" id="telegram" type="text" placeholder="https://t.me/…"></label>
+            </div>
+            <label class="f">Dev buy (optional) — paid in SOL, routed up the tree in one multi-hop swap right after the create, sent to your wallet
+              <div class="chips" id="devchips"><button type="button" data-v="0" class="on">none</button><button type="button" data-v="0.1">0.1 SOL</button><button type="button" data-v="0.25">0.25 SOL</button><button type="button" data-v="0.5">0.5 SOL</button><button type="button" data-v="1">1 SOL</button></div>
+              <input class="well" id="devbuy" type="text" placeholder="or type an amount in SOL" inputmode="decimal">
+            </label>
+            <p class="muted" style="font-size:14px">The tax is fixed at launch and cannot be changed. The coin's creator is its own engine wallet: the launchpad claims the tax every run, burns half as the parent coin and buys your coin back with the other half.</p>
+            <button class="key green" type="submit" id="go" style="margin-top:8px"><span data-ico="sprout"></span>GROW → SEND SOL</button>
+          </form>
+          <div id="g-pay" hidden>
+            <div class="well inset" id="payMsg" style="font-family:var(--pix);font-size:15px"></div>
+            <div class="row" style="margin-top:10px"><button class="key yellow" id="pay"><span data-ico="coin"></span>SEND <span id="payAmt"></span> SOL FROM MY WALLET</button><button class="key" id="payManual">I'LL SEND IT MANUALLY</button></div>
+            <div class="well inset" id="manual" hidden style="margin-top:10px;font-family:var(--pix);font-size:14px">Send exactly <b id="mAmt"></b> SOL to <span id="mAddr" style="font-family:var(--num);font-size:18px"></span>. The launch fires as soon as it lands (you have <span id="mMin"></span> minutes).</div>
+          </div>
+          <div id="g-wait" class="well inset" hidden style="font-family:var(--pix);font-size:15px"><b>Waiting for your SOL…</b> <span id="waitMsg"></span></div>
+          <div id="g-live" class="well inset" hidden style="font-family:var(--pix);font-size:15px"><b>Live.</b> Taking you to the coin's page…</div>
+          <div class="err" id="gErr" role="alert"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card has-tab">
+          <div class="tab"><span data-ico="scroll"></span>YOU SEND</div>
+          <div class="num big" id="sumTotal">– SOL</div>
+          <table class="kv" id="sumLines"></table>
+          <div class="lbl" style="margin-top:12px">THE COIN</div>
+          <div class="crumbs" id="sumChain" style="margin-top:6px"></div>
+          <p class="muted" style="font-size:14px;margin-top:10px"><span id="sumTax">1%</span> tax on top of pump.fun's fee, paid in the parent coin. Every <span id="sumIv">10 min</span>: <span id="sumSelf">50%</span> buys your coin back and burns it, <span id="sumDown">50%</span> burns the parent.</p>
+        </div>
+        <div class="card has-tab">
+          <div class="tab cream"><span data-ico="book"></span>HOW DEEP</div>
+          <p style="font-size:14px">SOL → <b>$ROOT</b> (depth 0) → a branch (depth 1) → a twig (depth 2). pump.fun opened depth 2 on Oct 13. The gate is read from the chain every tick: <span class="chip gold" id="gateChip">depth ≤ ?</span></p>
+          <p style="font-size:14px" class="muted">A coin paired with a pump coin starts at the same raise as a normal launch, counted in its parent: the price of the whole chain is read live when it is created.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VIEW 3: COINS ================= -->
+  <section class="view" id="view-coins">
+    <div class="card has-tab">
+      <div class="tab green"><span data-ico="leaf"></span>THE COINS</div>
+      <div class="row" style="justify-content:space-between">
+        <input class="well" id="q" placeholder="search name / ticker / mint" style="max-width:320px">
+        <div class="row" id="sortKeys"><button class="key small on" data-s="new">NEW</button><button class="key small" data-s="mcap">MCAP</button><button class="key small" data-s="depth">DEPTH</button><button class="key small" data-s="burned">BURNED</button><button class="key small" data-s="sap">SAP</button><button class="key small" data-s="children">KIDS</button></div>
+      </div>
+    </div>
+    <div class="cards" id="coinCards"></div>
+    <div class="empty" id="coinsEmpty" style="color:var(--cream)">nothing has grown on the tree yet — be the first branch</div>
+  </section>
+
+  <!-- ================= VIEW 4: COIN ================= -->
+  <section class="view" id="view-coin">
+    <div class="card has-tab">
+      <div class="tab" id="coinTab"><span data-ico="leaf"></span><span id="coinTabTxt">$COIN</span></div>
+      <div class="crumbs" id="coinCrumbs"></div>
+      <div class="row" style="align-items:flex-start;margin-top:12px">
+        <img class="coinico big" id="coinImg" alt="" src="/icon.png" onerror="this.src='/icon.png'">
+        <div style="flex:1;min-width:0">
+          <div class="row"><b style="font-family:var(--key);font-size:16px;text-transform:uppercase" id="coinName"></b><span class="chip" id="coinDepth"></span><span class="chip" id="coinStatus"></span></div>
+          <p id="coinDesc" style="font-size:15px"></p>
+          <div class="row" style="margin-top:6px"><div class="well inset" id="coinCa" style="flex:1;min-width:0;font-size:16px"></div><button class="key yellow small" id="coinCopy"><span data-ico="copy"></span>COPY</button></div>
+          <div class="row" style="margin-top:10px" id="coinKeys"></div>
+        </div>
+      </div>
+    </div>
+    <div class="grid">
+      <div>
+        <div class="card has-tab"><div class="tab cream"><span data-ico="bolt"></span>MARKET</div><table class="kv" id="coinMarket"></table></div>
+        <div class="card has-tab"><div class="tab purple"><span data-ico="drop"></span>SAP</div><table class="kv" id="coinSap"></table><p class="muted" id="coinNote" style="font-size:13px"></p></div>
+        <div class="card has-tab"><div class="tab green"><span data-ico="sprout"></span>GROWN ON IT</div><div id="coinKids" class="empty">nothing yet</div></div>
+      </div>
+      <div>
+        <div class="card has-tab">
+          <div class="tab cream"><span data-ico="chart"></span>CHART</div>
+          <div class="lbl">PRICE (USD) · from the chain, through the whole quote chain · <span style="color:var(--purple2)">♦ sap runs</span></div>
+          <div class="scene" style="margin-top:8px;background:var(--well)"><canvas id="coinChart" width="640" height="200"></canvas></div>
+        </div>
+        <div class="card has-tab">
+          <div class="tab purple"><span data-ico="drop"></span>SAP LOG</div>
+          <div class="scroll"><table class="log" id="coinRuns"><thead><tr><th>#</th><th>When</th><th class="r">Claimed</th><th class="r">Burned (self)</th><th class="r" id="crDown">Burned (parent)</th><th class="r">USD</th><th>Status</th><th>Txs</th></tr></thead><tbody></tbody></table></div>
+          <div class="empty" id="coinRunsEmpty">no run yet — the first one fires on the clock</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VIEW 5: SAP ================= -->
+  <section class="view" id="view-sap">
+    <div class="grid" style="grid-template-columns:300px 1fr">
+      <div>
+        <div class="card has-tab"><div class="tab purple"><span data-ico="drop"></span>SAP, TOTAL</div>
+          <table class="kv"><tr><td>Runs</td><td id="sRuns">—</td></tr><tr><td>Sap burned</td><td id="sUsd">—</td></tr><tr><td>Tokens burned</td><td id="sTokens">—</td></tr><tr><td>Coins</td><td id="sCoins">—</td></tr><tr><td>Last run</td><td id="sLast">—</td></tr></table>
+        </div>
+        <div class="card has-tab"><div class="tab cream"><span data-ico="scroll"></span>THE RUN</div>
+          <table class="kv"><tr><td>1 sweep + claim</td><td style="font-family:var(--pix);font-size:13px">100% of the fees</td></tr><tr><td>2 self</td><td id="rSelf">50%</td></tr><tr><td>3 down</td><td id="rDown">50%</td></tr><tr><td>4 ops</td><td id="rOps">0%</td></tr><tr><td>min. pot</td><td id="rMin">$0.25</td></tr></table>
+        </div>
+      </div>
+      <div class="card has-tab">
+        <div class="tab purple"><span data-ico="drop"></span>SAP LEDGER</div>
+        <p class="muted" style="font-size:14px">Every run of every coin, newest first. Self = the coin's own tokens bought back and burned. Down = the parent coin burned.</p>
+        <div class="scroll"><table class="log" id="sapTable"><thead><tr><th>#</th><th>Coin</th><th>When</th><th class="r">Claimed</th><th class="r">Self burned</th><th class="r">Down burned</th><th class="r">USD</th><th>Txs</th></tr></thead><tbody></tbody></table></div>
+        <div class="empty" id="sapEmpty">no sap run yet</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VIEW 6: DOCS ================= -->
+  <section class="view" id="view-docs">
+    <div class="grid">
+      <div class="card has-tab index"><div class="tab blue"><span data-ico="book"></span>DOCS</div><div id="docIndex"></div></div>
+      <div class="card has-tab docs"><div class="tab"><span data-ico="scroll"></span>HOW IT WORKS</div><div id="docBody"></div></div>
+    </div>
+  </section>
+
+  <div class="foot">ROOT · <a href="https://pump.fun" target="_blank" rel="noopener">pump.fun</a> · Solana · sap flows down · <span id="footMode"></span></div>
+</div>
+<div class="toast" id="toast">copied</div>
+<div class="modal" id="modal"><div class="box"><h3 style="font-family:var(--key);font-size:12px;text-transform:uppercase;margin:0 0 8px">Connect a wallet</h3><div id="wallets"></div><p class="muted" style="font-size:13px">No wallet detected? Install Phantom, Solflare or Backpack, then reload.</p><button class="key small" id="modalClose">CLOSE</button></div></div>
+
+<script src="/sprite.js"></script>
+<script src="/scene.js"></script>
+<script>
+// ------------------------------------------------------------- helpers
+const $ = (id) => document.getElementById(id);
+const fmt = (n, d = 0) => (isFinite(n) ? Number(n).toLocaleString("en-US", { maximumFractionDigits: d }) : "—");
+const usd = (n) => (!isFinite(n) ? "—" : n === 0 ? "$0" : n >= 1000 ? "$" + fmt(n) : n >= 1 ? "$" + n.toFixed(2) : "$" + n.toFixed(n > 0.01 ? 3 : 5));
+const compact = (n) => (!isFinite(n) ? "—" : n === 0 ? "0" : n >= 1e9 ? (n / 1e9).toFixed(2) + "B" : n >= 1e6 ? (n / 1e6).toFixed(2) + "M" : n >= 1e3 ? (n / 1e3).toFixed(1) + "K" : n >= 10 ? fmt(n, 0) : n >= 0.01 ? fmt(n, n >= 1 ? 3 : 4) : Number(n.toPrecision(3)).toString());
+const short = (a) => (a ? a.slice(0, 4) + "…" + a.slice(-4) : "—");
+const ago = (t) => { const s = Math.max(0, Math.floor(Date.now() / 1000) - t); return s < 60 ? s + "s ago" : s < 3600 ? Math.floor(s / 60) + "m ago" : s < 86400 ? Math.floor(s / 3600) + "h ago" : Math.floor(s / 86400) + "d ago"; };
+const hms = (s) => { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; return (h ? String(h).padStart(2, "0") + ":" : "") + String(m).padStart(2, "0") + ":" + String(x).padStart(2, "0"); };
+const ivTxt = (s) => (s % 3600 === 0 ? s / 3600 + " h" : s % 60 === 0 ? s / 60 + " min" : s + " s");
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const depthName = (d) => ["trunk", "branch", "twig", "sprig", "leaf", "leaf"][Math.min(5, d)];
+const price = (p) => (p ? "$" + p.toFixed(p < 0.001 ? 8 : p < 1 ? 5 : 3) : "—");
+let T = null, coinsList = [], runs = [], chart = null, range = "24h", sort = "new", curCoin = null;
+const ico = (n, px = 12, ov) => iconSvg(n, px, ov);
+function icons(root = document) { root.querySelectorAll("[data-ico]").forEach((el) => { if (el.dataset.done) return; el.dataset.done = "1"; el.innerHTML = iconSvg(el.dataset.ico, el.dataset.icoSize || 14); }); }
+function toast(m) { const t = $("toast"); t.textContent = m; t.style.display = "block"; setTimeout(() => (t.style.display = "none"), 1400); }
+function copy(txt, msg) { navigator.clipboard.writeText(txt).then(() => toast(msg || "copied")).catch(() => toast("copy failed")); }
+const crumb = (c, me = false) => `<a class="c ${me ? "me" : ""}" href="#c/${c.mint}">${c.image ? `<img src="${esc(c.image)}" alt="" onerror="this.remove()">` : ""}$${esc(c.symbol)}</a>`;
+function crumbs(c) { const parts = [`<span class="c" style="border:2px solid var(--ink);padding:3px 6px;background:var(--blue)">${ico("coin", 12, SOLCOIN)} SOL</span>`]; for (const k of c.chainCoins || c.chain.map((m) => coinsList.find((x) => x.mint === m) || { mint: m, symbol: m.slice(0, 4) })) parts.push(`<span class="arrow">→</span>`, crumb(k)); parts.push(`<span class="arrow">→</span>`, crumb(c, true)); return parts.join(""); }
+const chip = (status, dry) => { const cls = status === "done" ? "green" : status === "failed" ? "red" : status === "skipped" ? "" : "gold"; const ic = dry ? "flask" : status === "done" ? "check" : status === "failed" ? "skull" : "hourglass"; return `<span class="chip ${cls}">${ico(ic)}${dry ? "dry · " : ""}${status}</span>`; };
+const tx = (sig, label) => (sig ? `<a href="https://solscan.io/tx/${sig}" target="_blank" rel="noopener">${label} ↗</a>` : "");
+
+// ------------------------------------------------------------- views
+function showView(v) {
+  document.querySelectorAll(".view").forEach((e) => e.classList.toggle("on", e.id === "view-" + v));
+  document.querySelectorAll("#nav [data-view]").forEach((a) => a.classList.toggle("on", a.dataset.view === v));
+  if (v === "docs") renderDocs();
+  if (v === "coins") loadCoins();
+  if (v === "sap") loadSap();
+  if (v === "grow") initGrow();
+}
+function route() {
+  let h = (location.hash || "").slice(1);
+  if (!h && /^\/c\//.test(location.pathname)) h = "c/" + location.pathname.split("/")[2];
+  if (!h && /^\/(grow|coins|sap|docs)$/.test(location.pathname)) h = location.pathname.slice(1);
+  if (h.startsWith("c/")) { showView("coin"); openCoin(h.slice(2)); return; }
+  if (h.startsWith("grow/")) { growParent = h.slice(5); showView("grow"); return; }
+  showView(["tree", "grow", "coins", "sap", "docs"].includes(h) ? h : "tree");
+}
+window.addEventListener("hashchange", route);
+
+// ------------------------------------------------------------- pixel art
+(function () {
+  const c = $("logo"), ctx = c.getContext("2d"); ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = "#fff6d6"; ctx.fillRect(0, 0, 64, 64); ctx.fillStyle = "#2a2823"; ctx.fillRect(0, 0, 64, 4); ctx.fillRect(0, 60, 64, 4); ctx.fillRect(0, 0, 4, 64); ctx.fillRect(60, 0, 4, 64);
+  ctx.fillStyle = "#3a2615"; ctx.fillRect(4, 48, 56, 12); ctx.fillStyle = "#3f8f3a"; ctx.fillRect(4, 46, 56, 3);
+  ctx.fillStyle = "#9a6b3c"; ctx.fillRect(28, 24, 8, 24); ctx.fillStyle = "#5e3f22"; ctx.fillRect(30, 30, 2, 6); ctx.fillRect(32, 40, 2, 4);
+  drawLimb(ctx, 30, 36, 16, 28, 3, 1); drawLimb(ctx, 34, 30, 48, 22, 3, 1);
+  drawBlob(ctx, 16, 26, 7, 1, null, 2); drawBlob(ctx, 48, 20, 7, 1, null, 5); drawBlob(ctx, 32, 18, 11, 1, null, 9);
+  drawPix(ctx, COIN, 8, 52, 1.2, SOLCOIN); drawPix(ctx, COIN, 46, 53, 1.2, SOLCOIN);
+})();
+icons();
+
+// ------------------------------------------------------------- the scene
+const scene = new RootScene($("scene"));
+let lastCycle = null, lastCoinCount = null, seenRuns = new Set();
+$("sapKey").addEventListener("click", () => { const n = scene.nodes[Math.floor(Math.random() * scene.nodes.length)]; if (n) scene.sap(n.mint, 6); else scene.drink(); });
+$("birdKey").addEventListener("click", () => { scene.birds.push({ x: -20, y: 30 + Math.random() * 60, vx: 2.2, t: 0 }); });
+setInterval(() => scene.tick(), 1000 / 20);
+function syncScene() {
+  if (!T) return;
+  const hot = {}; const n = T.now; for (const c of coinsList) if (c.lastCycleAt && n - c.lastCycleAt < 120) hot[c.mint] = 1;
+  scene.set({ started: !!T.started, level: T.tree.level, coins: coinsList, rootSym: T.root ? T.root.symbol : "ROOT", burnedUsd: T.tree.burnedUsd, hot, status: T.sap.firing ? "running" : "idle", paused: T.started && !T.schedulerEnabled });
+  if (lastCoinCount !== null && coinsList.length > lastCoinCount) { const newest = coinsList.slice().sort((a, b) => b.launchedAt - a.launchedAt)[0]; if (newest) scene.grow(newest.mint); }
+  lastCoinCount = coinsList.length;
+  if (lastCycle !== null && T.sap.cycle > lastCycle) scene.drink();
+  lastCycle = T.sap.cycle;
+}
+function renderLevels() {
+  const levels = T ? T.levels : [0, 50, 250, 1000, 5000, 25000, 100000, 500000], lc = T ? T.levelsCoins : [0, 1, 3, 6, 12, 25, 50, 100];
+  const cur = T && T.started ? T.tree.level : 0;
+  $("levels").innerHTML = levels.map((v, i) => `<div class="lv ${cur === i + 1 ? "on" : ""} ${cur < i + 1 ? "locked" : ""}"><canvas width="64" height="56" data-lv="${i + 1}"></canvas><span class="n">${LEVEL_NAMES[i]}</span><span class="v">${usd(v)} · ${lc[i]} coins</span></div>`).join("");
+  $("levels").querySelectorAll("canvas").forEach((c) => drawMiniTree(c, Number(c.dataset.lv)));
+}
+
+// ------------------------------------------------------------- data
+async function load() {
+  try {
+    const r = await fetch("/api/tree"); if (!r.ok) return;
+    T = await r.json(); T._at = Date.now(); coinsList = T.coins || [];
+    render();
+  } catch (e) { /* offline */ }
+}
+function render() {
+  const R = T.rules, root = T.root;
+  syncScene(); renderLevels(); icons();
+  $("stTax").textContent = R.taxBps / 100 + "%"; $("stIv").textContent = ivTxt(R.intervalSec); $("stSelf").textContent = R.split.selfBps / 100 + "%"; $("stDown").textContent = R.split.downBps / 100 + "%"; $("stOps").textContent = R.split.opsBps / 100 + "%";
+  $("runMode").textContent = "every " + ivTxt(R.intervalSec);
+  $("depthGate").textContent = T.maxDepth ? "depth ≤ " + T.maxDepth : "—";
+  $("depthNote").textContent = T.maxCurveDepth ? `pump.fun allows ${T.maxCurveDepth} · the tree is at depth ${T.tree.maxDepthOnTree}` : "how deep pump.fun lets the tree grow right now";
+  $("gateChip").textContent = T.maxDepth ? "depth ≤ " + T.maxDepth : "depth ≤ ?";
+  const soc = []; if (T.brand.twitter) soc.push(`<a class="key small" href="${esc(T.brand.twitter)}" target="_blank" rel="noopener">${ico("x", 14)}</a>`); if (T.brand.telegram) soc.push(`<a class="key small blue" href="${esc(T.brand.telegram)}" target="_blank" rel="noopener">${ico("plane", 14)}</a>`);
+  if (root) soc.push(`<a class="key small" href="https://solscan.io/token/${root.mint}" target="_blank" rel="noopener">${ico("search", 14)} SOLSCAN</a>`, `<a class="key small" href="https://solscan.io/account/${root.wallet}" target="_blank" rel="noopener">${ico("chest", 14)} TRUNK WALLET</a>`);
+  $("socials").innerHTML = soc.join("");
+  $("hudUsd").textContent = usd(T.tree.burnedUsd);
+  if (!T.started || !root) {
+    $("ca").textContent = "not planted yet"; $("footMode").textContent = "not planted"; $("mkStatus").textContent = "not planted"; $("hudStatus").textContent = "SEED"; $("sceneCap").textContent = "the seed is in the soil — $ROOT has not been planted yet"; $("runCd").textContent = "--:--";
+    return;
+  }
+  $("rootTabTxt").textContent = "$" + root.symbol + " · THE TRUNK"; if (root.image) $("rootImg").src = root.image;
+  $("ca").textContent = root.mint;
+  const buy = `https://pump.fun/coin/${root.mint}`; $("buyKey").href = buy; $("buyKey2").href = buy;
+  const lv = T.tree.level; $("lvl").textContent = lv; $("lvlName").textContent = LEVEL_NAMES[lv - 1];
+  const lo = T.levels[lv - 1] || 0, hi = T.levels[lv] || null;
+  $("xp").style.width = (hi ? Math.min(100, ((T.tree.burnedUsd - lo) / (hi - lo)) * 100) : 100) + "%";
+  $("xpTxt").textContent = hi ? usd(T.tree.burnedUsd) + " / " + usd(hi) + " to " + LEVEL_NAMES[lv] : "max rings";
+  $("mkPrice").textContent = price(root.priceUsd); $("mkMcap").textContent = usd(root.mcapUsd);
+  $("mkCoins").textContent = fmt(T.tree.coins) + (T.tree.maxDepthOnTree ? ` · depth ${T.tree.maxDepthOnTree}` : "");
+  $("mkBurned").textContent = compact(root.burned) + " (" + (root.burnedPct * 100).toFixed(2) + "%)";
+  $("mkSap").textContent = usd(T.tree.burnedUsd);
+  $("mkStatus").textContent = (root.graduated ? "PumpSwap pool" : "bonding curve") + (T.dryRun || T.mode !== "bot" ? " · watch mode" : " · live") + (T.schedulerEnabled ? "" : " · PAUSED");
+  $("footMode").textContent = T.dryRun || T.mode !== "bot" ? "watch mode — dry sap runs" : "engine live";
+  $("rootBlurb").innerHTML = `$${esc(root.symbol)} is a pump.fun coin paired with SOL: the trunk. Every coin grown here is paired with a coin on the tree and pays a <b>${R.taxBps / 100}%</b> tax in it. Every ${ivTxt(R.intervalSec)}: <b>${R.split.selfBps / 100}%</b> buys the coin back and burns it, <b>${R.split.downBps / 100}%</b> burns the coin below. Sap flows down to the root.`;
+  $("hudStatus").textContent = T.sap.firing ? "SAP RUNNING" : T.schedulerEnabled ? LEVEL_NAMES[lv - 1].toUpperCase() + " · " + T.tree.coins + " COINS" : "PAUSED";
+  const hot = coinsList.filter((c) => c.progress && ["claiming", "buying", "burning"].includes(c.progress.status) && T.now - c.progress.at < 300);
+  $("sceneCap").textContent = T.sap.firing ? `sap run #${T.sap.cycle}: ${hot.map((c) => "$" + c.symbol).slice(0, 4).join(", ") || "walking the tree"}…` : T.tree.coins ? `${T.tree.coins} coin${T.tree.coins > 1 ? "s" : ""} grow on $${root.symbol} · ${Object.entries(T.tree.byDepth).map(([d, n]) => n + " at depth " + d).join(" · ")}` : `$${root.symbol} is planted — nothing grows on it yet`;
+  $("runNote").textContent = root.pot.unclaimed > 0 ? `${root.pot.unclaimed.toFixed(4)} SOL waiting in the trunk's creator vault` : root.lastNote || "every coin: claim → buy back + burn → burn the coin below";
+  const latest = coinsList.filter((c) => !c.isRoot).sort((a, b) => b.launchedAt - a.launchedAt).slice(0, 5);
+  $("latestCoins").innerHTML = latest.length ? latest.map((c) => `<div class="row" style="justify-content:space-between;border-bottom:2px dotted var(--line);padding:5px 0"><a href="#c/${c.mint}" class="row" style="gap:8px">${c.image ? `<img src="${esc(c.image)}" style="width:22px;height:22px;border:2px solid var(--ink)" onerror="this.remove()">` : ""}<b style="font-family:var(--key);font-size:12px">$${esc(c.symbol)}</b><span class="chip d${c.depth}">depth ${c.depth}</span></a><span style="font-family:var(--num);font-size:18px">${usd(c.mcapUsd)} · ${ago(c.launchedAt)}</span></div>`).join("") : `<div class="empty">nothing has grown yet — <a href="#grow" style="border-bottom:2px solid var(--ink)">grow the first branch</a></div>`;
+}
+async function loadRuns() {
+  try { const r = await fetch("/api/runs?limit=8"); if (!r.ok) return; runs = await r.json(); } catch { return; }
+  for (const x of runs) { if (!seenRuns.has(x.id)) { if (seenRuns.size) { x.isRoot ? scene.drink(6) : scene.sap(x.mint, 4); } seenRuns.add(x.id); } }
+  $("latestRuns").innerHTML = runs.length ? runs.slice(0, 5).map((x) => `<div class="row" style="justify-content:space-between;border-bottom:2px dotted var(--line);padding:5px 0"><a href="#c/${x.mint}"><b style="font-family:var(--key);font-size:12px">$${esc(x.symbol)}</b> <span class="muted" style="font-size:12px">${ago(x.t)}</span></a><span style="font-family:var(--num);font-size:18px">${compact(x.selfBurned)} burned${x.downQuote ? " · " + compact(x.downQuote) + " $" + esc(x.quoteSymbol) + " ↓" : ""} ${chip(x.status, x.dry)}</span></div>`).join("") : `<div class="empty">no sap run yet — the first one fires on the clock</div>`;
+}
+// countdown
+setInterval(() => {
+  if (!T || !T.started) return;
+  const now = T.now + (Date.now() - T._at) / 1000, f = T.sap.nextAt - now;
+  $("runCd").textContent = f > 0 ? hms(f) : "RUNNING"; $("runCd").classList.toggle("blink", f <= 0);
+}, 500);
+$("copyKey").addEventListener("click", () => { if (T && T.root) copy(T.root.mint, "CA copied"); });
+
+// ------------------------------------------------------------- charts
+document.querySelectorAll("#rangeKeys button").forEach((b) => b.addEventListener("click", () => { range = b.dataset.r; document.querySelectorAll("#rangeKeys button").forEach((x) => x.classList.toggle("on", x === b)); loadChart(); }));
+async function loadChart() {
+  if (!T || !T.root) return;
+  try { const r = await fetch(`/api/coin/${T.root.mint}/chart?r=${range}`); if (r.ok) chart = await r.json(); } catch { return; }
+  drawChart($("chart"), chart);
+}
+function drawChart(c, data) {
+  const ctx = c.getContext("2d"), W = c.width, H = c.height;
+  ctx.imageSmoothingEnabled = false; ctx.fillStyle = "#fbf2d8"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#e9dcb0"; for (let x = 0; x < W; x += 32) ctx.fillRect(x, 0, 2, H); for (let y = 0; y < H; y += 32) ctx.fillRect(0, y, W, 2);
+  const pts = data ? data.points : [];
+  ctx.font = "11px Silkscreen, monospace"; ctx.fillStyle = "#6f6551"; ctx.textAlign = "left";
+  if (pts.length < 2) { ctx.fillText("NO PRICE HISTORY YET", 12, 22); return; }
+  const t0 = pts[0].t, t1 = pts[pts.length - 1].t, lo = Math.min(...pts.map((p) => p.c)), hi = Math.max(...pts.map((p) => p.c));
+  const X = (t) => 8 + ((t - t0) / Math.max(1, t1 - t0)) * (W - 16), Y = (v) => H - 14 - ((v - lo) / Math.max(1e-12, hi - lo)) * (H - 40);
+  ctx.fillStyle = "#2a2823"; let px = X(pts[0].t), py = Y(pts[0].c);
+  for (const p of pts) { const x = X(p.t), y = Y(p.c); const x0 = Math.min(px, x), x1 = Math.max(px, x); ctx.fillRect(x0, py - 1, x1 - x0 + 3, 3); const y0 = Math.min(py, y), y1 = Math.max(py, y); ctx.fillRect(x - 1, y0, 3, y1 - y0 + 3); px = x; py = y; }
+  const near = (t) => { let b = pts[0]; for (const p of pts) if (Math.abs(p.t - t) < Math.abs(b.t - t)) b = p; return b; };
+  for (const r of data.runs || []) { if (r.t < t0 || r.t > t1) continue; const x = X(r.t), y = Y(near(r.t).c); ctx.fillStyle = r.dry ? "#b9b3a5" : "#8a5fd1"; ctx.fillRect(x - 1, y - 14, 3, 3); ctx.fillRect(x - 3, y - 11, 7, 3); ctx.fillRect(x - 1, y - 8, 3, 3); }
+  ctx.fillStyle = "#6f6551"; ctx.textAlign = "left"; ctx.fillText(price(hi), 8, 14); ctx.fillText(price(lo), 8, H - 4);
+  ctx.textAlign = "right"; ctx.fillText("FROM THE CHAIN", W - 8, 14);
+}
+
+// ------------------------------------------------------------- coins
+document.querySelectorAll("#sortKeys button").forEach((b) => b.addEventListener("click", () => { sort = b.dataset.s; document.querySelectorAll("#sortKeys button").forEach((x) => x.classList.toggle("on", x === b)); loadCoins(); }));
+$("q").addEventListener("input", () => loadCoins());
+async function loadCoins() {
+  let list = [];
+  try { const r = await fetch(`/api/coins?sort=${sort}&q=${encodeURIComponent($("q").value.trim())}`); if (!r.ok) return; list = (await r.json()).coins; } catch { return; }
+  $("coinCards").innerHTML = list.map((c) => `<div class="card has-tab cc" onclick="location.hash='#c/${c.mint}'">
+    <div class="tab ${c.depth === 1 ? "green" : c.depth === 2 ? "" : "purple"}">${ico(c.depth === 1 ? "branch" : "leaf", 14)} DEPTH ${c.depth} · ${depthName(c.depth)}</div>
+    <div class="head"><img class="coinico" src="${esc(c.image || "/icon.png")}" alt="" onerror="this.src='/icon.png'"><div class="t"><b>$${esc(c.symbol)}</b><span>${esc(c.name)}</span></div></div>
+    <div class="crumbs" style="margin-top:8px">${crumbsShort(c)}</div>
+    <table class="kv" style="margin-top:8px"><tr><td>Mcap</td><td>${usd(c.mcapUsd)}</td></tr><tr><td>Burned</td><td>${(c.burnedPct * 100).toFixed(2)}%</td></tr><tr><td>Sap burned</td><td>${usd(c.totalSapUsd)}</td></tr><tr><td>Grown on it</td><td>${c.children}</td></tr><tr><td>Born</td><td style="font-family:var(--pix);font-size:13px">${ago(c.launchedAt)}</td></tr></table>
+  </div>`).join("");
+  $("coinsEmpty").style.display = list.length ? "none" : "block"; icons();
+}
+function crumbsShort(c) { const all = [...(T ? [T.root] : []).filter(Boolean), ...coinsList]; const parts = [`<span class="muted">SOL</span>`]; for (const m of c.chain) { const k = all.find((x) => x && x.mint === m); parts.push(`<span class="arrow">→</span>`, `<span>$${esc(k ? k.symbol : m.slice(0, 4))}</span>`); } parts.push(`<span class="arrow">→</span>`, `<b>$${esc(c.symbol)}</b>`); return parts.join(" "); }
+
+// ------------------------------------------------------------- coin page
+$("coinCopy").addEventListener("click", () => { if (curCoin) copy(curCoin.mint, "CA copied"); });
+async function openCoin(mint) {
+  let c; try { const r = await fetch(`/api/coin/${mint}`); if (!r.ok) { $("coinName").textContent = "unknown coin"; return; } c = await r.json(); } catch { return; }
+  curCoin = c; const q = c.quote;
+  $("coinTabTxt").textContent = "$" + c.symbol + (c.isRoot ? " · THE TRUNK" : " · " + depthName(c.depth).toUpperCase());
+  $("coinCrumbs").innerHTML = crumbs(c); $("coinImg").src = c.image || "/icon.png"; $("coinName").textContent = c.name;
+  $("coinDepth").className = "chip d" + c.depth; $("coinDepth").textContent = "depth " + c.depth; $("coinStatus").textContent = c.graduated ? "PumpSwap pool" : "bonding curve";
+  $("coinDesc").textContent = c.description || ""; $("coinCa").textContent = c.mint;
+  const canGrow = T && c.depth < T.maxDepth;
+  $("coinKeys").innerHTML = `<a class="key yellow small" href="${c.links.pump}" target="_blank" rel="noopener">${ico("coin", 14)} BUY ON PUMP.FUN</a>${canGrow ? `<a class="key green small" href="#grow/${c.mint}">${ico("sprout", 14)} GROW ON $${esc(c.symbol)}</a>` : `<span class="chip">${ico("lock")} max depth</span>`}<a class="key small" href="${c.links.explorer}" target="_blank" rel="noopener">${ico("search", 14)} SOLSCAN</a><a class="key small" href="${c.links.wallet}" target="_blank" rel="noopener">${ico("chest", 14)} ENGINE WALLET</a>${c.twitter ? `<a class="key small" href="${esc(c.twitter)}" target="_blank" rel="noopener">${ico("x", 14)}</a>` : ""}${c.telegram ? `<a class="key small blue" href="${esc(c.telegram)}" target="_blank" rel="noopener">${ico("plane", 14)}</a>` : ""}`;
+  $("coinMarket").innerHTML = `<tr><td>Price</td><td>${price(c.priceUsd)}</td></tr><tr><td>in $${esc(q.symbol)}</td><td>${c.priceQuote ? c.priceQuote.toExponential(3) : "—"}</td></tr><tr><td>Market cap</td><td>${usd(c.mcapUsd)}</td></tr><tr><td>Supply</td><td>${compact(c.supply)}</td></tr><tr><td>Burned</td><td>${compact(c.burned)} (${(c.burnedPct * 100).toFixed(2)}%)</td></tr><tr><td>Tax</td><td>${c.isRoot ? "pump.fun std" : c.taxBps / 100 + "% in $" + esc(q.symbol)}</td></tr><tr><td>Born</td><td style="font-family:var(--pix);font-size:13px">${c.launchedAt ? new Date(c.launchedAt * 1000).toLocaleDateString() : "—"}</td></tr>`;
+  $("coinSap").innerHTML = `<tr><td>Waiting (unclaimed)</td><td>${c.pot.unclaimed.toFixed(4)} ${esc(q.symbol)}</td></tr><tr><td>In the engine wallet</td><td>${(c.isRoot ? c.pot.walletSol : c.pot.walletQuote).toFixed(4)} ${esc(q.symbol)}</td></tr><tr><td>Next run buys ≈</td><td>${compact(c.pot.estTokens || 0)} $${esc(c.symbol)}</td></tr><tr><td>Runs</td><td>${c.cyclesRun}</td></tr><tr><td>Claimed, total</td><td>${c.totalClaimedQuote.toFixed(4)} ${esc(q.symbol)}</td></tr><tr><td>Self burned, total</td><td>${compact(c.totalSelfBurned)} $${esc(c.symbol)}</td></tr><tr><td>Down burned, total</td><td>${c.isRoot ? "—" : c.totalDownQuote.toFixed(4) + " $" + esc(q.symbol)}</td></tr><tr><td>Sap burned (USD)</td><td>${usd(c.totalSapUsd)}</td></tr><tr><td>Gas</td><td>${c.pot.walletSol.toFixed(4)} SOL</td></tr>`;
+  $("coinNote").textContent = c.lastNote || "";
+  $("crDown").textContent = c.isRoot ? "—" : "Burned ($" + q.symbol + ")";
+  $("coinKids").innerHTML = c.childrenList.length ? c.childrenList.map((k) => `<div class="row" style="justify-content:space-between;border-bottom:2px dotted var(--line);padding:5px 0"><a href="#c/${k.mint}" class="row" style="gap:8px">${k.image ? `<img src="${esc(k.image)}" style="width:22px;height:22px;border:2px solid var(--ink)" onerror="this.remove()">` : ""}<b style="font-family:var(--key);font-size:12px">$${esc(k.symbol)}</b><span class="chip d${k.depth}">depth ${k.depth}</span></a><span style="font-family:var(--num);font-size:18px">${usd(k.mcapUsd)}</span></div>`).join("") : `<div class="empty">nothing yet${canGrow ? ` — <a href="#grow/${c.mint}" style="border-bottom:2px solid var(--ink)">grow on $${esc(c.symbol)}</a>` : ""}</div>`;
+  icons();
+  try { const r = await fetch(`/api/coin/${mint}/chart?r=24h`); if (r.ok) drawChart($("coinChart"), await r.json()); } catch {}
+  try {
+    const r = await fetch(`/api/coin/${mint}/runs?limit=100`); if (!r.ok) return; const rows = await r.json();
+    $("coinRuns").querySelector("tbody").innerHTML = rows.map((x) => `<tr><td>${x.id}</td><td class="t">${ago(x.t)}</td><td class="r">${x.claimedQuote.toFixed(4)}</td><td class="r">${compact(x.selfBurned)}</td><td class="r">${c.isRoot ? "—" : x.downQuote.toFixed(4)}</td><td class="r">${usd(x.sapUsd)}</td><td class="t">${chip(x.status, x.dry)}${x.status !== "done" && x.note ? `<div class="muted" style="font-size:12px;max-width:260px;white-space:normal">${esc(x.note)}</div>` : ""}</td><td class="t txs">${tx(x.claimTx, "claim")}${tx(x.buyTx, "buy")}${tx(x.burnTx, "burn")}${tx(x.downTx, "down")}${tx(x.gasTx, "gas")}</td></tr>`).join("");
+    $("coinRunsEmpty").style.display = rows.length ? "none" : "block";
+  } catch {}
+}
+
+// ------------------------------------------------------------- sap ledger
+async function loadSap() {
+  try { const r = await fetch("/api/runs?limit=120"); if (!r.ok) return; const rows = await r.json();
+    $("sapTable").querySelector("tbody").innerHTML = rows.map((x) => `<tr class="click" onclick="location.hash='#c/${x.mint}'"><td>${x.id}</td><td class="t">${x.image ? `<img src="${esc(x.image)}" onerror="this.remove()">` : ""}<b>$${esc(x.symbol)}</b> <span class="chip d${x.depth}">d${x.depth}</span></td><td class="t">${ago(x.t)}</td><td class="r">${x.claimedQuote.toFixed(4)} ${esc(x.quoteSymbol)}</td><td class="r">${compact(x.selfBurned)}</td><td class="r">${x.isRoot ? "—" : x.downQuote.toFixed(4) + " " + esc(x.quoteSymbol)}</td><td class="r">${usd(x.sapUsd)}</td><td class="t txs">${tx(x.claimTx, "claim")}${tx(x.buyTx, "buy")}${tx(x.burnTx, "burn")}${tx(x.downTx, "down")}</td></tr>`).join("");
+    $("sapEmpty").style.display = rows.length ? "none" : "block";
+  } catch {}
+  if (T) { $("sRuns").textContent = fmt(T.totals.runs); $("sUsd").textContent = usd(T.totals.sapUsd); $("sTokens").textContent = compact(T.totals.selfBurned); $("sCoins").textContent = fmt(T.tree.coins); $("sLast").textContent = T.sap.lastRunAt ? ago(T.sap.lastRunAt) : "—"; $("rSelf").textContent = T.rules.split.selfBps / 100 + "%"; $("rDown").textContent = T.rules.split.downBps / 100 + "%"; $("rOps").textContent = T.rules.split.opsBps / 100 + "%"; $("rMin").textContent = "$" + T.rules.minSapUsd; }
+}
+
+// ------------------------------------------------------------- grow
+let wallet = null, provider = null, growParent = "", growOpts = null, launchId = null, deposit = null, devBuy = 0, logoId = "", growInit = false;
+function showStep(n) { document.querySelectorAll("#steps .chip").forEach((s, i) => s.classList.toggle("on", i + 1 <= n)); ["g-wallet", "g-parent", "g-form", "g-pay", "g-wait", "g-live"].forEach((id, i) => { $(id).hidden = i + 1 !== n; }); summary(); }
+function showErr(m) { $("gErr").textContent = m; $("gErr").classList.toggle("on", !!m); }
+async function initGrow() {
+  try { const r = await fetch("/api/grow/options"); if (r.ok) growOpts = await r.json(); } catch {}
+  if (!growOpts) return;
+  $("sumTax").textContent = growOpts.taxBps / 100 + "%"; $("sumIv").textContent = ivTxt(growOpts.rules.intervalSec); $("sumSelf").textContent = growOpts.rules.split.selfBps / 100 + "%"; $("sumDown").textContent = growOpts.rules.split.downBps / 100 + "%";
+  $("parentGateTxt").textContent = `pump.fun allows depth ≤ ${growOpts.maxDepth} right now.`;
+  $("parents").innerHTML = growOpts.parents.map((p) => `<div class="pp ${p.mint === growParent ? "on" : ""}" data-mint="${p.mint}"><img src="${esc(p.image || "/icon.png")}" alt="" onerror="this.src='/icon.png'"><div><b>$${esc(p.symbol)}</b><small>depth ${p.depth} → ${p.depth + 1} · ${usd(p.mcapUsd)}</small></div></div>`).join("") || `<div class="empty">nothing to grow on yet</div>`;
+  $("parents").querySelectorAll(".pp").forEach((el) => el.addEventListener("click", () => pickParent(el.dataset.mint)));
+  if (growParent) pickParent(growParent);
+  if (!growInit) { growInit = true; if (!wallet) showStep(1); }
+  summary();
+}
+async function pickParent(mint) {
+  growParent = mint; $("parents").querySelectorAll(".pp").forEach((el) => el.classList.toggle("on", el.dataset.mint === mint));
+  const p = growOpts.parents.find((x) => x.mint === mint); if (!p) return;
+  $("parentChain").innerHTML = `checking $${esc(p.symbol)}'s chain on pump.fun…`; $("parentOk").disabled = true;
+  try { const r = await fetch(`/api/grow/check/${mint}`); const j = await r.json();
+    if (j.ok) { $("parentChain").innerHTML = `${ico("check", 14)} your coin would be <b>depth ${j.depth}</b>, paired with <b>$${esc(p.symbol)}</b> · create_v2 passes ${j.chainLength} curve group${j.chainLength > 1 ? "s" : ""}${j.migratedQuote ? " (parent migrated: pool accounts included)" : ""}`; $("parentOk").disabled = false; }
+    else $("parentChain").innerHTML = `${ico("skull", 14)} ${esc(j.error)}`;
+  } catch { $("parentChain").textContent = "could not check the chain"; }
+  summary();
+}
+$("parentOk").addEventListener("click", () => { if (growParent) showStep(3); });
+function summary() {
+  const p = growOpts && growOpts.parents.find((x) => x.mint === growParent);
+  const gas = growOpts ? growOpts.launch.gasSol : 0.06, total = gas + devBuy;
+  $("sumTotal").textContent = (growOpts ? total.toFixed(3) : "–") + " SOL";
+  $("sumLines").innerHTML = `<tr><td>create + fees + gas reserve</td><td>${gas} SOL</td></tr><tr><td>dev buy</td><td>${devBuy} SOL</td></tr>`;
+  $("sumChain").innerHTML = p ? `<span class="muted">SOL</span> <span class="arrow">→</span> ${p.depth > 0 ? `<span>…</span> <span class="arrow">→</span> ` : ""}<span>$${esc(p.symbol)}</span> <span class="arrow">→</span> <b>$${esc(($("symbol").value || "YOURS").toUpperCase())}</b> <span class="chip d${p.depth + 1}">depth ${p.depth + 1}</span>` : `<span class="muted">pick a parent</span>`;
+}
+$("symbol").addEventListener("input", summary);
+// wallet (Solana)
+function detectWallets() {
+  const list = [];
+  const add = (name, p, icon) => { if (p && !list.find((x) => x.provider === p)) list.push({ name, provider: p, icon }); };
+  add("Phantom", window.phantom?.solana, "https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/wallets/icons/phantom.svg");
+  add("Solflare", window.solflare, "https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/wallets/icons/solflare.svg");
+  add("Backpack", window.backpack?.solana, "https://raw.githubusercontent.com/solana-labs/wallet-adapter/master/packages/wallets/icons/backpack.svg");
+  if (window.solana && !list.find((x) => x.provider === window.solana)) add("Solana wallet", window.solana, "/icon.png");
+  return list;
+}
+async function connectWith(p) {
+  const res = await p.connect(); const pk = p.publicKey || res?.publicKey;
+  if (!pk) throw new Error("wallet did not return a public key");
+  provider = p; wallet = pk.toString(); $("modal").classList.remove("on"); showStep(2);
+}
+function openModal() {
+  const list = detectWallets();
+  $("wallets").innerHTML = list.length ? list.map((p, i) => `<button class="key w" data-i="${i}"><img src="${p.icon}" alt="" onerror="this.style.display='none'">${p.name}</button>`).join("") : `<p class="muted">No Solana wallet detected.</p>`;
+  $("wallets").querySelectorAll("button").forEach((b) => b.addEventListener("click", async () => { try { await connectWith(list[Number(b.dataset.i)].provider); } catch (e) { showErr(e.message || String(e)); } }));
+  $("modal").classList.add("on");
+}
+$("connect").addEventListener("click", openModal); $("modalClose").addEventListener("click", () => $("modal").classList.remove("on"));
+// logo
+$("logoDrop").addEventListener("click", () => $("logo").click());
+$("logo").addEventListener("change", async () => {
+  const f = $("logo").files[0]; if (!f) return;
+  if (f.size > 3 * 1024 * 1024) return showErr("logo over 3MB");
+  const data = await new Promise((res) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.readAsDataURL(f); });
+  try { const r = await fetch("/api/upload", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ data, mime: f.type }) }); const j = await r.json(); if (!r.ok) throw new Error(j.error); logoId = j.id; $("logoPrev").src = j.url; $("logoPrev").hidden = false; showErr(""); }
+  catch (e) { showErr("upload failed: " + e.message); }
+});
+// dev buy
+$("devchips").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { devBuy = Number(b.dataset.v); $("devbuy").value = devBuy || ""; $("devchips").querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); summary(); }));
+$("devbuy").addEventListener("input", () => { devBuy = Math.max(0, Number($("devbuy").value) || 0); $("devchips").querySelectorAll("button").forEach((x) => x.classList.toggle("on", Number(x.dataset.v) === devBuy)); summary(); });
+// submit
+$("go").addEventListener("click", async () => {
+  showErr("");
+  const body = { name: $("name").value.trim(), symbol: $("symbol").value.trim().toUpperCase(), description: $("desc").value.trim(), twitter: $("twitter").value.trim(), telegram: $("telegram").value.trim(), devBuySol: devBuy, userWallet: wallet, imageId: logoId, parent: growParent };
+  if (!body.name) return showErr("give it a name"); if (!body.symbol) return showErr("give it a ticker"); if (!logoId) return showErr("every coin needs a logo"); if (!growParent) return showErr("pick a parent");
+  try {
+    const r = await fetch("/api/grow", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    const j = await r.json(); if (!r.ok) throw new Error(j.error || "launch refused");
+    launchId = j.launchId; deposit = j;
+    $("payMsg").innerHTML = `Send <b>${j.expectedSol} SOL</b> to the coin's fresh wallet: ${j.gasSol} SOL covers the create, the fees and the wallet's permanent gas reserve${j.devBuySol ? `, ${j.devBuySol} SOL is your dev buy` : ""}. $${esc(j.parent)} → <b>$${esc(body.symbol)}</b> at depth ${j.depth}. The launch fires as soon as it lands.`;
+    $("payAmt").textContent = j.expectedSol; $("mAmt").textContent = j.expectedSol; $("mAddr").textContent = j.depositAddress; $("mMin").textContent = j.timeoutMin;
+    showStep(4);
+  } catch (e) { showErr(e.message); }
+});
+$("payManual").addEventListener("click", () => { $("manual").hidden = false; waitForLaunch(); });
+$("pay").addEventListener("click", async () => {
+  try {
+    const w3 = window.solanaWeb3 || await new Promise((res, rej) => { window.addEventListener("w3ready", () => res(window.solanaWeb3), { once: true }); setTimeout(() => rej(new Error("wallet library still loading — try again")), 15000); });
+    const bal = await (await fetch(`/api/balance/${wallet}`)).json();
+    if (bal.sol < deposit.expectedSol + 0.001) throw new Error(`your wallet has ${bal.sol.toFixed(4)} SOL — needs ${deposit.expectedSol} + fees`);
+    const { blockhash } = await (await fetch("/api/blockhash")).json();
+    const txn = new w3.Transaction({ recentBlockhash: blockhash, feePayer: new w3.PublicKey(wallet) }).add(w3.SystemProgram.transfer({ fromPubkey: new w3.PublicKey(wallet), toPubkey: new w3.PublicKey(deposit.depositAddress), lamports: Math.round(deposit.expectedSol * 1e9) }));
+    if (provider.signAndSendTransaction) await provider.signAndSendTransaction(txn);
+    else { const signed = await provider.signTransaction(txn); const conn = new w3.Connection("https://api.mainnet-beta.solana.com", "confirmed"); await conn.sendRawTransaction(signed.serialize()); }
+    waitForLaunch();
+  } catch (e) { showErr(e.message || String(e)); }
+});
+async function waitForLaunch() {
+  showStep(5); $("g-wait").hidden = false; $("g-live").hidden = true;
+  for (;;) {
+    await new Promise((r) => setTimeout(r, 4000));
+    try {
+      const j = await (await fetch(`/api/grow/${launchId}`)).json();
+      $("waitMsg").textContent = j.status === "awaiting_deposit" ? "watching the deposit wallet…" : j.status === "launching" ? "SOL landed — creating the coin on pump.fun and routing the dev buy up the tree…" : j.status;
+      if (j.status === "live" && j.mint) { $("g-wait").hidden = true; $("g-live").hidden = false; setTimeout(() => { location.hash = "#c/" + j.mint; }, 1500); return; }
+      if (["failed", "expired", "refunded"].includes(j.status)) { showErr(`launch ${j.status}: ${j.error || "the deposit window closed"}${j.refundTx ? " · refunded ↗ " + j.refundTx : ""}`); return; }
+    } catch {}
+  }
+}
+
+// ------------------------------------------------------------- docs
+function renderDocs() {
+  const R = T ? T.rules : { taxBps: 100, intervalSec: 600, split: { selfBps: 5000, downBps: 5000, opsBps: 0 }, minSapUsd: 0.25 };
+  const md = T && T.maxDepth ? T.maxDepth : 2, root = T && T.root ? "$" + T.root.symbol : "$ROOT";
+  const S = [
+    ["what-root-is", "What ROOT is", `<p><b>ROOT</b> is a launchpad on pump.fun where every coin is paired with another coin on the tree instead of SOL. <b>${root}</b> is the trunk: a standard pump.fun coin paired with SOL, depth 0. A coin paired with ${root} is a <b>branch</b> (depth 1). A coin paired with a branch is a <b>twig</b> (depth 2). pump.fun enabled depth 1 last week and depth 2 on October 13; the program allows up to 5, and this tree follows pump.fun's gate (right now: depth ≤ ${md}).</p>
+      <p>Why does this matter? Because a coin high on the tree is bought <i>through</i> every coin below it. Buying a twig from SOL is one <b>multi-hop swap</b>: SOL → ${root} → the branch → the twig. Every buy up the tree is a buy of every coin under it. The whole branch moves together.</p>`],
+    ["the-tax", "The tax", `<p>Every coin grown here is born with a creator fee of <b>${R.taxBps / 100}%</b> on every trade, on top of pump.fun's own fee, and it is paid in the <b>coin it grows on</b>: a branch's tax is paid in ${root}, a twig's tax is paid in its branch. The coin's creator is its own engine wallet, so the launchpad is the one that claims it. The rate is fixed at creation and cannot be changed (pump.fun's own rule).</p>
+      <p>${root} itself has pump.fun's standard creator fee, in SOL.</p>`],
+    ["the-sap-run", "The sap run", `<p>One clock for the whole tree. Every <b>${ivTxt(R.intervalSec)}</b>, for every coin:</p>
+      <table><tr><th>Step</th><th>What happens</th></tr>
+      <tr><td>1 claim</td><td>sweep the fees v3 trades left on the curve, then collect <b>100%</b> of the creator vault (and the PumpSwap vault after graduation). A branch collects ${root}; a twig collects its branch; the trunk collects SOL.</td></tr>
+      <tr><td>2 self · ${R.split.selfBps / 100}%</td><td>one buy of the coin itself, on its curve or its pool, paid in its quote — then every token that buy brought in is <b>burned</b>.</td></tr>
+      <tr><td>3 down · ${R.split.downBps / 100}%</td><td>the parent coin is <b>burned</b> on the spot: sap flows down. The trunk has no parent, so for ${root} this half buys ${root} back and burns it too.</td></tr>
+      ${R.split.opsBps ? `<tr><td>4 ops · ${R.split.opsBps / 100}%</td><td>to the ops wallet, in the coin's quote.</td></tr>` : ""}</table>
+      <p>A pot worth less than <b>$${R.minSapUsd}</b> waits in the coin's wallet for the next run. A failed step is retried next run — the sap is still there. Nothing is ever sold. Every run is a row in the ledger with every transaction.</p>`],
+    ["sap-flows-down", "Sap flows down", `<p>Follow one twig. Its holders trade. ${R.taxBps / 100}% of every trade lands as its branch's token. Half of that buys the twig back and burns it; the other half burns the branch. The branch's own traders do the same to it and to ${root}. ${root}'s own fees buy ${root} back and burn it. Everything that grows on the tree ends up burning the coins beneath it, all the way down to the trunk.</p>
+      <p>So the more that is built on a coin, the scarcer that coin gets. Hold low on the tree and everything above you works for you. Grow high on the tree and you ride every coin below you.</p>`],
+    ["growing", "Growing a coin", `<p>Connect a wallet, pick a parent (any coin on the tree whose children would still be within pump.fun's depth gate), name your coin, drop a logo and send SOL to a fresh wallet the launchpad creates for it. That SOL covers the create, the fees, the wallet's permanent gas reserve and, if you want one, a dev buy.</p>
+      <p>The launchpad resolves the parent as a <b>pump-coin quote</b>: pump.fun's SDK walks the parent's whole chain down to ${root} and returns the extra accounts <span class="muted">create_v2</span> needs (the parent's curve or pool, then one group per coin below it). The coin is created paired with the parent, carrying the tax. The dev buy is one multi-hop swap from SOL up the chain into your new coin, and the tokens are sent to your wallet.</p>
+      <p>A new coin's starting price is not a fixed number: pump.fun computes it from the live reserves of every coin on the chain so that your coin raises about as much as a normal SOL launch, counted in its parent.</p>
+      <p>If the launch fails for any reason the SOL goes back to your wallet. If the dev buy fails after the create, that SOL goes back too.</p>`],
+    ["rings", "The rings", `<p>The tree on the front page grows with the sap burned (USD) and with the coins on it: ${LEVEL_NAMES.map((n, i) => `${n} at ${usd((T ? T.levels : [0, 50, 250, 1000, 5000, 25000, 100000, 500000])[i])} or ${(T ? T.levelsCoins : [0, 1, 3, 6, 12, 25, 50, 100])[i]} coins`).join(" · ")}. Every branch is a real coin, with its logo as the fruit; twigs grow on branches. Sap drops run down the limbs when a coin's run fires; SOL sinks into the soil when the trunk drinks.</p>`],
+    ["prices", "Prices", `<p>Nested coins are on no candle API, so the page reads prices from the chain: a coin's price in its quote comes from its curve's virtual reserves (or its pool's vaults after graduation), and its USD price is that times the quote's USD price, up the chain to SOL. The charts are the engine's own samples.</p>`],
+    ["what-the-engine-can-and-cannot-do", "What the engine can and cannot do", `<table><tr><th>Can</th><td>create coins paired with coins on the tree; claim their tax; buy them back and burn them; burn the parent coin; pause itself (kill switch: the page stays up, nothing moves); change the clock, the split and the thresholds for future runs.</td></tr>
+      <tr><th>Cannot</th><td>sell anything; change a coin's tax after creation; mint tokens; freeze or block a holder; change pump.fun's fee; grow deeper than pump.fun allows.</td></tr></table>
+      <p>This is an off-chain engine over plain pump.fun coins, not a program: the promise is in the code and in the transaction history, and the history is public. Read it before you trust it.</p>`],
+    ["risks-plainly", "Risks, plainly", `<ul><li>These are memecoins. A coin's sap is fed only by its trading: no volume, no sap, no burn.</li>
+      <li>A coin high on the tree is priced through every coin below it. If a branch dies, its twigs die with it.</li>
+      <li>Every grown coin's creator wallet lives on the engine's server (keys encrypted at rest). If the server stops, fees wait in the vaults until it runs again — nobody else can take them.</li>
+      <li>pump.fun's depth gate, the SDK, Solana's RPCs are outside dependencies; a run can fail and be retried.</li>
+      <li>Burns reduce supply, not your bags. Nothing here is financial advice. The tree does not care about your bags.</li></ul>`],
+  ];
+  $("docIndex").innerHTML = S.map(([id, t]) => `<a href="#docs" onclick="setTimeout(()=>document.getElementById('doc-${id}').scrollIntoView({behavior:'smooth'}),30)">${t}</a>`).join("");
+  $("docBody").innerHTML = S.map(([id, t, body]) => `<h4 id="doc-${id}">${t}</h4>${body}`).join("");
+}
+
+// ------------------------------------------------------------- boot
+(async function boot() {
+  await load(); route();
+  loadRuns(); loadChart(); renderDocs();
+  setInterval(load, 6_000);
+  setInterval(loadRuns, 12_000);
+  setInterval(loadChart, 60_000);
+})();
+</script>
+</body>
+</html>
