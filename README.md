@@ -77,3 +77,18 @@ to the page. Set `SITE_URL` / `PUBLIC_API_URL` accordingly.
 - A parent whose chain has a coin with a complete curve but no pool yet is refused by pump.fun
   (`QuoteCurveAwaitingMigration`); the grow form checks the chain before taking a deposit.
 - Nested coins are on no candle API: prices come from the chain, charts from the engine's own samples.
+
+## Deploy, step by step
+
+**Railway (the engine + API)**
+1. New project → Deploy from GitHub repo → this repo. Add the **Postgres** plugin (it sets `DATABASE_URL`).
+2. Service → Settings → *Root Directory* = `root` (the `Dockerfile` and `railway.toml` are there).
+3. Variables: `ROOT_MINT`, `ROOT_WALLET_PRIVATE_KEY`, `MASTER_KEY` (`openssl rand -hex 32`), `RPC_URL` (an
+   indexed RPC — Helius / Chainstack), `SITE_URL` (the Vercel URL), `PUBLIC_API_URL` (the Railway URL),
+   `BRAND_TWITTER`, `ADMIN_KEY`. Leave `ROOT_MINT` empty until `$ROOT` is planted.
+4. Fund the trunk wallet with ~0.05 SOL of gas. `/api/health` must answer `ok: true`.
+
+**Vercel (the page)**
+1. New project → same repo → *Root Directory* = `root/backend/public`, framework "Other", no build command.
+2. Edit `backend/public/vercel.json`: replace `REPLACE-WITH-RAILWAY-URL` with the Railway service URL.
+3. Deploy. The page calls `/api/*` on its own origin; Vercel proxies it to Railway.
