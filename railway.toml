@@ -1,4 +1,4 @@
-# Railway: point the service's Root Directory at `root/` (this folder) and it picks this up.
+# Railway: Dockerfile and this file live at the repo root — leave the service Root Directory empty.
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"

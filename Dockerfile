@@ -1,4 +1,4 @@
-# Railway: set the service's root directory to `root/` (or build the repo root with this file) — the image runs the engine + page.
+# Railway: Dockerfile at the repo root (Root Directory empty) — the image runs the engine + page.
 FROM node:22-alpine
 WORKDIR /app
 COPY backend/package.json backend/package-lock.json* ./
