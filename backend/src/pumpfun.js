@@ -322,9 +322,13 @@ export async function estimateCurveBuy(mint, quoteAmountRaw) {
 export async function pumpswapBuy({ wallet, mint, quote = SOL_QUOTE, quoteAmountRaw, slippagePct = config.rules.slippagePct }) {
   const poolPk = canonicalPumpPoolPdaWithQuote(pk(mint), quote.isSol ? NATIVE_MINT : pk(quote.mint));
   const state = await amm.swapSolanaState(poolPk, wallet.publicKey);
-  const instructions = await PUMP_AMM_SDK.buyQuoteInput(state, bn(quoteAmountRaw), slippagePct);
+  // `quoteAmountRaw` is the whole budget. buyQuoteInput moves quote × (1 + slippage) up front (for SOL it wraps
+  // that much into WSOL, then refunds the unused part), so a budget equal to the wallet balance fails the
+  // simulation with "insufficient lamports … need quote × 1.05". Spend the budget / (1 + slippage) instead.
+  const quoteIn = (BigInt(quoteAmountRaw) * 10_000n) / BigInt(10_000 + Math.round(slippagePct * 100));
+  const instructions = await PUMP_AMM_SDK.buyQuoteInput(state, bn(quoteIn), slippagePct);
   const sig = await sendTx({ instructions, payer: wallet.publicKey, signers: [wallet], computeUnits: 400_000 });
-  return { sig, pool: poolPk.toBase58(), venue: "pumpswap" };
+  return { sig, pool: poolPk.toBase58(), venue: "pumpswap", quoteInRaw: quoteIn };
 }
 /// Curve while it trades, the pool after graduation.
 export async function buyAny({ wallet, mint, quote, quoteAmountRaw, programId, graduated }) {

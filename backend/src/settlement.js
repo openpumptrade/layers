@@ -151,7 +151,7 @@ async function runCoin(c, summary) {
       const before = await tokenBalanceRaw(me, c.mint, programId);
       try {
         const r = await buyAny({ wallet, mint: c.mint, quote, quoteAmountRaw: toRaw(selfQuote, quote.decimals), programId, graduated: c.graduated });
-        txs.buy = r.sig; patch.venue = r.venue; patch.self = selfQuote;
+        txs.buy = r.sig; patch.venue = r.venue; patch.self = r.quoteInRaw ? fromRaw(r.quoteInRaw, quote.decimals) : selfQuote; // pumpswap spends budget / (1 + slippage); the rest waits for the next settlement
         const after = await tokenBalanceRawSettled(me, c.mint, programId, before);
         const delta = after > before ? after - before : 0n;
         if (delta > 0n) { const b = await burnTokens({ wallet, mint: c.mint, programId, amountRaw: delta }); txs.burn = b.sig; patch.selfBurned = fromRaw(delta, DECIMALS); }
