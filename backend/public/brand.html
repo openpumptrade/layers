@@ -24,16 +24,16 @@ async function render() {
   glyph(c, 70, 70, 3);
   c.fillStyle = "#e6e8ef"; c.font = "700 150px 'Space Grotesk', sans-serif"; c.textBaseline = "top"; c.textAlign = "left"; c.fillText("LAYERS", 60, 130);
   c.font = "400 30px 'JetBrains Mono', monospace"; c.fillStyle = "#e6e8ef"; c.fillText("launch your L2 on a memecoin.", 70, 320);
-  c.fillStyle = "#7b8294"; c.font = "400 22px 'JetBrains Mono', monospace"; c.fillText("pump.fun coins paired with pump.fun coins, nested.", 70, 372); c.fillText("every settlement burns the coin and the layer below it.", 70, 404); c.fillText("everything settles to $L1.", 70, 436);
+  c.fillStyle = "#7b8294"; c.font = "400 22px 'JetBrains Mono', monospace"; c.fillText("pump.fun coins paired with pump.fun coins, nested.", 70, 372); c.fillText("every settlement burns the coin + the layer below.", 70, 404); c.fillText("everything settles to $L1.", 70, 436);
   // a small stack diagram, bottom right
-  const bx = 760, by = 300, w = 380;
+  const bx = 830, by = 310, w = 330;
   const block = (x, y, bw, h, col, label) => { c.fillStyle = "#0f1218"; c.fillRect(x, y, bw, h); c.strokeStyle = col; c.strokeRect(x + 0.5, y + 0.5, bw - 1, h - 1); c.fillStyle = col; c.fillRect(x, y, bw, 3); if (label) { c.fillStyle = "#e6e8ef"; c.font = "600 16px 'JetBrains Mono', monospace"; c.textBaseline = "middle"; c.fillText(label, x + 12, y + h / 2); } };
   block(bx, by + 200, w, 56, "#e6e8ef", "$L1");
-  for (const [i, l] of [["$L2", 0, 150], ["$L2", 165, 100], ["$L2", 280, 100]].entries()) block(bx + l[1], by + 110, l[2], 48, "#7cff6b", l[0]);
+  for (const [i, l] of [["$L2", 0, 130], ["$L2", 145, 90], ["$L2", 250, 80]].entries()) block(bx + l[1], by + 110, l[2], 48, "#7cff6b", l[0]);
   block(bx + 10, by + 30, 70, 40, "#ffb020", "$L3"); block(bx + 90, by + 30, 50, 40, "#ffb020", ""); block(bx + 175, by + 30, 80, 40, "#ffb020", "$L3");
-  c.strokeStyle = "#272d3a"; for (const x of [bx + 75, bx + 215, bx + 330]) { c.beginPath(); c.moveTo(x, by + 158); c.lineTo(x, by + 200); c.stroke(); }
+  c.strokeStyle = "#272d3a"; for (const x of [bx + 65, bx + 190, bx + 290]) { c.beginPath(); c.moveTo(x, by + 158); c.lineTo(x, by + 200); c.stroke(); }
   for (const x of [bx + 45, bx + 115, bx + 215]) { c.beginPath(); c.moveTo(x, by + 70); c.lineTo(x, by + 110); c.stroke(); c.fillStyle = "#ffb020"; c.fillRect(x - 1, by + 80, 2, 8); }
-  c.fillStyle = "#7cff6b"; c.fillRect(bx + 74, by + 170, 2, 8); c.fillRect(bx + 329, by + 180, 2, 8);
+  c.fillStyle = "#7cff6b"; c.fillRect(bx + 64, by + 170, 2, 8); c.fillRect(bx + 289, by + 180, 2, 8);
   c.fillStyle = "#4a5160"; c.font = "400 14px 'JetBrains Mono', monospace"; c.textBaseline = "top"; c.fillText("SOL", bx, by + 270); c.textAlign = "right"; c.fillText("stack explorer · pump.fun · solana", bx + w, by + 270);
   c.fillStyle = "#7cff6b"; c.fillRect(0, 0, 1200, 4);
   window.__done = true;
