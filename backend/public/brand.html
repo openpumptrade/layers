@@ -24,7 +24,7 @@ async function render() {
   glyph(c, 70, 70, 3);
   c.fillStyle = "#e6e8ef"; c.font = "700 150px 'Space Grotesk', sans-serif"; c.textBaseline = "top"; c.textAlign = "left"; c.fillText("LAYERS", 60, 130);
   c.font = "400 30px 'JetBrains Mono', monospace"; c.fillStyle = "#e6e8ef"; c.fillText("stack coins on coins.", 70, 320);
-  c.fillStyle = "#7b8294"; c.font = "400 22px 'JetBrains Mono', monospace"; c.fillText("launch a layer on a memecoin: an L2, an L3, as high as pump.fun allows.", 70, 372); c.fillText("every settlement burns the coin + the layer below.", 70, 404); c.fillText("everything settles to $L1.", 70, 436);
+  c.fillStyle = "#7b8294"; c.font = "400 22px 'JetBrains Mono', monospace"; c.fillText("launch a layer on a memecoin. L2, L3, higher.", 70, 372); c.fillText("every settlement burns the coin + the layer below.", 70, 404); c.fillText("everything settles to $L1.", 70, 436);
   // a small stack diagram, bottom right
   const bx = 830, by = 310, w = 330;
   const block = (x, y, bw, h, col, label) => { c.fillStyle = "#0f1218"; c.fillRect(x, y, bw, h); c.strokeStyle = col; c.strokeRect(x + 0.5, y + 0.5, bw - 1, h - 1); c.fillStyle = col; c.fillRect(x, y, bw, 3); if (label) { c.fillStyle = "#e6e8ef"; c.font = "600 16px 'JetBrains Mono', monospace"; c.textBaseline = "middle"; c.fillText(label, x + 12, y + h / 2); } };
