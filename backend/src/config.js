@@ -50,6 +50,8 @@ export const config = {
 
   // the base layer
   l1Mint: (process.env.L1_MINT || "").trim(),
+  // the CA announced before genesis (a pre-generated mint): shown on the page while L1_MINT is still empty
+  l1MintAnnounced: (process.env.L1_MINT_ANNOUNCED || "").trim(),
   l1Wallet: parseKeypair(process.env.L1_WALLET_PRIVATE_KEY),
 
   // custody of the launched layers

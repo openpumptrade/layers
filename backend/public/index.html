@@ -494,8 +494,10 @@ function render() {
   $("mkFees").textContent = usd(T.stack.burnedUsd);
   $("mkCoins").textContent = fmt(T.stack.coins);
   if (!T.started || !l1) {
-    $("ca").textContent = "genesis pending"; $("footMode").textContent = "genesis pending"; $("mkStatus").textContent = "genesis pending"; $("hudStatus").textContent = "genesis"; $("hudStatus").className = "chip"; $("sceneCap").textContent = "$L1 has not been deployed yet"; $("runCd").textContent = "--:--"; $("liveTxt").textContent = "genesis pending"; $("liveDot").className = "dot off";
-    $("ticker").innerHTML = Array(2).fill(`<span>genesis pending</span><span>stack coins on coins</span><span>an L2 on $L1 · an L3 on an L2 · as high as pump.fun allows</span><span>pump.fun depth gate <b>${T.maxDepth ? layerName(T.maxDepth) : "—"}</b></span><span>fee <b>${R.taxBps / 100}%</b> paid in the layer below</span><span>settlement every <b>${ivTxt(R.intervalSec)}</b></span><span>nothing is ever sold</span>`).join("");
+    const ann = T.announced || "";
+    $("ca").textContent = ann || "genesis pending"; $("footMode").textContent = "genesis pending"; $("mkStatus").textContent = ann ? "CA announced · genesis pending" : "genesis pending"; $("hudStatus").textContent = "genesis"; $("hudStatus").className = "chip" + (ann ? " warn" : ""); $("sceneCap").textContent = ann ? "$L1 CA announced · not launched yet" : "$L1 has not been deployed yet"; $("runCd").textContent = "--:--"; $("liveTxt").textContent = ann ? "genesis pending · CA announced" : "genesis pending"; $("liveDot").className = "dot" + (ann ? " warn" : " off");
+    if (ann) { const buy = `https://pump.fun/coin/${ann}`; $("buyKey").href = buy; $("buyKey2").href = buy; }
+    $("ticker").innerHTML = Array(2).fill(`<span>genesis pending</span>${ann ? `<span>$L1 CA <b>${esc(ann)}</b></span>` : ""}<span>stack coins on coins</span><span>an L2 on $L1 · an L3 on an L2 · as high as pump.fun allows</span><span>pump.fun depth gate <b>${T.maxDepth ? layerName(T.maxDepth) : "—"}</b></span><span>fee <b>${R.taxBps / 100}%</b> paid in the layer below</span><span>settlement every <b>${ivTxt(R.intervalSec)}</b></span><span>nothing is ever sold</span>`).join("");
     return;
   }
   $("ca").textContent = l1.mint;
@@ -529,7 +531,7 @@ setInterval(() => {
   const now = T.now + (Date.now() - T._at) / 1000, f = T.settlement.nextAt - now;
   $("runCd").textContent = f > 0 ? hms(f) : "settling"; $("runCd").style.color = f <= 0 ? "var(--amber)" : "";
 }, 500);
-$("copyKey").addEventListener("click", () => { if (T && T.l1) copy(T.l1.mint, "CA copied"); });
+$("copyKey").addEventListener("click", () => { const m = T && (T.l1 ? T.l1.mint : T.announced); if (m) copy(m, "CA copied"); });
 
 // ------------------------------------------------------------- charts
 document.querySelectorAll("#rangeKeys button").forEach((b) => b.addEventListener("click", () => { range = b.dataset.r; setOn("#rangeKeys button", (x) => x === b); loadChart(); }));

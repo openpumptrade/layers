@@ -60,7 +60,7 @@ export function startApi(started) {
       mode: mode(), dryRun: config.dryRun, schedulerEnabled: config.schedulerEnabled,
       solUsd: market.solUsd, maxCurveDepth: market.maxCurveDepth, maxDepth: market.maxDepthAllowed, taxGate: market.taxGate,
       settlement: { nextAt: settlement.nextCycleAt, genesis: settlement.genesis, cycle: settlement.cycle, firing: settlement.firing, lastRunAt: settlement.lastRunAt, last: settlement.lastSummary },
-      l1: l1 ? coinJson(l1) : null,
+      l1: l1 ? coinJson(l1) : null, announced: config.l1MintAnnounced,
       stack: stackStats(), levels: LEVELS, levelsCoins: LEVELS_COINS, levelNames: LEVEL_NAMES,
       launch: { gasSol: config.launchGasSol, maxDevBuySol: config.maxDevBuySol, timeoutMin: config.depositTimeoutMin, taxBps: config.creatorTaxBps },
       now: now(),
