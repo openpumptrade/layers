@@ -3,7 +3,7 @@
     { "source": "/api/(.*)", "destination": "https://root-production-4161.up.railway.app/api/$1" },
     { "source": "/l/(.*)", "destination": "https://root-production-4161.up.railway.app/l/$1" },
     { "source": "/c/(.*)", "destination": "/index.html" },
-    { "source": "/(grow|coins|sap|docs)", "destination": "/index.html" }
+    { "source": "/(launch|coins|settlement|docs)", "destination": "/index.html" }
   ],
   "headers": [
     { "source": "/(.*)", "headers": [{ "key": "cache-control", "value": "no-store" }] }

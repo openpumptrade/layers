@@ -10,7 +10,7 @@ export const sql = postgres(config.databaseUrl, { max: 8, idle_timeout: 30, ssl,
 export async function ensureSchema() {
   await sql`create table if not exists meta (key text primary key, value text not null)`;
 
-  // one row per coin on the tree: the launch (custodial wallet, deposit, pump.fun txs), its place in the tree and live stats
+  // one row per coin on the stack: the launch (custodial wallet, deposit, pump.fun txs), its place in the stack and live stats
   await sql`create table if not exists coins (
     launch_id text primary key,
     mint text unique,
@@ -28,11 +28,11 @@ export async function ensureSchema() {
     website text not null default '',
     twitter text not null default '',
     telegram text not null default '',
-    -- the tree
-    parent_mint text not null default '',               -- '' for the trunk (quoted in SOL)
+    -- the stack
+    parent_mint text not null default '',               -- '' for $L1 (quoted in SOL)
     depth int not null default 0,
-    chain text not null default '[]',                   -- json: mints from the trunk up to the parent
-    quote_mint text not null default '',                -- what the coin trades in (WSOL for the trunk)
+    chain text not null default '[]',                   -- json: mints from $L1 up to the parent
+    quote_mint text not null default '',                -- what the coin trades in (WSOL for $L1)
     quote_decimals int not null default 6,
     quote_token_program text not null default '',
     -- the launch
@@ -79,7 +79,7 @@ export async function ensureSchema() {
   await sql`create index if not exists coins_parent on coins (parent_mint)`;
   await sql`create index if not exists coins_user on coins (user_wallet)`;
 
-  // the sap runs: one row per coin per cycle — sweep + claim → self buy + burn → parent burn → ops
+  // the settlements: one row per coin per cycle — sweep + claim → self buy + burn → parent burn → ops
   await sql`create table if not exists runs (
     id serial primary key, mint text not null, cycle int not null, ts int not null,
     status text not null default 'claiming',
@@ -119,7 +119,7 @@ let lockSql = null;
 export async function acquireEngineLock() {
   lockSql = postgres(config.databaseUrl, { max: 1, idle_timeout: 0, max_lifetime: null, ssl, onnotice: () => {} });
   for (;;) {
-    const [{ ok }] = await lockSql`select pg_try_advisory_lock(hashtext('root-engine')) as ok`;
+    const [{ ok }] = await lockSql`select pg_try_advisory_lock(hashtext('layers-engine')) as ok`;
     if (ok) return true;
     console.warn("[db] another engine holds the lock — waiting");
     await new Promise((r) => setTimeout(r, 5_000));

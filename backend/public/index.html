@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ROOT · a launchpad where every coin grows on another coin</title>
-<meta name="description" content="ROOT is a launchpad on pump.fun. $ROOT is the trunk, paired with SOL. Every coin grown here is paired with a coin already on the tree — depth 1, depth 2 — and pays a tax in the coin it grows on. Every run: half buys the coin back and burns it, half burns the coin below. Sap flows down.">
-<meta property="og:title" content="ROOT · a launchpad where every coin grows on another coin">
-<meta property="og:description" content="pump.fun coins paired with pump.fun coins. Every buy up the tree buys every coin below it. Every run burns the coin and the coin it stands on. Sap flows down to $ROOT.">
+<title>LAYERS · launch your L2 on a memecoin</title>
+<meta name="description" content="LAYERS is a launchpad on pump.fun. $L1 is the base layer, paired with SOL. Every coin launched here is paired with a coin already on the stack — an L2 on $L1, an L3 on an L2 — and pays its fee in the layer it runs on. Every settlement: half buys the coin back and burns it, half burns the layer below. Everything settles to $L1.">
+<meta property="og:title" content="LAYERS · launch your L2 on a memecoin">
+<meta property="og:description" content="pump.fun coins paired with pump.fun coins, nested. Every buy of an L3 buys its L2 and $L1 first. Every settlement burns the coin and the layer it runs on. Everything settles to $L1.">
 <link rel="icon" href="/icon.png" type="image/png">
 <link rel="apple-touch-icon" href="/icon.png">
 <meta property="og:image" content="/og.png">
@@ -21,14 +21,14 @@
 </script>
 <style>
   :root {
-    --bg: #12231a; --bg2: #172d21; --deep: #0a1510;
-    --cream: #fff6d6; --cream2: #f4e8c1; --well: #fbf2d8; --ink: #2a2823; --muted: #6f6551; --line: #d9cb9f;
-    --gold: #f7c948; --gold2: #d9a521; --red: #e5473f; --red2: #b8322b; --green: #7ccf6a; --green2: #4f9e40; --blue: #62a8ea; --blue2: #3b7fc4; --purple: #b58cf0; --purple2: #8a5fd1; --bark: #9a6b3c; --bark2: #5e3f22; --leaf: #63c15a;
+    --bg: #0b1020; --bg2: #111a33; --deep: #060a16;
+    --cream: #f3f6ff; --cream2: #dfe6f7; --well: #eef2fb; --ink: #1c2240; --muted: #5a6486; --line: #c3cde6;
+    --gold: #f7c948; --gold2: #d9a521; --red: #ff5c5c; --red2: #b8322b; --green: #3ddc6a; --green2: #1f8f44; --blue: #62a8ea; --blue2: #3b7fc4; --purple: #b58cf0; --purple2: #8a5fd1; --l1: #2bb8d6; --l1dark: #1a7a90; --accent: #5ef2ff;
     --pix: "Pixelify Sans", "Silkscreen", monospace; --key: "Silkscreen", "Pixelify Sans", monospace; --num: "VT323", monospace;
   }
   * { box-sizing: border-box; }
   html { background: var(--bg); }
-  body { margin: 0; color: var(--ink); font-family: var(--pix); font-size: 17px; line-height: 1.35; background-color: var(--bg); background-image: repeating-conic-gradient(var(--bg2) 0 25%, transparent 0 50%); background-size: 16px 16px; image-rendering: pixelated; -webkit-font-smoothing: none; }
+  body { margin: 0; color: var(--ink); font-family: var(--pix); font-size: 17px; line-height: 1.35; background-color: var(--bg); background-image: linear-gradient(var(--bg2) 1px, transparent 1px), linear-gradient(90deg, var(--bg2) 1px, transparent 1px); background-size: 32px 32px; image-rendering: pixelated; -webkit-font-smoothing: none; }
   a { color: inherit; text-decoration: none; }
   button, input, textarea, select { font: inherit; }
   canvas, img { image-rendering: pixelated; image-rendering: crisp-edges; }
@@ -38,14 +38,14 @@
   .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px 0 14px; flex-wrap: wrap; }
   .wordmark { display: flex; align-items: center; gap: 12px; }
   .wordmark canvas { width: 72px; height: 72px; }
-  .wordmark h1 { margin: 0; font-family: var(--key); font-weight: 700; font-size: 52px; line-height: 1; letter-spacing: -1px; color: var(--leaf); text-shadow: 3px 0 var(--ink), -3px 0 var(--ink), 0 3px var(--ink), 0 -3px var(--ink), 3px 3px var(--ink), -3px -3px var(--ink), 3px -3px var(--ink), -3px 3px var(--ink), 7px 7px 0 var(--deep); }
+  .wordmark h1 { margin: 0; font-family: var(--key); font-weight: 700; font-size: 52px; line-height: 1; letter-spacing: -1px; color: var(--accent); text-shadow: 3px 0 var(--ink), -3px 0 var(--ink), 0 3px var(--ink), 0 -3px var(--ink), 3px 3px var(--ink), -3px -3px var(--ink), 3px -3px var(--ink), -3px 3px var(--ink), 7px 7px 0 var(--deep); }
   .wordmark small { display: block; font-family: var(--pix); font-size: 15px; color: var(--cream); margin-top: 8px; text-shadow: 2px 2px 0 var(--deep); }
   .keys { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
   .key { display: inline-flex; align-items: center; gap: 8px; font-family: var(--key); font-size: 12.5px; text-transform: uppercase; color: var(--ink); background: var(--cream); border: 3px solid var(--ink); padding: 8px 12px; cursor: pointer; white-space: nowrap; box-shadow: 3px 3px 0 var(--ink); user-select: none; line-height: 1; }
   .key.small { font-size: 11px; padding: 7px 10px; }
   .key:active, .key.down { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-  .key.on { background: var(--green); }
-  .key.yellow { background: var(--gold); } .key.red { background: var(--red); color: var(--cream); } .key.blue { background: var(--blue); } .key.green { background: var(--green); } .key.purple { background: var(--purple); } .key.bark { background: var(--bark); color: var(--cream); }
+  .key.on { background: var(--accent); }
+  .key.yellow { background: var(--gold); } .key.red { background: var(--red); color: var(--cream); } .key.blue { background: var(--blue); } .key.green { background: var(--green); } .key.purple { background: var(--purple); } .key.l1 { background: var(--l1); color: var(--ink); } .key.cyan { background: var(--accent); }
   .key[disabled] { opacity: .5; cursor: default; }
   .key svg, .tab svg, .chip svg, .kv svg, .lbl svg, .ico { width: 16px; height: 16px; vertical-align: -3px; flex: none; }
   .chip svg { width: 12px; height: 12px; vertical-align: -2px; margin-right: 3px; }
@@ -53,7 +53,7 @@
   .key .n { background: var(--ink); color: var(--cream); padding: 2px 5px; margin-left: -4px; }
   .levels { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
   .lv { text-align: center; border: 3px solid var(--line); padding: 6px 2px 4px; background: var(--well); }
-  .lv.on { border-color: var(--ink); background: var(--gold); box-shadow: 3px 3px 0 var(--ink); }
+  .lv.on { border-color: var(--ink); background: var(--accent); box-shadow: 3px 3px 0 var(--ink); }
   .lv.locked { opacity: .55; }
   .lv canvas { width: 64px; height: 56px; }
   .lv .n { font-family: var(--key); font-size: 9px; text-transform: uppercase; display: block; margin-top: 2px; }
@@ -67,7 +67,7 @@
   .card.tight::after { transform: translate(4px, 4px); }
   .card.dark { color: var(--cream); } .card.dark::before { background: var(--deep); }
   .tab { position: absolute; top: -18px; left: -4px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--key); font-size: 12px; text-transform: uppercase; background: var(--gold); border: 4px solid var(--ink); padding: 5px 12px 4px; line-height: 1; color: var(--ink); box-shadow: 3px 3px 0 var(--deep); }
-  .tab.red { background: var(--red); color: var(--cream); } .tab.green { background: var(--green); } .tab.blue { background: var(--blue); } .tab.purple { background: var(--purple); } .tab.cream { background: var(--cream2); } .tab.bark { background: var(--bark); color: var(--cream); }
+  .tab.red { background: var(--red); color: var(--cream); } .tab.green { background: var(--green); } .tab.blue { background: var(--blue); } .tab.purple { background: var(--purple); } .tab.cream { background: var(--cream2); } .tab.l1 { background: var(--l1); } .tab.cyan { background: var(--accent); }
   .card.has-tab { padding-top: 26px; }
   .card h3 { font-family: var(--key); font-size: 12px; text-transform: uppercase; margin: 0 0 8px; }
   .card p { margin: 6px 0; font-size: 16px; }
@@ -76,7 +76,7 @@
   .num { font-family: var(--num); font-size: 30px; line-height: 1; }
   .num.big { font-size: 46px; }
   .well { background: var(--well); border: 3px solid var(--ink); padding: 8px 10px; font-family: var(--num); font-size: 20px; line-height: 1.1; word-break: break-all; box-shadow: inset 3px 3px 0 var(--cream2); }
-  .well.inset { box-shadow: inset 3px 3px 0 #e9dcb0; }
+  .well.inset { box-shadow: inset 3px 3px 0 #d3dcf0; }
   input.well, textarea.well { width: 100%; outline: none; font-family: var(--pix); font-size: 16px; }
   input.well:focus, textarea.well:focus { border-color: var(--blue2); }
   textarea.well { resize: vertical; min-height: 70px; }
@@ -89,16 +89,16 @@
   .kv tr:last-child td { border-bottom: 0; }
   .bar { height: 14px; border: 3px solid var(--ink); background: var(--well); position: relative; }
   .bar > i { position: absolute; inset: 0; width: 0; background: var(--green); background-image: repeating-linear-gradient(90deg, transparent 0 6px, rgba(255,255,255,.25) 6px 8px); }
-  .bar.gold > i { background-color: var(--gold); } .bar.red > i { background-color: var(--red); }
+  .bar.cyan > i { background-color: var(--accent); } .bar.gold > i { background-color: var(--gold); } .bar.red > i { background-color: var(--red); }
   .chip { display: inline-block; font-family: var(--key); font-size: 10px; text-transform: uppercase; border: 2px solid var(--ink); padding: 3px 6px; background: var(--cream2); line-height: 1; }
-  .chip.green { background: var(--green); } .chip.red { background: var(--red); color: var(--cream); } .chip.gold { background: var(--gold); } .chip.blue { background: var(--blue); } .chip.purple { background: var(--purple); } .chip.bark { background: var(--bark); color: var(--cream); }
-  .chip.d0 { background: var(--bark); color: var(--cream); } .chip.d1 { background: var(--green); } .chip.d2 { background: var(--gold); } .chip.d3, .chip.d4, .chip.d5 { background: var(--purple); }
+  .chip.green { background: var(--green); } .chip.red { background: var(--red); color: var(--cream); } .chip.gold { background: var(--gold); } .chip.blue { background: var(--blue); } .chip.purple { background: var(--purple); } .chip.l1 { background: var(--l1); } .chip.cyan { background: var(--accent); }
+  .chip.d0 { background: var(--l1); } .chip.d1 { background: var(--green); } .chip.d2 { background: var(--gold); } .chip.d3, .chip.d4, .chip.d5 { background: var(--purple); }
   .txs a { font-family: var(--key); font-size: 10px; text-transform: uppercase; border-bottom: 2px solid var(--ink); margin-right: 10px; }
   .crumbs { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-family: var(--key); font-size: 11px; text-transform: uppercase; }
   .crumbs .arrow { color: var(--muted); }
   .crumbs a.c { display: inline-flex; align-items: center; gap: 5px; border: 2px solid var(--ink); background: var(--cream2); padding: 3px 6px; }
   .crumbs a.c img { width: 14px; height: 14px; border: 1px solid var(--ink); }
-  .crumbs a.c.me { background: var(--gold); }
+  .crumbs a.c.me { background: var(--accent); }
 
   /* layout */
   .grid { display: grid; grid-template-columns: 300px 1fr; gap: 22px; align-items: start; }
@@ -112,7 +112,7 @@
   .scene { background: var(--deep); border: 4px solid var(--ink); position: relative; overflow: hidden; }
   .scene canvas { display: block; width: 100%; height: auto; }
   .scene .hud { position: absolute; left: 10px; top: 8px; font-family: var(--key); font-size: 11px; color: var(--cream); text-transform: uppercase; text-shadow: 2px 2px 0 var(--deep); }
-  .scene .hud b { color: var(--gold); }
+  .scene .hud b { color: var(--accent); }
   .scene .hud2 { position: absolute; right: 10px; top: 8px; text-align: right; font-family: var(--key); font-size: 11px; color: var(--cream); text-transform: uppercase; text-shadow: 2px 2px 0 var(--deep); }
   .scene .cap { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; font-family: var(--pix); font-size: 15px; color: var(--cream); text-shadow: 2px 2px 0 var(--deep); padding: 0 10px; }
   .coinico { width: 44px; height: 44px; border: 3px solid var(--ink); background: var(--well); object-fit: cover; }
@@ -127,19 +127,19 @@
   .cc:hover::before { background: var(--well); }
   .parents { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-height: 320px; overflow: auto; padding: 4px; }
   .pp { border: 3px solid var(--line); background: var(--well); padding: 8px; cursor: pointer; display: flex; gap: 8px; align-items: center; }
-  .pp.on { border-color: var(--ink); background: var(--gold); box-shadow: 3px 3px 0 var(--ink); }
+  .pp.on { border-color: var(--ink); background: var(--accent); box-shadow: 3px 3px 0 var(--ink); }
   .pp img { width: 28px; height: 28px; border: 2px solid var(--ink); }
   .pp b { font-family: var(--key); font-size: 11px; text-transform: uppercase; display: block; }
   .pp small { font-family: var(--num); font-size: 15px; display: block; }
   .steps { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
-  .steps .chip { opacity: .5; } .steps .chip.on { opacity: 1; background: var(--gold); }
+  .steps .chip { opacity: .5; } .steps .chip.on { opacity: 1; background: var(--accent); }
   .chips button { font-family: var(--key); font-size: 10px; border: 2px solid var(--ink); background: var(--cream2); padding: 5px 8px; cursor: pointer; margin: 4px 4px 0 0; text-transform: uppercase; }
   .chips button.on { background: var(--green); }
   .drop { border: 3px dashed var(--ink); background: var(--well); padding: 10px; display: flex; gap: 10px; align-items: center; cursor: pointer; }
   .drop img { width: 56px; height: 56px; border: 3px solid var(--ink); object-fit: cover; }
   .err { display: none; background: var(--red); color: var(--cream); border: 3px solid var(--ink); padding: 8px 10px; font-size: 14px; margin-top: 10px; }
   .err.on { display: block; }
-  .modal { position: fixed; inset: 0; background: rgba(10,21,16,.8); display: none; place-items: center; z-index: 30; }
+  .modal { position: fixed; inset: 0; background: rgba(6,10,22,.82); display: none; place-items: center; z-index: 30; }
   .modal.on { display: grid; }
   .modal .box { background: var(--cream); border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--deep); padding: 18px; width: min(380px, 92vw); }
   .modal .w { display: flex; gap: 10px; align-items: center; width: 100%; margin: 6px 0; }
@@ -161,12 +161,12 @@
   .docs h4 { font-family: var(--key); font-size: 12px; text-transform: uppercase; margin: 22px 0 8px; padding-bottom: 6px; border-bottom: 4px solid var(--ink); }
   .docs h4:first-child { margin-top: 0; }
   .docs p, .docs li { font-size: 16px; }
-  .docs b { color: var(--green2); }
+  .docs b { color: var(--l1dark); }
   .docs table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 15px; }
   .docs th { font-family: var(--key); font-size: 10px; text-transform: uppercase; text-align: left; border-bottom: 3px solid var(--ink); padding: 4px 6px; }
   .docs td { border-bottom: 2px dotted var(--line); padding: 5px 6px; vertical-align: top; }
   .docs td:first-child { font-family: var(--key); font-size: 11px; text-transform: uppercase; white-space: nowrap; }
-  .index a { display: block; font-family: var(--key); font-size: 11px; text-transform: uppercase; color: var(--green2); padding: 6px 0; border-bottom: 2px dotted var(--line); }
+  .index a { display: block; font-family: var(--key); font-size: 11px; text-transform: uppercase; color: var(--l1dark); padding: 6px 0; border-bottom: 2px dotted var(--line); }
   .index a::before { content: "■ "; color: var(--ink); }
   .foot { text-align: center; color: var(--cream); font-size: 14px; padding: 36px 0 24px; text-shadow: 2px 2px 0 var(--deep); }
   .foot a { border-bottom: 2px solid var(--cream); }
@@ -178,71 +178,71 @@
 <body>
 <div class="wrap">
   <header class="top">
-    <a class="wordmark" href="#tree"><canvas id="logo" width="64" height="64"></canvas><div><h1>ROOT</h1><small>a launchpad where every coin grows on another coin</small></div></a>
+    <a class="wordmark" href="#stack"><canvas id="logo" width="64" height="64"></canvas><div><h1>LAYERS</h1><small>launch your L2 on a memecoin</small></div></a>
     <nav class="keys" id="nav">
-      <a class="key small" href="#tree" data-view="tree"><span class="n">1</span><span data-ico="tree"></span>TREE</a>
-      <a class="key small" href="#grow" data-view="grow"><span class="n">2</span><span data-ico="sprout"></span>GROW</a>
-      <a class="key small" href="#coins" data-view="coins"><span class="n">3</span><span data-ico="leaf"></span>COINS</a>
-      <a class="key small" href="#sap" data-view="sap"><span class="n">4</span><span data-ico="drop"></span>SAP</a>
+      <a class="key small" href="#stack" data-view="stack"><span class="n">1</span><span data-ico="layers"></span>STACK</a>
+      <a class="key small" href="#launch" data-view="launch"><span class="n">2</span><span data-ico="rollup"></span>LAUNCH</a>
+      <a class="key small" href="#coins" data-view="coins"><span class="n">3</span><span data-ico="cube"></span>LAYERS</a>
+      <a class="key small" href="#settlement" data-view="settlement"><span class="n">4</span><span data-ico="settle"></span>SETTLEMENT</a>
       <a class="key small" href="#docs" data-view="docs"><span class="n">5</span><span data-ico="book"></span>DOCS</a>
-      <a class="key small yellow" id="buyKey" href="https://pump.fun" target="_blank" rel="noopener"><span data-ico="coin"></span>BUY $ROOT</a>
+      <a class="key small yellow" id="buyKey" href="https://pump.fun" target="_blank" rel="noopener"><span data-ico="coin"></span>BUY $L1</a>
     </nav>
   </header>
 
-  <!-- ================= VIEW 1: TREE ================= -->
-  <section class="view on" id="view-tree">
+  <!-- ================= VIEW 1: STACK ================= -->
+  <section class="view on" id="view-stack">
     <div class="grid">
       <div>
         <div class="card has-tab">
-          <div class="tab bark"><span data-ico="root"></span><span id="rootTabTxt">$ROOT · THE TRUNK</span></div>
+          <div class="tab l1"><span data-ico="l1"></span><span id="l1TabTxt">$L1 · THE BASE LAYER</span></div>
           <div class="row" style="align-items:flex-start">
-            <img class="coinico" id="rootImg" alt="" src="/icon.png" onerror="this.src='/icon.png'">
+            <img class="coinico" id="l1Img" alt="" src="/icon.png" onerror="this.src='/icon.png'">
             <div style="flex:1;min-width:0">
-              <div class="lbl">RINGS <span class="num" id="lvl" style="font-size:28px">1</span> <span class="muted" style="font-family:var(--pix);font-size:13px;text-transform:none" id="lvlName">seed</span></div>
-              <div class="lbl" style="margin-top:6px">SAP BURNED <span class="muted" id="xpTxt" style="font-family:var(--pix);font-size:12px;text-transform:none"></span></div>
-              <div class="bar gold" style="margin-top:4px"><i id="xp"></i></div>
+              <div class="lbl">EPOCH <span class="num" id="lvl" style="font-size:28px">1</span> <span class="muted" style="font-family:var(--pix);font-size:13px;text-transform:none" id="lvlName">genesis</span></div>
+              <div class="lbl" style="margin-top:6px">FEES SETTLED <span class="muted" id="xpTxt" style="font-family:var(--pix);font-size:12px;text-transform:none"></span></div>
+              <div class="bar cyan" style="margin-top:4px"><i id="xp"></i></div>
             </div>
           </div>
-          <p id="rootBlurb">$ROOT is a pump.fun coin paired with SOL: the trunk. Every coin grown here is paired with a coin on the tree and pays a tax in it. Every run: half buys the coin back and burns it, half burns the coin below. Sap flows down to the root.</p>
+          <p id="l1Blurb">$L1 is a pump.fun coin paired with SOL: the base layer. Every coin launched here is paired with a coin on the stack and pays its fee in it. Every settlement: half buys the coin back and burns it, half burns the layer below. Everything settles to $L1.</p>
           <div class="row" style="margin-top:8px">
-            <div class="well inset" id="ca" style="flex:1;min-width:0;font-size:17px">not planted yet</div>
+            <div class="well inset" id="ca" style="flex:1;min-width:0;font-size:17px">genesis pending</div>
             <button class="key yellow" id="copyKey"><span data-ico="copy"></span>COPY</button>
           </div>
-          <a class="key green" id="growKey" href="#grow" style="width:100%;justify-content:center;margin-top:12px;font-size:14px"><span data-ico="sprout"></span>GROW A COIN ON THE TREE</a>
-          <a class="key red" id="buyKey2" href="https://pump.fun" target="_blank" rel="noopener" style="width:100%;justify-content:center;margin-top:8px;font-size:14px"><span data-ico="coin"></span>BUY $ROOT</a>
+          <a class="key green" id="launchKey" href="#launch" style="width:100%;justify-content:center;margin-top:12px;font-size:14px"><span data-ico="rollup"></span>LAUNCH AN L2 ON $L1</a>
+          <a class="key red" id="buyKey2" href="https://pump.fun" target="_blank" rel="noopener" style="width:100%;justify-content:center;margin-top:8px;font-size:14px"><span data-ico="coin"></span>BUY $L1</a>
           <div class="row" style="margin-top:12px" id="socials"></div>
         </div>
 
         <div class="card has-tab">
           <div class="tab blue"><span data-ico="clock"></span>NEXT</div>
-          <div class="lbl"><span data-ico="drop"></span>NEXT SAP RUN <span class="chip gold" id="runMode">every 10 min</span></div>
+          <div class="lbl"><span data-ico="settle"></span>NEXT SETTLEMENT <span class="chip gold" id="runMode">every 10 min</span></div>
           <div class="cd" id="runCd">--:--</div>
-          <p class="muted" id="runNote" style="font-size:14px">every coin: claim → buy back + burn → burn the coin below</p>
-          <div class="lbl" style="margin-top:12px"><span data-ico="tree"></span>DEPTH GATE</div>
+          <p class="muted" id="runNote" style="font-size:14px">every layer: claim → buy back + burn → burn the layer below</p>
+          <div class="lbl" style="margin-top:12px"><span data-ico="layers"></span>STACK HEIGHT</div>
           <div class="num" id="depthGate">—</div>
-          <p class="muted" id="depthNote" style="font-size:14px">how deep pump.fun lets the tree grow right now</p>
+          <p class="muted" id="depthNote" style="font-size:14px">how many layers pump.fun allows right now</p>
         </div>
 
         <div class="card has-tab">
           <div class="tab green"><span data-ico="chart"></span>STATZ</div>
           <table class="kv">
-            <tr><td><span data-ico="coin"></span>Tax on grown coins</td><td id="stTax">1%</td></tr>
-            <tr><td><span data-ico="clock"></span>Sap run every</td><td id="stIv">10 min</td></tr>
+            <tr><td><span data-ico="coin"></span>Fee on every layer</td><td id="stTax">1%</td></tr>
+            <tr><td><span data-ico="clock"></span>Settlement every</td><td id="stIv">10 min</td></tr>
             <tr><td><span data-ico="fire"></span>→ buy back + burn</td><td id="stSelf">50%</td></tr>
-            <tr><td><span data-ico="down"></span>→ burn the coin below</td><td id="stDown">50%</td></tr>
+            <tr><td><span data-ico="settle"></span>→ burn the layer below</td><td id="stDown">50%</td></tr>
             <tr><td><span data-ico="skull"></span>Team cut</td><td id="stOps">0%</td></tr>
-            <tr><td><span data-ico="lock"></span>Sap sold</td><td>never</td></tr>
+            <tr><td><span data-ico="lock"></span>Fees sold</td><td>never</td></tr>
           </table>
         </div>
 
         <div class="card has-tab">
           <div class="tab cream"><span data-ico="bolt"></span>MARKET</div>
           <table class="kv">
-            <tr><td><span data-ico="bolt"></span>$ROOT price</td><td id="mkPrice">—</td></tr>
+            <tr><td><span data-ico="bolt"></span>$L1 price</td><td id="mkPrice">—</td></tr>
             <tr><td><span data-ico="chart"></span>Market cap</td><td id="mkMcap">—</td></tr>
-            <tr><td><span data-ico="leaf"></span>Coins on the tree</td><td id="mkCoins">—</td></tr>
-            <tr><td><span data-ico="fire"></span>$ROOT burned</td><td id="mkBurned">—</td></tr>
-            <tr><td><span data-ico="drop"></span>Sap burned (all)</td><td id="mkSap">—</td></tr>
+            <tr><td><span data-ico="cube"></span>Layers on the stack</td><td id="mkCoins">—</td></tr>
+            <tr><td><span data-ico="fire"></span>$L1 burned</td><td id="mkBurned">—</td></tr>
+            <tr><td><span data-ico="settle"></span>Fees settled (all)</td><td id="mkFees">—</td></tr>
             <tr><td><span data-ico="star"></span>Status</td><td id="mkStatus" style="font-family:var(--pix);font-size:14px">—</td></tr>
           </table>
         </div>
@@ -250,35 +250,35 @@
 
       <div>
         <div class="card has-tab" style="padding:26px 12px 12px">
-          <div class="tab"><span data-ico="gif"></span>THE GROVE</div>
+          <div class="tab cyan"><span data-ico="layers"></span>THE STACK</div>
           <div class="scene">
             <canvas id="scene" width="640" height="300"></canvas>
-            <div class="hud">SAP BURNED <b id="hudUsd">$0</b></div>
-            <div class="hud2" id="hudStatus">SEED</div>
-            <div class="cap" id="sceneCap">the seed is in the soil — $ROOT has not been planted yet</div>
+            <div class="hud">FEES SETTLED <b id="hudUsd">$0</b></div>
+            <div class="hud2" id="hudStatus">GENESIS</div>
+            <div class="cap" id="sceneCap">genesis pending — $L1 has not been deployed yet</div>
           </div>
           <div class="row" style="justify-content:space-between;margin-top:10px">
-            <div class="lbl"><span data-ico="gem"></span>RINGS <span class="muted" style="font-family:var(--pix);font-size:12px;text-transform:none">· the tree grows with the sap burned and the coins on it</span></div>
-            <div class="row"><button class="key small purple" id="sapKey"><span data-ico="drop"></span>SAP</button><button class="key small blue" id="birdKey"><span data-ico="bird"></span>BIRD</button><a class="key small" href="/root.gif" download="root.gif"><span data-ico="gif"></span>SAVE GIF</a></div>
+            <div class="lbl"><span data-ico="gem"></span>EPOCHS <span class="muted" style="font-family:var(--pix);font-size:12px;text-transform:none">· the stack grows with the fees settled and the layers on it</span></div>
+            <div class="row"><button class="key small purple" id="settleKey"><span data-ico="settle"></span>SETTLE</button><button class="key small blue" id="pingKey"><span data-ico="packet"></span>PING</button></div>
           </div>
           <div class="levels" id="levels" style="margin-top:8px"></div>
         </div>
 
         <div class="grid2">
           <div class="card has-tab">
-            <div class="tab green"><span data-ico="sprout"></span>LATEST GROWTH</div>
-            <div id="latestCoins" class="empty">nothing has grown yet</div>
+            <div class="tab green"><span data-ico="rollup"></span>LATEST LAUNCHES</div>
+            <div id="latestCoins" class="empty">no layer launched yet</div>
           </div>
           <div class="card has-tab">
-            <div class="tab purple"><span data-ico="drop"></span>LATEST SAP</div>
-            <div id="latestRuns" class="empty">no sap run yet</div>
+            <div class="tab purple"><span data-ico="settle"></span>LATEST SETTLEMENTS</div>
+            <div id="latestRuns" class="empty">no settlement yet</div>
           </div>
         </div>
 
         <div class="card has-tab">
           <div class="tab cream"><span data-ico="chart"></span>CHART</div>
           <div class="row" style="justify-content:space-between">
-            <div class="lbl">$ROOT price (USD) · <span style="color:var(--purple2)">♦ sap runs</span></div>
+            <div class="lbl">$L1 price (USD) · <span style="color:var(--purple2)">♦ settlements</span></div>
             <div class="row" id="rangeKeys"><button class="key small on" data-r="24h">24h</button><button class="key small" data-r="7d">7d</button></div>
           </div>
           <div class="scene" style="margin-top:8px;background:var(--well)"><canvas id="chart" width="640" height="200"></canvas></div>
@@ -287,40 +287,40 @@
     </div>
   </section>
 
-  <!-- ================= VIEW 2: GROW ================= -->
-  <section class="view" id="view-grow">
+  <!-- ================= VIEW 2: LAUNCH ================= -->
+  <section class="view" id="view-launch">
     <div class="grid" style="grid-template-columns:1fr 300px">
       <div>
         <div class="card has-tab">
-          <div class="tab green"><span data-ico="sprout"></span>GROW A COIN</div>
-          <div class="steps" id="steps"><span class="chip on">1 · wallet</span><span class="chip">2 · pick a parent</span><span class="chip">3 · the coin</span><span class="chip">4 · send SOL</span><span class="chip">5 · live</span></div>
+          <div class="tab green"><span data-ico="rollup"></span>LAUNCH A LAYER</div>
+          <div class="steps" id="steps"><span class="chip on">1 · wallet</span><span class="chip">2 · pick a base layer</span><span class="chip">3 · the coin</span><span class="chip">4 · send SOL</span><span class="chip">5 · live</span></div>
           <div id="g-wallet">
             <p>Connect the Solana wallet that will receive the dev buy (Phantom, Solflare, Backpack…). Your wallet never signs the launch itself: it only sends SOL.</p>
             <button class="key" id="connect"><span data-ico="wallet"></span>CONNECT WALLET</button>
           </div>
           <div id="g-parent" hidden>
-            <p>Pick the coin your coin grows on. Its children are one level deeper. <span class="muted" id="parentGateTxt"></span></p>
+            <p>Pick the layer your coin runs on. Launch on $L1 and you are an L2; launch on an L2 and you are an L3. <span class="muted" id="parentGateTxt"></span></p>
             <div class="parents" id="parents"></div>
-            <div class="well inset" id="parentChain" style="margin-top:10px;font-family:var(--pix);font-size:14px">pick a parent</div>
-            <button class="key green" id="parentOk" style="margin-top:10px" disabled><span data-ico="check"></span>GROW ON THIS COIN</button>
+            <div class="well inset" id="parentChain" style="margin-top:10px;font-family:var(--pix);font-size:14px">pick a base layer</div>
+            <button class="key green" id="parentOk" style="margin-top:10px" disabled><span data-ico="check"></span>ROLL UP ON THIS LAYER</button>
           </div>
           <form id="g-form" hidden onsubmit="return false">
             <div class="drop" id="logoDrop"><img id="logoPrev" src="" alt="" hidden><div><div class="lbl">LOGO</div><span class="muted" style="font-size:14px">png / jpg / webp, up to 3MB — click to pick</span></div><input type="file" id="logoFile" accept="image/*" hidden></div>
             <div class="grid2" style="gap:12px">
-              <label class="f">Name<input class="well" id="name" type="text" maxlength="32" placeholder="Twig"></label>
-              <label class="f">Ticker<input class="well" id="symbol" type="text" maxlength="13" placeholder="TWIG" style="text-transform:uppercase"></label>
+              <label class="f">Name<input class="well" id="name" type="text" maxlength="32" placeholder="My L2"></label>
+              <label class="f">Ticker<input class="well" id="symbol" type="text" maxlength="13" placeholder="MYL2" style="text-transform:uppercase"></label>
             </div>
-            <label class="f">Description<textarea class="well" id="desc" maxlength="500" placeholder="what this coin is about"></textarea></label>
+            <label class="f">Description<textarea class="well" id="desc" maxlength="500" placeholder="what this layer is about"></textarea></label>
             <div class="grid2" style="gap:12px">
               <label class="f">X (optional)<input class="well" id="twitter" type="text" placeholder="https://x.com/…"></label>
               <label class="f">Telegram (optional)<input class="well" id="telegram" type="text" placeholder="https://t.me/…"></label>
             </div>
-            <label class="f">Dev buy (optional) — paid in SOL, routed up the tree in one multi-hop swap right after the create, sent to your wallet
+            <label class="f">Dev buy (optional) — paid in SOL, routed up the stack in one multi-hop swap right after the create, sent to your wallet
               <div class="chips" id="devchips"><button type="button" data-v="0" class="on">none</button><button type="button" data-v="0.1">0.1 SOL</button><button type="button" data-v="0.25">0.25 SOL</button><button type="button" data-v="0.5">0.5 SOL</button><button type="button" data-v="1">1 SOL</button></div>
               <input class="well" id="devbuy" type="text" placeholder="or type an amount in SOL" inputmode="decimal">
             </label>
-            <p class="muted" style="font-size:14px">The tax is fixed at launch and cannot be changed. The coin's creator is its own engine wallet: the launchpad claims the tax every run, burns half as the parent coin and buys your coin back with the other half.</p>
-            <button class="key green" type="submit" id="go" style="margin-top:8px"><span data-ico="sprout"></span>GROW → SEND SOL</button>
+            <p class="muted" style="font-size:14px">The fee is fixed at launch and cannot be changed. The coin's creator is its own sequencer wallet: the launchpad claims the fee every settlement, burns half as the layer below and buys your coin back with the other half.</p>
+            <button class="key green" type="submit" id="go" style="margin-top:8px"><span data-ico="rollup"></span>LAUNCH → SEND SOL</button>
           </form>
           <div id="g-pay" hidden>
             <div class="well inset" id="payMsg" style="font-family:var(--pix);font-size:15px"></div>
@@ -339,34 +339,34 @@
           <table class="kv" id="sumLines"></table>
           <div class="lbl" style="margin-top:12px">THE COIN</div>
           <div class="crumbs" id="sumChain" style="margin-top:6px"></div>
-          <p class="muted" style="font-size:14px;margin-top:10px"><span id="sumTax">1%</span> tax on top of pump.fun's fee, paid in the parent coin. Every <span id="sumIv">10 min</span>: <span id="sumSelf">50%</span> buys your coin back and burns it, <span id="sumDown">50%</span> burns the parent.</p>
+          <p class="muted" style="font-size:14px;margin-top:10px"><span id="sumTax">1%</span> fee on top of pump.fun's fee, paid in the layer below. Every <span id="sumIv">10 min</span>: <span id="sumSelf">50%</span> buys your coin back and burns it, <span id="sumDown">50%</span> burns the layer below.</p>
         </div>
         <div class="card has-tab">
-          <div class="tab cream"><span data-ico="book"></span>HOW DEEP</div>
-          <p style="font-size:14px">SOL → <b>$ROOT</b> (depth 0) → a branch (depth 1) → a twig (depth 2). pump.fun opened depth 2 on Oct 13. The gate is read from the chain every tick: <span class="chip gold" id="gateChip">depth ≤ ?</span></p>
-          <p style="font-size:14px" class="muted">A coin paired with a pump coin starts at the same raise as a normal launch, counted in its parent: the price of the whole chain is read live when it is created.</p>
+          <div class="tab cream"><span data-ico="book"></span>HOW HIGH</div>
+          <p style="font-size:14px">SOL → <b>$L1</b> (depth 0) → an L2 (depth 1) → an L3 (depth 2). pump.fun opened depth 2 on Oct 13; the program allows up to 5. The gate is read from the chain every tick: <span class="chip gold" id="gateChip">up to L?</span></p>
+          <p style="font-size:14px" class="muted">A coin paired with a pump coin starts at the same raise as a normal launch, counted in the layer below: the price of the whole chain is read live when it is created.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= VIEW 3: COINS ================= -->
+  <!-- ================= VIEW 3: LAYERS (coins) ================= -->
   <section class="view" id="view-coins">
     <div class="card has-tab">
-      <div class="tab green"><span data-ico="leaf"></span>THE COINS</div>
+      <div class="tab green"><span data-ico="cube"></span>THE LAYERS</div>
       <div class="row" style="justify-content:space-between">
         <input class="well" id="q" placeholder="search name / ticker / mint" style="max-width:320px">
-        <div class="row" id="sortKeys"><button class="key small on" data-s="new">NEW</button><button class="key small" data-s="mcap">MCAP</button><button class="key small" data-s="depth">DEPTH</button><button class="key small" data-s="burned">BURNED</button><button class="key small" data-s="sap">SAP</button><button class="key small" data-s="children">KIDS</button></div>
+        <div class="row" id="sortKeys"><button class="key small on" data-s="new">NEW</button><button class="key small" data-s="mcap">MCAP</button><button class="key small" data-s="depth">DEPTH</button><button class="key small" data-s="burned">BURNED</button><button class="key small" data-s="fees">FEES</button><button class="key small" data-s="children">ROLLUPS</button></div>
       </div>
     </div>
     <div class="cards" id="coinCards"></div>
-    <div class="empty" id="coinsEmpty" style="color:var(--cream)">nothing has grown on the tree yet — be the first branch</div>
+    <div class="empty" id="coinsEmpty" style="color:var(--cream)">no layer has been launched yet — be the first L2</div>
   </section>
 
   <!-- ================= VIEW 4: COIN ================= -->
   <section class="view" id="view-coin">
     <div class="card has-tab">
-      <div class="tab" id="coinTab"><span data-ico="leaf"></span><span id="coinTabTxt">$COIN</span></div>
+      <div class="tab" id="coinTab"><span data-ico="cube"></span><span id="coinTabTxt">$COIN</span></div>
       <div class="crumbs" id="coinCrumbs"></div>
       <div class="row" style="align-items:flex-start;margin-top:12px">
         <img class="coinico big" id="coinImg" alt="" src="/icon.png" onerror="this.src='/icon.png'">
@@ -381,40 +381,40 @@
     <div class="grid">
       <div>
         <div class="card has-tab"><div class="tab cream"><span data-ico="bolt"></span>MARKET</div><table class="kv" id="coinMarket"></table></div>
-        <div class="card has-tab"><div class="tab purple"><span data-ico="drop"></span>SAP</div><table class="kv" id="coinSap"></table><p class="muted" id="coinNote" style="font-size:13px"></p></div>
-        <div class="card has-tab"><div class="tab green"><span data-ico="sprout"></span>GROWN ON IT</div><div id="coinKids" class="empty">nothing yet</div></div>
+        <div class="card has-tab"><div class="tab purple"><span data-ico="settle"></span>SETTLEMENT</div><table class="kv" id="coinSettle"></table><p class="muted" id="coinNote" style="font-size:13px"></p></div>
+        <div class="card has-tab"><div class="tab green"><span data-ico="rollup"></span>LAYERS ON IT</div><div id="coinKids" class="empty">nothing yet</div></div>
       </div>
       <div>
         <div class="card has-tab">
           <div class="tab cream"><span data-ico="chart"></span>CHART</div>
-          <div class="lbl">PRICE (USD) · from the chain, through the whole quote chain · <span style="color:var(--purple2)">♦ sap runs</span></div>
+          <div class="lbl">PRICE (USD) · from the chain, through the whole quote chain · <span style="color:var(--purple2)">♦ settlements</span></div>
           <div class="scene" style="margin-top:8px;background:var(--well)"><canvas id="coinChart" width="640" height="200"></canvas></div>
         </div>
         <div class="card has-tab">
-          <div class="tab purple"><span data-ico="drop"></span>SAP LOG</div>
-          <div class="scroll"><table class="log" id="coinRuns"><thead><tr><th>#</th><th>When</th><th class="r">Claimed</th><th class="r">Burned (self)</th><th class="r" id="crDown">Burned (parent)</th><th class="r">USD</th><th>Status</th><th>Txs</th></tr></thead><tbody></tbody></table></div>
-          <div class="empty" id="coinRunsEmpty">no run yet — the first one fires on the clock</div>
+          <div class="tab purple"><span data-ico="settle"></span>SETTLEMENT LOG</div>
+          <div class="scroll"><table class="log" id="coinRuns"><thead><tr><th>#</th><th>When</th><th class="r">Claimed</th><th class="r">Burned (self)</th><th class="r" id="crDown">Burned (below)</th><th class="r">USD</th><th>Status</th><th>Txs</th></tr></thead><tbody></tbody></table></div>
+          <div class="empty" id="coinRunsEmpty">no settlement yet — the first one fires on the clock</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= VIEW 5: SAP ================= -->
-  <section class="view" id="view-sap">
+  <!-- ================= VIEW 5: SETTLEMENT ================= -->
+  <section class="view" id="view-settlement">
     <div class="grid" style="grid-template-columns:300px 1fr">
       <div>
-        <div class="card has-tab"><div class="tab purple"><span data-ico="drop"></span>SAP, TOTAL</div>
-          <table class="kv"><tr><td>Runs</td><td id="sRuns">—</td></tr><tr><td>Sap burned</td><td id="sUsd">—</td></tr><tr><td>Tokens burned</td><td id="sTokens">—</td></tr><tr><td>Coins</td><td id="sCoins">—</td></tr><tr><td>Last run</td><td id="sLast">—</td></tr></table>
+        <div class="card has-tab"><div class="tab purple"><span data-ico="settle"></span>SETTLED, TOTAL</div>
+          <table class="kv"><tr><td>Settlements</td><td id="sRuns">—</td></tr><tr><td>Fees settled</td><td id="sUsd">—</td></tr><tr><td>Tokens burned</td><td id="sTokens">—</td></tr><tr><td>Layers</td><td id="sCoins">—</td></tr><tr><td>Last settlement</td><td id="sLast">—</td></tr></table>
         </div>
-        <div class="card has-tab"><div class="tab cream"><span data-ico="scroll"></span>THE RUN</div>
-          <table class="kv"><tr><td>1 sweep + claim</td><td style="font-family:var(--pix);font-size:13px">100% of the fees</td></tr><tr><td>2 self</td><td id="rSelf">50%</td></tr><tr><td>3 down</td><td id="rDown">50%</td></tr><tr><td>4 ops</td><td id="rOps">0%</td></tr><tr><td>min. pot</td><td id="rMin">$0.25</td></tr></table>
+        <div class="card has-tab"><div class="tab cream"><span data-ico="scroll"></span>THE SETTLEMENT</div>
+          <table class="kv"><tr><td>1 sweep + claim</td><td style="font-family:var(--pix);font-size:13px">100% of the fees</td></tr><tr><td>2 self</td><td id="rSelf">50%</td></tr><tr><td>3 below</td><td id="rDown">50%</td></tr><tr><td>4 ops</td><td id="rOps">0%</td></tr><tr><td>min. pot</td><td id="rMin">$0.25</td></tr></table>
         </div>
       </div>
       <div class="card has-tab">
-        <div class="tab purple"><span data-ico="drop"></span>SAP LEDGER</div>
-        <p class="muted" style="font-size:14px">Every run of every coin, newest first. Self = the coin's own tokens bought back and burned. Down = the parent coin burned.</p>
-        <div class="scroll"><table class="log" id="sapTable"><thead><tr><th>#</th><th>Coin</th><th>When</th><th class="r">Claimed</th><th class="r">Self burned</th><th class="r">Down burned</th><th class="r">USD</th><th>Txs</th></tr></thead><tbody></tbody></table></div>
-        <div class="empty" id="sapEmpty">no sap run yet</div>
+        <div class="tab purple"><span data-ico="settle"></span>SETTLEMENT LEDGER</div>
+        <p class="muted" style="font-size:14px">Every settlement of every layer, newest first. Self = the coin's own tokens bought back and burned. Below = the layer it runs on, burned.</p>
+        <div class="scroll"><table class="log" id="settleTable"><thead><tr><th>#</th><th>Layer</th><th>When</th><th class="r">Claimed</th><th class="r">Self burned</th><th class="r">Below burned</th><th class="r">USD</th><th>Txs</th></tr></thead><tbody></tbody></table></div>
+        <div class="empty" id="settleEmpty">no settlement yet</div>
       </div>
     </div>
   </section>
@@ -427,7 +427,7 @@
     </div>
   </section>
 
-  <div class="foot">ROOT · <a href="https://pump.fun" target="_blank" rel="noopener">pump.fun</a> · Solana · sap flows down · <span id="footMode"></span></div>
+  <div class="foot">LAYERS · <a href="https://pump.fun" target="_blank" rel="noopener">pump.fun</a> · Solana · everything settles to $L1 · <span id="footMode"></span></div>
 </div>
 <div class="toast" id="toast">copied</div>
 <div class="modal" id="modal"><div class="box"><h3 style="font-family:var(--key);font-size:12px;text-transform:uppercase;margin:0 0 8px">Connect a wallet</h3><div id="wallets"></div><p class="muted" style="font-size:13px">No wallet detected? Install Phantom, Solflare or Backpack, then reload.</p><button class="key small" id="modalClose">CLOSE</button></div></div>
@@ -445,7 +445,7 @@ const ago = (t) => { const s = Math.max(0, Math.floor(Date.now() / 1000) - t); r
 const hms = (s) => { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; return (h ? String(h).padStart(2, "0") + ":" : "") + String(m).padStart(2, "0") + ":" + String(x).padStart(2, "0"); };
 const ivTxt = (s) => (s % 3600 === 0 ? s / 3600 + " h" : s % 60 === 0 ? s / 60 + " min" : s + " s");
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const depthName = (d) => ["trunk", "branch", "twig", "sprig", "leaf", "leaf"][Math.min(5, d)];
+const layerName = (d) => "L" + (Math.min(5, d) + 1);          // depth 0 = L1, depth 1 = L2, depth 2 = L3…
 const price = (p) => (p ? "$" + p.toFixed(p < 0.001 ? 8 : p < 1 ? 5 : 3) : "—");
 let T = null, coinsList = [], runs = [], chart = null, range = "24h", sort = "new", curCoin = null;
 const ico = (n, px = 12, ov) => iconSvg(n, px, ov);
@@ -463,217 +463,217 @@ function showView(v) {
   document.querySelectorAll("#nav [data-view]").forEach((a) => a.classList.toggle("on", a.dataset.view === v));
   if (v === "docs") renderDocs();
   if (v === "coins") loadCoins();
-  if (v === "sap") loadSap();
-  if (v === "grow") initGrow();
+  if (v === "settlement") loadSettlement();
+  if (v === "launch") initLaunch();
 }
 function route() {
   let h = (location.hash || "").slice(1);
   if (!h && /^\/c\//.test(location.pathname)) h = "c/" + location.pathname.split("/")[2];
-  if (!h && /^\/(grow|coins|sap|docs)$/.test(location.pathname)) h = location.pathname.slice(1);
+  if (!h && /^\/(launch|coins|settlement|docs)$/.test(location.pathname)) h = location.pathname.slice(1);
   if (h.startsWith("c/")) { showView("coin"); openCoin(h.slice(2)); return; }
-  if (h.startsWith("grow/")) { growParent = h.slice(5); showView("grow"); return; }
-  showView(["tree", "grow", "coins", "sap", "docs"].includes(h) ? h : "tree");
+  if (h.startsWith("launch/")) { launchParent = h.slice(7); showView("launch"); return; }
+  showView(["stack", "launch", "coins", "settlement", "docs"].includes(h) ? h : "stack");
 }
 window.addEventListener("hashchange", route);
 
-// ------------------------------------------------------------- pixel art
+// ------------------------------------------------------------- pixel art: the header logo (a small stack)
 (function () {
   const c = $("logo"), ctx = c.getContext("2d"); ctx.imageSmoothingEnabled = false;
-  ctx.fillStyle = "#fff6d6"; ctx.fillRect(0, 0, 64, 64); ctx.fillStyle = "#2a2823"; ctx.fillRect(0, 0, 64, 4); ctx.fillRect(0, 60, 64, 4); ctx.fillRect(0, 0, 4, 64); ctx.fillRect(60, 0, 4, 64);
-  ctx.fillStyle = "#3a2615"; ctx.fillRect(4, 48, 56, 12); ctx.fillStyle = "#3f8f3a"; ctx.fillRect(4, 46, 56, 3);
-  ctx.fillStyle = "#9a6b3c"; ctx.fillRect(28, 24, 8, 24); ctx.fillStyle = "#5e3f22"; ctx.fillRect(30, 30, 2, 6); ctx.fillRect(32, 40, 2, 4);
-  drawLimb(ctx, 30, 36, 16, 28, 3, 1); drawLimb(ctx, 34, 30, 48, 22, 3, 1);
-  drawBlob(ctx, 16, 26, 7, 1, null, 2); drawBlob(ctx, 48, 20, 7, 1, null, 5); drawBlob(ctx, 32, 18, 11, 1, null, 9);
-  drawPix(ctx, COIN, 8, 52, 1.2, SOLCOIN); drawPix(ctx, COIN, 46, 53, 1.2, SOLCOIN);
+  ctx.fillStyle = "#0b1020"; ctx.fillRect(0, 0, 64, 64); ctx.fillStyle = "#1c2240"; ctx.fillRect(0, 0, 64, 4); ctx.fillRect(0, 60, 64, 4); ctx.fillRect(0, 0, 4, 64); ctx.fillRect(60, 0, 4, 64);
+  ctx.fillStyle = "#141a2e"; ctx.fillRect(4, 52, 56, 8);
+  drawBlock(ctx, 10, 40, 40, 12, 2, skinFor(5));
+  drawBlock(ctx, 14, 26, 14, 9, 2, depthSkin(1)); drawBlock(ctx, 33, 26, 14, 9, 2, depthSkin(1));
+  drawBlock(ctx, 36, 14, 9, 7, 2, depthSkin(2));
+  drawPix(ctx, COIN, 8, 54, 1.2, SOLCOIN); drawPix(ctx, COIN, 46, 54, 1.2, SOLCOIN);
 })();
 icons();
 
 // ------------------------------------------------------------- the scene
-const scene = new RootScene($("scene"));
+const scene = new StackScene($("scene"));
 let lastCycle = null, lastCoinCount = null, seenRuns = new Set();
-$("sapKey").addEventListener("click", () => { const n = scene.nodes[Math.floor(Math.random() * scene.nodes.length)]; if (n) scene.sap(n.mint, 6); else scene.drink(); });
-$("birdKey").addEventListener("click", () => { scene.birds.push({ x: -20, y: 30 + Math.random() * 60, vx: 2.2, t: 0 }); });
+$("settleKey").addEventListener("click", () => { const n = scene.nodes[Math.floor(Math.random() * scene.nodes.length)]; if (n) scene.settle(n.mint, 6); else scene.finalize(); });
+$("pingKey").addEventListener("click", () => scene.ping());
 setInterval(() => scene.tick(), 1000 / 20);
 function syncScene() {
   if (!T) return;
   const hot = {}; const n = T.now; for (const c of coinsList) if (c.lastCycleAt && n - c.lastCycleAt < 120) hot[c.mint] = 1;
-  scene.set({ started: !!T.started, level: T.tree.level, coins: coinsList, rootSym: T.root ? T.root.symbol : "ROOT", burnedUsd: T.tree.burnedUsd, hot, status: T.sap.firing ? "running" : "idle", paused: T.started && !T.schedulerEnabled });
-  if (lastCoinCount !== null && coinsList.length > lastCoinCount) { const newest = coinsList.slice().sort((a, b) => b.launchedAt - a.launchedAt)[0]; if (newest) scene.grow(newest.mint); }
+  scene.set({ started: !!T.started, level: T.stack.level, coins: coinsList, l1Sym: T.l1 ? T.l1.symbol : "L1", burnedUsd: T.stack.burnedUsd, hot, status: T.settlement.firing ? "running" : "idle", paused: T.started && !T.schedulerEnabled });
+  if (lastCoinCount !== null && coinsList.length > lastCoinCount) { const newest = coinsList.slice().sort((a, b) => b.launchedAt - a.launchedAt)[0]; if (newest) scene.deploy(newest.mint); }
   lastCoinCount = coinsList.length;
-  if (lastCycle !== null && T.sap.cycle > lastCycle) scene.drink();
-  lastCycle = T.sap.cycle;
+  if (lastCycle !== null && T.settlement.cycle > lastCycle) scene.finalize();
+  lastCycle = T.settlement.cycle;
 }
 function renderLevels() {
   const levels = T ? T.levels : [0, 50, 250, 1000, 5000, 25000, 100000, 500000], lc = T ? T.levelsCoins : [0, 1, 3, 6, 12, 25, 50, 100];
-  const cur = T && T.started ? T.tree.level : 0;
-  $("levels").innerHTML = levels.map((v, i) => `<div class="lv ${cur === i + 1 ? "on" : ""} ${cur < i + 1 ? "locked" : ""}"><canvas width="64" height="56" data-lv="${i + 1}"></canvas><span class="n">${LEVEL_NAMES[i]}</span><span class="v">${usd(v)} · ${lc[i]} coins</span></div>`).join("");
-  $("levels").querySelectorAll("canvas").forEach((c) => drawMiniTree(c, Number(c.dataset.lv)));
+  const cur = T && T.started ? T.stack.level : 0;
+  $("levels").innerHTML = levels.map((v, i) => `<div class="lv ${cur === i + 1 ? "on" : ""} ${cur < i + 1 ? "locked" : ""}"><canvas width="64" height="56" data-lv="${i + 1}"></canvas><span class="n">${LEVEL_NAMES[i]}</span><span class="v">${usd(v)} · ${lc[i]} layers</span></div>`).join("");
+  $("levels").querySelectorAll("canvas").forEach((c) => drawMiniStack(c, Number(c.dataset.lv)));
 }
 
 // ------------------------------------------------------------- data
 async function load() {
   try {
-    const r = await fetch("/api/tree"); if (!r.ok) return;
+    const r = await fetch("/api/stack"); if (!r.ok) return;
     T = await r.json(); T._at = Date.now(); coinsList = T.coins || [];
     render();
   } catch (e) { /* offline */ }
 }
 function render() {
-  const R = T.rules, root = T.root;
+  const R = T.rules, l1 = T.l1;
   syncScene(); renderLevels(); icons();
   $("stTax").textContent = R.taxBps / 100 + "%"; $("stIv").textContent = ivTxt(R.intervalSec); $("stSelf").textContent = R.split.selfBps / 100 + "%"; $("stDown").textContent = R.split.downBps / 100 + "%"; $("stOps").textContent = R.split.opsBps / 100 + "%";
   $("runMode").textContent = "every " + ivTxt(R.intervalSec);
-  $("depthGate").textContent = T.maxDepth ? "depth ≤ " + T.maxDepth : "—";
-  $("depthNote").textContent = T.maxCurveDepth ? `pump.fun allows ${T.maxCurveDepth} · the tree is at depth ${T.tree.maxDepthOnTree}` : "how deep pump.fun lets the tree grow right now";
-  $("gateChip").textContent = T.maxDepth ? "depth ≤ " + T.maxDepth : "depth ≤ ?";
+  $("depthGate").textContent = T.maxDepth ? "up to " + layerName(T.maxDepth) : "—";
+  $("depthNote").textContent = T.maxCurveDepth ? `pump.fun allows depth ${T.maxCurveDepth} (${layerName(T.maxCurveDepth)}) · the stack reaches ${layerName(T.stack.maxDepthOnStack)}` : "how many layers pump.fun allows right now";
+  $("gateChip").textContent = T.maxDepth ? "up to " + layerName(T.maxDepth) : "up to L?";
   const soc = []; if (T.brand.twitter) soc.push(`<a class="key small" href="${esc(T.brand.twitter)}" target="_blank" rel="noopener">${ico("x", 14)}</a>`); if (T.brand.telegram) soc.push(`<a class="key small blue" href="${esc(T.brand.telegram)}" target="_blank" rel="noopener">${ico("plane", 14)}</a>`);
-  if (root) soc.push(`<a class="key small" href="https://solscan.io/token/${root.mint}" target="_blank" rel="noopener">${ico("search", 14)} SOLSCAN</a>`, `<a class="key small" href="https://solscan.io/account/${root.wallet}" target="_blank" rel="noopener">${ico("chest", 14)} TRUNK WALLET</a>`);
+  if (l1) soc.push(`<a class="key small" href="https://solscan.io/token/${l1.mint}" target="_blank" rel="noopener">${ico("search", 14)} SOLSCAN</a>`, `<a class="key small" href="https://solscan.io/account/${l1.wallet}" target="_blank" rel="noopener">${ico("chest", 14)} L1 WALLET</a>`);
   $("socials").innerHTML = soc.join("");
-  $("hudUsd").textContent = usd(T.tree.burnedUsd);
-  if (!T.started || !root) {
-    $("ca").textContent = "not planted yet"; $("footMode").textContent = "not planted"; $("mkStatus").textContent = "not planted"; $("hudStatus").textContent = "SEED"; $("sceneCap").textContent = "the seed is in the soil — $ROOT has not been planted yet"; $("runCd").textContent = "--:--";
+  $("hudUsd").textContent = usd(T.stack.burnedUsd);
+  if (!T.started || !l1) {
+    $("ca").textContent = "genesis pending"; $("footMode").textContent = "genesis pending"; $("mkStatus").textContent = "genesis pending"; $("hudStatus").textContent = "GENESIS"; $("sceneCap").textContent = "genesis pending — $L1 has not been deployed yet"; $("runCd").textContent = "--:--";
     return;
   }
-  $("rootTabTxt").textContent = "$" + root.symbol + " · THE TRUNK"; if (root.image) $("rootImg").src = root.image;
-  $("ca").textContent = root.mint;
-  const buy = `https://pump.fun/coin/${root.mint}`; $("buyKey").href = buy; $("buyKey2").href = buy;
-  const lv = T.tree.level; $("lvl").textContent = lv; $("lvlName").textContent = LEVEL_NAMES[lv - 1];
+  $("l1TabTxt").textContent = "$" + l1.symbol + " · THE BASE LAYER"; if (l1.image) $("l1Img").src = l1.image;
+  $("ca").textContent = l1.mint;
+  const buy = `https://pump.fun/coin/${l1.mint}`; $("buyKey").href = buy; $("buyKey2").href = buy;
+  const lv = T.stack.level; $("lvl").textContent = lv; $("lvlName").textContent = LEVEL_NAMES[lv - 1];
   const lo = T.levels[lv - 1] || 0, hi = T.levels[lv] || null;
-  $("xp").style.width = (hi ? Math.min(100, ((T.tree.burnedUsd - lo) / (hi - lo)) * 100) : 100) + "%";
-  $("xpTxt").textContent = hi ? usd(T.tree.burnedUsd) + " / " + usd(hi) + " to " + LEVEL_NAMES[lv] : "max rings";
-  $("mkPrice").textContent = price(root.priceUsd); $("mkMcap").textContent = usd(root.mcapUsd);
-  $("mkCoins").textContent = fmt(T.tree.coins) + (T.tree.maxDepthOnTree ? ` · depth ${T.tree.maxDepthOnTree}` : "");
-  $("mkBurned").textContent = compact(root.burned) + " (" + (root.burnedPct * 100).toFixed(2) + "%)";
-  $("mkSap").textContent = usd(T.tree.burnedUsd);
-  $("mkStatus").textContent = (root.graduated ? "PumpSwap pool" : "bonding curve") + (T.dryRun || T.mode !== "bot" ? " · watch mode" : " · live") + (T.schedulerEnabled ? "" : " · PAUSED");
-  $("footMode").textContent = T.dryRun || T.mode !== "bot" ? "watch mode — dry sap runs" : "engine live";
-  $("rootBlurb").innerHTML = `$${esc(root.symbol)} is a pump.fun coin paired with SOL: the trunk. Every coin grown here is paired with a coin on the tree and pays a <b>${R.taxBps / 100}%</b> tax in it. Every ${ivTxt(R.intervalSec)}: <b>${R.split.selfBps / 100}%</b> buys the coin back and burns it, <b>${R.split.downBps / 100}%</b> burns the coin below. Sap flows down to the root.`;
-  $("hudStatus").textContent = T.sap.firing ? "SAP RUNNING" : T.schedulerEnabled ? LEVEL_NAMES[lv - 1].toUpperCase() + " · " + T.tree.coins + " COINS" : "PAUSED";
+  $("xp").style.width = (hi ? Math.min(100, ((T.stack.burnedUsd - lo) / (hi - lo)) * 100) : 100) + "%";
+  $("xpTxt").textContent = hi ? usd(T.stack.burnedUsd) + " / " + usd(hi) + " to " + LEVEL_NAMES[lv] : "final epoch";
+  $("mkPrice").textContent = price(l1.priceUsd); $("mkMcap").textContent = usd(l1.mcapUsd);
+  $("mkCoins").textContent = fmt(T.stack.coins) + (T.stack.maxDepthOnStack ? ` · up to ${layerName(T.stack.maxDepthOnStack)}` : "");
+  $("mkBurned").textContent = compact(l1.burned) + " (" + (l1.burnedPct * 100).toFixed(2) + "%)";
+  $("mkFees").textContent = usd(T.stack.burnedUsd);
+  $("mkStatus").textContent = (l1.graduated ? "PumpSwap pool" : "bonding curve") + (T.dryRun || T.mode !== "bot" ? " · watch mode" : " · live") + (T.schedulerEnabled ? "" : " · PAUSED");
+  $("footMode").textContent = T.dryRun || T.mode !== "bot" ? "watch mode — dry settlements" : "sequencer live";
+  $("l1Blurb").innerHTML = `$${esc(l1.symbol)} is a pump.fun coin paired with SOL: the base layer. Every coin launched here is paired with a coin on the stack and pays a <b>${R.taxBps / 100}%</b> fee in it. Every ${ivTxt(R.intervalSec)}: <b>${R.split.selfBps / 100}%</b> buys the coin back and burns it, <b>${R.split.downBps / 100}%</b> burns the layer below. Everything settles to $${esc(l1.symbol)}.`;
+  $("hudStatus").textContent = T.settlement.firing ? "SETTLING" : T.schedulerEnabled ? LEVEL_NAMES[lv - 1].toUpperCase() + " · " + T.stack.coins + " LAYERS" : "PAUSED";
   const hot = coinsList.filter((c) => c.progress && ["claiming", "buying", "burning"].includes(c.progress.status) && T.now - c.progress.at < 300);
-  $("sceneCap").textContent = T.sap.firing ? `sap run #${T.sap.cycle}: ${hot.map((c) => "$" + c.symbol).slice(0, 4).join(", ") || "walking the tree"}…` : T.tree.coins ? `${T.tree.coins} coin${T.tree.coins > 1 ? "s" : ""} grow on $${root.symbol} · ${Object.entries(T.tree.byDepth).map(([d, n]) => n + " at depth " + d).join(" · ")}` : `$${root.symbol} is planted — nothing grows on it yet`;
-  $("runNote").textContent = root.pot.unclaimed > 0 ? `${root.pot.unclaimed.toFixed(4)} SOL waiting in the trunk's creator vault` : root.lastNote || "every coin: claim → buy back + burn → burn the coin below";
-  const latest = coinsList.filter((c) => !c.isRoot).sort((a, b) => b.launchedAt - a.launchedAt).slice(0, 5);
-  $("latestCoins").innerHTML = latest.length ? latest.map((c) => `<div class="row" style="justify-content:space-between;border-bottom:2px dotted var(--line);padding:5px 0"><a href="#c/${c.mint}" class="row" style="gap:8px">${c.image ? `<img src="${esc(c.image)}" style="width:22px;height:22px;border:2px solid var(--ink)" onerror="this.remove()">` : ""}<b style="font-family:var(--key);font-size:12px">$${esc(c.symbol)}</b><span class="chip d${c.depth}">depth ${c.depth}</span></a><span style="font-family:var(--num);font-size:18px">${usd(c.mcapUsd)} · ${ago(c.launchedAt)}</span></div>`).join("") : `<div class="empty">nothing has grown yet — <a href="#grow" style="border-bottom:2px solid var(--ink)">grow the first branch</a></div>`;
+  $("sceneCap").textContent = T.settlement.firing ? `settlement #${T.settlement.cycle}: ${hot.map((c) => "$" + c.symbol).slice(0, 4).join(", ") || "walking the stack"}…` : T.stack.coins ? `${T.stack.coins} layer${T.stack.coins > 1 ? "s" : ""} on $${l1.symbol} · ${Object.entries(T.stack.byDepth).map(([d, n]) => n + " at " + layerName(Number(d))).join(" · ")}` : `$${l1.symbol} is live — no layer on it yet`;
+  $("runNote").textContent = l1.pot.unclaimed > 0 ? `${l1.pot.unclaimed.toFixed(4)} SOL waiting in the L1 creator vault` : l1.lastNote || "every layer: claim → buy back + burn → burn the layer below";
+  const latest = coinsList.filter((c) => !c.isL1).sort((a, b) => b.launchedAt - a.launchedAt).slice(0, 5);
+  $("latestCoins").innerHTML = latest.length ? latest.map((c) => `<div class="row" style="justify-content:space-between;border-bottom:2px dotted var(--line);padding:5px 0"><a href="#c/${c.mint}" class="row" style="gap:8px">${c.image ? `<img src="${esc(c.image)}" style="width:22px;height:22px;border:2px solid var(--ink)" onerror="this.remove()">` : ""}<b style="font-family:var(--key);font-size:12px">$${esc(c.symbol)}</b><span class="chip d${c.depth}">${layerName(c.depth)}</span></a><span style="font-family:var(--num);font-size:18px">${usd(c.mcapUsd)} · ${ago(c.launchedAt)}</span></div>`).join("") : `<div class="empty">no layer launched yet — <a href="#launch" style="border-bottom:2px solid var(--ink)">launch the first L2</a></div>`;
 }
 async function loadRuns() {
   try { const r = await fetch("/api/runs?limit=8"); if (!r.ok) return; runs = await r.json(); } catch { return; }
-  for (const x of runs) { if (!seenRuns.has(x.id)) { if (seenRuns.size) { x.isRoot ? scene.drink(6) : scene.sap(x.mint, 4); } seenRuns.add(x.id); } }
-  $("latestRuns").innerHTML = runs.length ? runs.slice(0, 5).map((x) => `<div class="row" style="justify-content:space-between;border-bottom:2px dotted var(--line);padding:5px 0"><a href="#c/${x.mint}"><b style="font-family:var(--key);font-size:12px">$${esc(x.symbol)}</b> <span class="muted" style="font-size:12px">${ago(x.t)}</span></a><span style="font-family:var(--num);font-size:18px">${compact(x.selfBurned)} burned${x.downQuote ? " · " + compact(x.downQuote) + " $" + esc(x.quoteSymbol) + " ↓" : ""} ${chip(x.status, x.dry)}</span></div>`).join("") : `<div class="empty">no sap run yet — the first one fires on the clock</div>`;
+  for (const x of runs) { if (!seenRuns.has(x.id)) { if (seenRuns.size) { x.isL1 ? scene.finalize(6) : scene.settle(x.mint, 4); } seenRuns.add(x.id); } }
+  $("latestRuns").innerHTML = runs.length ? runs.slice(0, 5).map((x) => `<div class="row" style="justify-content:space-between;border-bottom:2px dotted var(--line);padding:5px 0"><a href="#c/${x.mint}"><b style="font-family:var(--key);font-size:12px">$${esc(x.symbol)}</b> <span class="muted" style="font-size:12px">${ago(x.t)}</span></a><span style="font-family:var(--num);font-size:18px">${compact(x.selfBurned)} burned${x.downQuote ? " · " + compact(x.downQuote) + " $" + esc(x.quoteSymbol) + " ↓" : ""} ${chip(x.status, x.dry)}</span></div>`).join("") : `<div class="empty">no settlement yet — the first one fires on the clock</div>`;
 }
 // countdown
 setInterval(() => {
   if (!T || !T.started) return;
-  const now = T.now + (Date.now() - T._at) / 1000, f = T.sap.nextAt - now;
-  $("runCd").textContent = f > 0 ? hms(f) : "RUNNING"; $("runCd").classList.toggle("blink", f <= 0);
+  const now = T.now + (Date.now() - T._at) / 1000, f = T.settlement.nextAt - now;
+  $("runCd").textContent = f > 0 ? hms(f) : "SETTLING"; $("runCd").classList.toggle("blink", f <= 0);
 }, 500);
-$("copyKey").addEventListener("click", () => { if (T && T.root) copy(T.root.mint, "CA copied"); });
+$("copyKey").addEventListener("click", () => { if (T && T.l1) copy(T.l1.mint, "CA copied"); });
 
 // ------------------------------------------------------------- charts
 document.querySelectorAll("#rangeKeys button").forEach((b) => b.addEventListener("click", () => { range = b.dataset.r; document.querySelectorAll("#rangeKeys button").forEach((x) => x.classList.toggle("on", x === b)); loadChart(); }));
 async function loadChart() {
-  if (!T || !T.root) return;
-  try { const r = await fetch(`/api/coin/${T.root.mint}/chart?r=${range}`); if (r.ok) chart = await r.json(); } catch { return; }
+  if (!T || !T.l1) return;
+  try { const r = await fetch(`/api/coin/${T.l1.mint}/chart?r=${range}`); if (r.ok) chart = await r.json(); } catch { return; }
   drawChart($("chart"), chart);
 }
 function drawChart(c, data) {
   const ctx = c.getContext("2d"), W = c.width, H = c.height;
-  ctx.imageSmoothingEnabled = false; ctx.fillStyle = "#fbf2d8"; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = "#e9dcb0"; for (let x = 0; x < W; x += 32) ctx.fillRect(x, 0, 2, H); for (let y = 0; y < H; y += 32) ctx.fillRect(0, y, W, 2);
+  ctx.imageSmoothingEnabled = false; ctx.fillStyle = "#eef2fb"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#d3dcf0"; for (let x = 0; x < W; x += 32) ctx.fillRect(x, 0, 2, H); for (let y = 0; y < H; y += 32) ctx.fillRect(0, y, W, 2);
   const pts = data ? data.points : [];
-  ctx.font = "11px Silkscreen, monospace"; ctx.fillStyle = "#6f6551"; ctx.textAlign = "left";
+  ctx.font = "11px Silkscreen, monospace"; ctx.fillStyle = "#5a6486"; ctx.textAlign = "left";
   if (pts.length < 2) { ctx.fillText("NO PRICE HISTORY YET", 12, 22); return; }
   const t0 = pts[0].t, t1 = pts[pts.length - 1].t, lo = Math.min(...pts.map((p) => p.c)), hi = Math.max(...pts.map((p) => p.c));
   const X = (t) => 8 + ((t - t0) / Math.max(1, t1 - t0)) * (W - 16), Y = (v) => H - 14 - ((v - lo) / Math.max(1e-12, hi - lo)) * (H - 40);
-  ctx.fillStyle = "#2a2823"; let px = X(pts[0].t), py = Y(pts[0].c);
+  ctx.fillStyle = "#1c2240"; let px = X(pts[0].t), py = Y(pts[0].c);
   for (const p of pts) { const x = X(p.t), y = Y(p.c); const x0 = Math.min(px, x), x1 = Math.max(px, x); ctx.fillRect(x0, py - 1, x1 - x0 + 3, 3); const y0 = Math.min(py, y), y1 = Math.max(py, y); ctx.fillRect(x - 1, y0, 3, y1 - y0 + 3); px = x; py = y; }
   const near = (t) => { let b = pts[0]; for (const p of pts) if (Math.abs(p.t - t) < Math.abs(b.t - t)) b = p; return b; };
   for (const r of data.runs || []) { if (r.t < t0 || r.t > t1) continue; const x = X(r.t), y = Y(near(r.t).c); ctx.fillStyle = r.dry ? "#b9b3a5" : "#8a5fd1"; ctx.fillRect(x - 1, y - 14, 3, 3); ctx.fillRect(x - 3, y - 11, 7, 3); ctx.fillRect(x - 1, y - 8, 3, 3); }
-  ctx.fillStyle = "#6f6551"; ctx.textAlign = "left"; ctx.fillText(price(hi), 8, 14); ctx.fillText(price(lo), 8, H - 4);
+  ctx.fillStyle = "#5a6486"; ctx.textAlign = "left"; ctx.fillText(price(hi), 8, 14); ctx.fillText(price(lo), 8, H - 4);
   ctx.textAlign = "right"; ctx.fillText("FROM THE CHAIN", W - 8, 14);
 }
 
-// ------------------------------------------------------------- coins
+// ------------------------------------------------------------- layers (coins)
 document.querySelectorAll("#sortKeys button").forEach((b) => b.addEventListener("click", () => { sort = b.dataset.s; document.querySelectorAll("#sortKeys button").forEach((x) => x.classList.toggle("on", x === b)); loadCoins(); }));
 $("q").addEventListener("input", () => loadCoins());
 async function loadCoins() {
   let list = [];
   try { const r = await fetch(`/api/coins?sort=${sort}&q=${encodeURIComponent($("q").value.trim())}`); if (!r.ok) return; list = (await r.json()).coins; } catch { return; }
   $("coinCards").innerHTML = list.map((c) => `<div class="card has-tab cc" onclick="location.hash='#c/${c.mint}'">
-    <div class="tab ${c.depth === 1 ? "green" : c.depth === 2 ? "" : "purple"}">${ico(c.depth === 1 ? "branch" : "leaf", 14)} DEPTH ${c.depth} · ${depthName(c.depth)}</div>
+    <div class="tab ${c.depth === 1 ? "green" : c.depth === 2 ? "" : "purple"}">${ico("cube", 14)} ${layerName(c.depth)} · DEPTH ${c.depth}</div>
     <div class="head"><img class="coinico" src="${esc(c.image || "/icon.png")}" alt="" onerror="this.src='/icon.png'"><div class="t"><b>$${esc(c.symbol)}</b><span>${esc(c.name)}</span></div></div>
     <div class="crumbs" style="margin-top:8px">${crumbsShort(c)}</div>
-    <table class="kv" style="margin-top:8px"><tr><td>Mcap</td><td>${usd(c.mcapUsd)}</td></tr><tr><td>Burned</td><td>${(c.burnedPct * 100).toFixed(2)}%</td></tr><tr><td>Sap burned</td><td>${usd(c.totalSapUsd)}</td></tr><tr><td>Grown on it</td><td>${c.children}</td></tr><tr><td>Born</td><td style="font-family:var(--pix);font-size:13px">${ago(c.launchedAt)}</td></tr></table>
+    <table class="kv" style="margin-top:8px"><tr><td>Mcap</td><td>${usd(c.mcapUsd)}</td></tr><tr><td>Burned</td><td>${(c.burnedPct * 100).toFixed(2)}%</td></tr><tr><td>Fees settled</td><td>${usd(c.totalFeesUsd)}</td></tr><tr><td>Layers on it</td><td>${c.children}</td></tr><tr><td>Deployed</td><td style="font-family:var(--pix);font-size:13px">${ago(c.launchedAt)}</td></tr></table>
   </div>`).join("");
   $("coinsEmpty").style.display = list.length ? "none" : "block"; icons();
 }
-function crumbsShort(c) { const all = [...(T ? [T.root] : []).filter(Boolean), ...coinsList]; const parts = [`<span class="muted">SOL</span>`]; for (const m of c.chain) { const k = all.find((x) => x && x.mint === m); parts.push(`<span class="arrow">→</span>`, `<span>$${esc(k ? k.symbol : m.slice(0, 4))}</span>`); } parts.push(`<span class="arrow">→</span>`, `<b>$${esc(c.symbol)}</b>`); return parts.join(" "); }
+function crumbsShort(c) { const all = [...(T ? [T.l1] : []).filter(Boolean), ...coinsList]; const parts = [`<span class="muted">SOL</span>`]; for (const m of c.chain) { const k = all.find((x) => x && x.mint === m); parts.push(`<span class="arrow">→</span>`, `<span>$${esc(k ? k.symbol : m.slice(0, 4))}</span>`); } parts.push(`<span class="arrow">→</span>`, `<b>$${esc(c.symbol)}</b>`); return parts.join(" "); }
 
 // ------------------------------------------------------------- coin page
 $("coinCopy").addEventListener("click", () => { if (curCoin) copy(curCoin.mint, "CA copied"); });
 async function openCoin(mint) {
   let c; try { const r = await fetch(`/api/coin/${mint}`); if (!r.ok) { $("coinName").textContent = "unknown coin"; return; } c = await r.json(); } catch { return; }
   curCoin = c; const q = c.quote;
-  $("coinTabTxt").textContent = "$" + c.symbol + (c.isRoot ? " · THE TRUNK" : " · " + depthName(c.depth).toUpperCase());
+  $("coinTabTxt").textContent = "$" + c.symbol + (c.isL1 ? " · THE BASE LAYER" : " · " + layerName(c.depth));
   $("coinCrumbs").innerHTML = crumbs(c); $("coinImg").src = c.image || "/icon.png"; $("coinName").textContent = c.name;
-  $("coinDepth").className = "chip d" + c.depth; $("coinDepth").textContent = "depth " + c.depth; $("coinStatus").textContent = c.graduated ? "PumpSwap pool" : "bonding curve";
+  $("coinDepth").className = "chip d" + c.depth; $("coinDepth").textContent = layerName(c.depth) + " · depth " + c.depth; $("coinStatus").textContent = c.graduated ? "PumpSwap pool" : "bonding curve";
   $("coinDesc").textContent = c.description || ""; $("coinCa").textContent = c.mint;
-  const canGrow = T && c.depth < T.maxDepth;
-  $("coinKeys").innerHTML = `<a class="key yellow small" href="${c.links.pump}" target="_blank" rel="noopener">${ico("coin", 14)} BUY ON PUMP.FUN</a>${canGrow ? `<a class="key green small" href="#grow/${c.mint}">${ico("sprout", 14)} GROW ON $${esc(c.symbol)}</a>` : `<span class="chip">${ico("lock")} max depth</span>`}<a class="key small" href="${c.links.explorer}" target="_blank" rel="noopener">${ico("search", 14)} SOLSCAN</a><a class="key small" href="${c.links.wallet}" target="_blank" rel="noopener">${ico("chest", 14)} ENGINE WALLET</a>${c.twitter ? `<a class="key small" href="${esc(c.twitter)}" target="_blank" rel="noopener">${ico("x", 14)}</a>` : ""}${c.telegram ? `<a class="key small blue" href="${esc(c.telegram)}" target="_blank" rel="noopener">${ico("plane", 14)}</a>` : ""}`;
-  $("coinMarket").innerHTML = `<tr><td>Price</td><td>${price(c.priceUsd)}</td></tr><tr><td>in $${esc(q.symbol)}</td><td>${c.priceQuote ? c.priceQuote.toExponential(3) : "—"}</td></tr><tr><td>Market cap</td><td>${usd(c.mcapUsd)}</td></tr><tr><td>Supply</td><td>${compact(c.supply)}</td></tr><tr><td>Burned</td><td>${compact(c.burned)} (${(c.burnedPct * 100).toFixed(2)}%)</td></tr><tr><td>Tax</td><td>${c.isRoot ? "pump.fun std" : c.taxBps / 100 + "% in $" + esc(q.symbol)}</td></tr><tr><td>Born</td><td style="font-family:var(--pix);font-size:13px">${c.launchedAt ? new Date(c.launchedAt * 1000).toLocaleDateString() : "—"}</td></tr>`;
-  $("coinSap").innerHTML = `<tr><td>Waiting (unclaimed)</td><td>${c.pot.unclaimed.toFixed(4)} ${esc(q.symbol)}</td></tr><tr><td>In the engine wallet</td><td>${(c.isRoot ? c.pot.walletSol : c.pot.walletQuote).toFixed(4)} ${esc(q.symbol)}</td></tr><tr><td>Next run buys ≈</td><td>${compact(c.pot.estTokens || 0)} $${esc(c.symbol)}</td></tr><tr><td>Runs</td><td>${c.cyclesRun}</td></tr><tr><td>Claimed, total</td><td>${c.totalClaimedQuote.toFixed(4)} ${esc(q.symbol)}</td></tr><tr><td>Self burned, total</td><td>${compact(c.totalSelfBurned)} $${esc(c.symbol)}</td></tr><tr><td>Down burned, total</td><td>${c.isRoot ? "—" : c.totalDownQuote.toFixed(4) + " $" + esc(q.symbol)}</td></tr><tr><td>Sap burned (USD)</td><td>${usd(c.totalSapUsd)}</td></tr><tr><td>Gas</td><td>${c.pot.walletSol.toFixed(4)} SOL</td></tr>`;
+  const canLaunch = T && c.depth < T.maxDepth;
+  $("coinKeys").innerHTML = `<a class="key yellow small" href="${c.links.pump}" target="_blank" rel="noopener">${ico("coin", 14)} BUY ON PUMP.FUN</a>${canLaunch ? `<a class="key green small" href="#launch/${c.mint}">${ico("rollup", 14)} LAUNCH ON $${esc(c.symbol)}</a>` : `<span class="chip">${ico("lock")} max height</span>`}<a class="key small" href="${c.links.explorer}" target="_blank" rel="noopener">${ico("search", 14)} SOLSCAN</a><a class="key small" href="${c.links.wallet}" target="_blank" rel="noopener">${ico("chest", 14)} SEQUENCER WALLET</a>${c.twitter ? `<a class="key small" href="${esc(c.twitter)}" target="_blank" rel="noopener">${ico("x", 14)}</a>` : ""}${c.telegram ? `<a class="key small blue" href="${esc(c.telegram)}" target="_blank" rel="noopener">${ico("plane", 14)}</a>` : ""}`;
+  $("coinMarket").innerHTML = `<tr><td>Price</td><td>${price(c.priceUsd)}</td></tr><tr><td>in $${esc(q.symbol)}</td><td>${c.priceQuote ? c.priceQuote.toExponential(3) : "—"}</td></tr><tr><td>Market cap</td><td>${usd(c.mcapUsd)}</td></tr><tr><td>Supply</td><td>${compact(c.supply)}</td></tr><tr><td>Burned</td><td>${compact(c.burned)} (${(c.burnedPct * 100).toFixed(2)}%)</td></tr><tr><td>Fee</td><td>${c.isL1 ? "pump.fun std" : c.taxBps / 100 + "% in $" + esc(q.symbol)}</td></tr><tr><td>Deployed</td><td style="font-family:var(--pix);font-size:13px">${c.launchedAt ? new Date(c.launchedAt * 1000).toLocaleDateString() : "—"}</td></tr>`;
+  $("coinSettle").innerHTML = `<tr><td>Waiting (unclaimed)</td><td>${c.pot.unclaimed.toFixed(4)} ${esc(q.symbol)}</td></tr><tr><td>In the sequencer wallet</td><td>${(c.isL1 ? c.pot.walletSol : c.pot.walletQuote).toFixed(4)} ${esc(q.symbol)}</td></tr><tr><td>Next settlement buys ≈</td><td>${compact(c.pot.estTokens || 0)} $${esc(c.symbol)}</td></tr><tr><td>Settlements</td><td>${c.cyclesRun}</td></tr><tr><td>Claimed, total</td><td>${c.totalClaimedQuote.toFixed(4)} ${esc(q.symbol)}</td></tr><tr><td>Self burned, total</td><td>${compact(c.totalSelfBurned)} $${esc(c.symbol)}</td></tr><tr><td>Below burned, total</td><td>${c.isL1 ? "—" : c.totalDownQuote.toFixed(4) + " $" + esc(q.symbol)}</td></tr><tr><td>Fees settled</td><td>${usd(c.totalFeesUsd)}</td></tr>`;
   $("coinNote").textContent = c.lastNote || "";
-  $("crDown").textContent = c.isRoot ? "—" : "Burned ($" + q.symbol + ")";
-  $("coinKids").innerHTML = c.childrenList.length ? c.childrenList.map((k) => `<div class="row" style="justify-content:space-between;border-bottom:2px dotted var(--line);padding:5px 0"><a href="#c/${k.mint}" class="row" style="gap:8px">${k.image ? `<img src="${esc(k.image)}" style="width:22px;height:22px;border:2px solid var(--ink)" onerror="this.remove()">` : ""}<b style="font-family:var(--key);font-size:12px">$${esc(k.symbol)}</b><span class="chip d${k.depth}">depth ${k.depth}</span></a><span style="font-family:var(--num);font-size:18px">${usd(k.mcapUsd)}</span></div>`).join("") : `<div class="empty">nothing yet${canGrow ? ` — <a href="#grow/${c.mint}" style="border-bottom:2px solid var(--ink)">grow on $${esc(c.symbol)}</a>` : ""}</div>`;
+  $("crDown").textContent = c.isL1 ? "—" : "Burned ($" + q.symbol + ")";
+  $("coinKids").innerHTML = c.childrenList.length ? c.childrenList.map((k) => `<div class="row" style="justify-content:space-between;border-bottom:2px dotted var(--line);padding:5px 0"><a href="#c/${k.mint}" class="row" style="gap:8px">${k.image ? `<img src="${esc(k.image)}" style="width:22px;height:22px;border:2px solid var(--ink)" onerror="this.remove()">` : ""}<b style="font-family:var(--key);font-size:12px">$${esc(k.symbol)}</b><span class="chip d${k.depth}">${layerName(k.depth)}</span></a><span style="font-family:var(--num);font-size:18px">${usd(k.mcapUsd)}</span></div>`).join("") : `<div class="empty">nothing yet${canLaunch ? ` — <a href="#launch/${c.mint}" style="border-bottom:2px solid var(--ink)">launch the first ${layerName(c.depth + 1)} on $${esc(c.symbol)}</a>` : ""}</div>`;
   icons();
   try { const r = await fetch(`/api/coin/${mint}/chart?r=24h`); if (r.ok) drawChart($("coinChart"), await r.json()); } catch {}
   try {
     const r = await fetch(`/api/coin/${mint}/runs?limit=100`); if (!r.ok) return; const rows = await r.json();
-    $("coinRuns").querySelector("tbody").innerHTML = rows.map((x) => `<tr><td>${x.id}</td><td class="t">${ago(x.t)}</td><td class="r">${x.claimedQuote.toFixed(4)}</td><td class="r">${compact(x.selfBurned)}</td><td class="r">${c.isRoot ? "—" : x.downQuote.toFixed(4)}</td><td class="r">${usd(x.sapUsd)}</td><td class="t">${chip(x.status, x.dry)}${x.status !== "done" && x.note ? `<div class="muted" style="font-size:12px;max-width:260px;white-space:normal">${esc(x.note)}</div>` : ""}</td><td class="t txs">${tx(x.claimTx, "claim")}${tx(x.buyTx, "buy")}${tx(x.burnTx, "burn")}${tx(x.downTx, "down")}${tx(x.gasTx, "gas")}</td></tr>`).join("");
+    $("coinRuns").querySelector("tbody").innerHTML = rows.map((x) => `<tr><td>${x.id}</td><td class="t">${ago(x.t)}</td><td class="r">${x.claimedQuote.toFixed(4)}</td><td class="r">${compact(x.selfBurned)}</td><td class="r">${c.isL1 ? "—" : x.downQuote.toFixed(4)}</td><td class="r">${usd(x.feesUsd)}</td><td class="t">${chip(x.status, x.dry)}${x.status !== "done" && x.note ? `<div class="muted" style="font-size:12px;max-width:260px;white-space:normal">${esc(x.note)}</div>` : ""}</td><td class="t txs">${tx(x.claimTx, "claim")}${tx(x.buyTx, "buy")}${tx(x.burnTx, "burn")}${tx(x.downTx, "below")}${tx(x.gasTx, "gas")}</td></tr>`).join("");
     $("coinRunsEmpty").style.display = rows.length ? "none" : "block";
   } catch {}
 }
 
-// ------------------------------------------------------------- sap ledger
-async function loadSap() {
+// ------------------------------------------------------------- settlement ledger
+async function loadSettlement() {
   try { const r = await fetch("/api/runs?limit=120"); if (!r.ok) return; const rows = await r.json();
-    $("sapTable").querySelector("tbody").innerHTML = rows.map((x) => `<tr class="click" onclick="location.hash='#c/${x.mint}'"><td>${x.id}</td><td class="t">${x.image ? `<img src="${esc(x.image)}" onerror="this.remove()">` : ""}<b>$${esc(x.symbol)}</b> <span class="chip d${x.depth}">d${x.depth}</span></td><td class="t">${ago(x.t)}</td><td class="r">${x.claimedQuote.toFixed(4)} ${esc(x.quoteSymbol)}</td><td class="r">${compact(x.selfBurned)}</td><td class="r">${x.isRoot ? "—" : x.downQuote.toFixed(4) + " " + esc(x.quoteSymbol)}</td><td class="r">${usd(x.sapUsd)}</td><td class="t txs">${tx(x.claimTx, "claim")}${tx(x.buyTx, "buy")}${tx(x.burnTx, "burn")}${tx(x.downTx, "down")}</td></tr>`).join("");
-    $("sapEmpty").style.display = rows.length ? "none" : "block";
+    $("settleTable").querySelector("tbody").innerHTML = rows.map((x) => `<tr class="click" onclick="location.hash='#c/${x.mint}'"><td>${x.id}</td><td class="t">${x.image ? `<img src="${esc(x.image)}" onerror="this.remove()">` : ""}<b>$${esc(x.symbol)}</b> <span class="chip d${x.depth}">${layerName(x.depth)}</span></td><td class="t">${ago(x.t)}</td><td class="r">${x.claimedQuote.toFixed(4)} ${esc(x.quoteSymbol)}</td><td class="r">${compact(x.selfBurned)}</td><td class="r">${x.isL1 ? "—" : x.downQuote.toFixed(4) + " " + esc(x.quoteSymbol)}</td><td class="r">${usd(x.feesUsd)}</td><td class="t txs">${tx(x.claimTx, "claim")}${tx(x.buyTx, "buy")}${tx(x.burnTx, "burn")}${tx(x.downTx, "below")}</td></tr>`).join("");
+    $("settleEmpty").style.display = rows.length ? "none" : "block";
   } catch {}
-  if (T) { $("sRuns").textContent = fmt(T.totals.runs); $("sUsd").textContent = usd(T.totals.sapUsd); $("sTokens").textContent = compact(T.totals.selfBurned); $("sCoins").textContent = fmt(T.tree.coins); $("sLast").textContent = T.sap.lastRunAt ? ago(T.sap.lastRunAt) : "—"; $("rSelf").textContent = T.rules.split.selfBps / 100 + "%"; $("rDown").textContent = T.rules.split.downBps / 100 + "%"; $("rOps").textContent = T.rules.split.opsBps / 100 + "%"; $("rMin").textContent = "$" + T.rules.minSapUsd; }
+  if (T) { $("sRuns").textContent = fmt(T.totals.runs); $("sUsd").textContent = usd(T.totals.feesUsd); $("sTokens").textContent = compact(T.totals.selfBurned); $("sCoins").textContent = fmt(T.stack.coins); $("sLast").textContent = T.settlement.lastRunAt ? ago(T.settlement.lastRunAt) : "—"; $("rSelf").textContent = T.rules.split.selfBps / 100 + "%"; $("rDown").textContent = T.rules.split.downBps / 100 + "%"; $("rOps").textContent = T.rules.split.opsBps / 100 + "%"; $("rMin").textContent = "$" + T.rules.minSapUsd; }
 }
 
-// ------------------------------------------------------------- grow
-let wallet = null, provider = null, growParent = "", growOpts = null, launchId = null, deposit = null, devBuy = 0, logoId = "", growInit = false;
+// ------------------------------------------------------------- launch
+let wallet = null, provider = null, launchParent = "", launchOpts = null, launchId = null, deposit = null, devBuy = 0, logoId = "", launchInit = false;
 function showStep(n) { document.querySelectorAll("#steps .chip").forEach((s, i) => s.classList.toggle("on", i + 1 <= n)); ["g-wallet", "g-parent", "g-form", "g-pay", "g-wait", "g-live"].forEach((id, i) => { $(id).hidden = i + 1 !== n; }); summary(); }
 function showErr(m) { $("gErr").textContent = m; $("gErr").classList.toggle("on", !!m); }
-async function initGrow() {
-  try { const r = await fetch("/api/grow/options"); if (r.ok) growOpts = await r.json(); } catch {}
-  if (!growOpts) return;
-  $("sumTax").textContent = growOpts.taxBps / 100 + "%"; $("sumIv").textContent = ivTxt(growOpts.rules.intervalSec); $("sumSelf").textContent = growOpts.rules.split.selfBps / 100 + "%"; $("sumDown").textContent = growOpts.rules.split.downBps / 100 + "%";
-  $("parentGateTxt").textContent = `pump.fun allows depth ≤ ${growOpts.maxDepth} right now.`;
-  $("parents").innerHTML = growOpts.parents.map((p) => `<div class="pp ${p.mint === growParent ? "on" : ""}" data-mint="${p.mint}"><img src="${esc(p.image || "/icon.png")}" alt="" onerror="this.src='/icon.png'"><div><b>$${esc(p.symbol)}</b><small>depth ${p.depth} → ${p.depth + 1} · ${usd(p.mcapUsd)}</small></div></div>`).join("") || `<div class="empty">nothing to grow on yet</div>`;
+async function initLaunch() {
+  try { const r = await fetch("/api/launch/options"); if (r.ok) launchOpts = await r.json(); } catch {}
+  if (!launchOpts) return;
+  $("sumTax").textContent = launchOpts.taxBps / 100 + "%"; $("sumIv").textContent = ivTxt(launchOpts.rules.intervalSec); $("sumSelf").textContent = launchOpts.rules.split.selfBps / 100 + "%"; $("sumDown").textContent = launchOpts.rules.split.downBps / 100 + "%";
+  $("parentGateTxt").textContent = `pump.fun allows up to ${layerName(launchOpts.maxDepth)} right now.`;
+  $("parents").innerHTML = launchOpts.parents.map((p) => `<div class="pp ${p.mint === launchParent ? "on" : ""}" data-mint="${p.mint}"><img src="${esc(p.image || "/icon.png")}" alt="" onerror="this.src='/icon.png'"><div><b>$${esc(p.symbol)}</b><small>${layerName(p.depth)} → ${layerName(p.depth + 1)} · ${usd(p.mcapUsd)}</small></div></div>`).join("") || `<div class="empty">nothing to launch on yet</div>`;
   $("parents").querySelectorAll(".pp").forEach((el) => el.addEventListener("click", () => pickParent(el.dataset.mint)));
-  if (growParent) pickParent(growParent);
-  if (!growInit) { growInit = true; if (!wallet) showStep(1); }
+  if (launchParent) pickParent(launchParent);
+  if (!launchInit) { launchInit = true; if (!wallet) showStep(1); }
   summary();
 }
 async function pickParent(mint) {
-  growParent = mint; $("parents").querySelectorAll(".pp").forEach((el) => el.classList.toggle("on", el.dataset.mint === mint));
-  const p = growOpts.parents.find((x) => x.mint === mint); if (!p) return;
+  launchParent = mint; $("parents").querySelectorAll(".pp").forEach((el) => el.classList.toggle("on", el.dataset.mint === mint));
+  const p = launchOpts.parents.find((x) => x.mint === mint); if (!p) return;
   $("parentChain").innerHTML = `checking $${esc(p.symbol)}'s chain on pump.fun…`; $("parentOk").disabled = true;
-  try { const r = await fetch(`/api/grow/check/${mint}`); const j = await r.json();
-    if (j.ok) { $("parentChain").innerHTML = `${ico("check", 14)} your coin would be <b>depth ${j.depth}</b>, paired with <b>$${esc(p.symbol)}</b> · create_v2 passes ${j.chainLength} curve group${j.chainLength > 1 ? "s" : ""}${j.migratedQuote ? " (parent migrated: pool accounts included)" : ""}`; $("parentOk").disabled = false; }
+  try { const r = await fetch(`/api/launch/check/${mint}`); const j = await r.json();
+    if (j.ok) { $("parentChain").innerHTML = `${ico("check", 14)} your coin would be an <b>${layerName(j.depth)}</b> (depth ${j.depth}), paired with <b>$${esc(p.symbol)}</b> · create_v2 passes ${j.chainLength} curve group${j.chainLength > 1 ? "s" : ""}${j.migratedQuote ? " (base layer migrated: pool accounts included)" : ""}`; $("parentOk").disabled = false; }
     else $("parentChain").innerHTML = `${ico("skull", 14)} ${esc(j.error)}`;
   } catch { $("parentChain").textContent = "could not check the chain"; }
   summary();
 }
-$("parentOk").addEventListener("click", () => { if (growParent) showStep(3); });
+$("parentOk").addEventListener("click", () => { if (launchParent) showStep(3); });
 function summary() {
-  const p = growOpts && growOpts.parents.find((x) => x.mint === growParent);
-  const gas = growOpts ? growOpts.launch.gasSol : 0.06, total = gas + devBuy;
-  $("sumTotal").textContent = (growOpts ? total.toFixed(3) : "–") + " SOL";
+  const p = launchOpts && launchOpts.parents.find((x) => x.mint === launchParent);
+  const gas = launchOpts ? launchOpts.launch.gasSol : 0.06, total = gas + devBuy;
+  $("sumTotal").textContent = (launchOpts ? total.toFixed(3) : "–") + " SOL";
   $("sumLines").innerHTML = `<tr><td>create + fees + gas reserve</td><td>${gas} SOL</td></tr><tr><td>dev buy</td><td>${devBuy} SOL</td></tr>`;
-  $("sumChain").innerHTML = p ? `<span class="muted">SOL</span> <span class="arrow">→</span> ${p.depth > 0 ? `<span>…</span> <span class="arrow">→</span> ` : ""}<span>$${esc(p.symbol)}</span> <span class="arrow">→</span> <b>$${esc(($("symbol").value || "YOURS").toUpperCase())}</b> <span class="chip d${p.depth + 1}">depth ${p.depth + 1}</span>` : `<span class="muted">pick a parent</span>`;
+  $("sumChain").innerHTML = p ? `<span class="muted">SOL</span> <span class="arrow">→</span> ${p.depth > 0 ? `<span>…</span> <span class="arrow">→</span> ` : ""}<span>$${esc(p.symbol)}</span> <span class="arrow">→</span> <b>$${esc(($("symbol").value || "YOURS").toUpperCase())}</b> <span class="chip d${p.depth + 1}">${layerName(p.depth + 1)}</span>` : `<span class="muted">pick a base layer</span>`;
 }
 $("symbol").addEventListener("input", summary);
 // wallet (Solana)
@@ -713,13 +713,13 @@ $("devbuy").addEventListener("input", () => { devBuy = Math.max(0, Number($("dev
 // submit
 $("go").addEventListener("click", async () => {
   showErr("");
-  const body = { name: $("name").value.trim(), symbol: $("symbol").value.trim().toUpperCase(), description: $("desc").value.trim(), twitter: $("twitter").value.trim(), telegram: $("telegram").value.trim(), devBuySol: devBuy, userWallet: wallet, imageId: logoId, parent: growParent };
-  if (!body.name) return showErr("give it a name"); if (!body.symbol) return showErr("give it a ticker"); if (!logoId) return showErr("every coin needs a logo"); if (!growParent) return showErr("pick a parent");
+  const body = { name: $("name").value.trim(), symbol: $("symbol").value.trim().toUpperCase(), description: $("desc").value.trim(), twitter: $("twitter").value.trim(), telegram: $("telegram").value.trim(), devBuySol: devBuy, userWallet: wallet, imageId: logoId, parent: launchParent };
+  if (!body.name) return showErr("give it a name"); if (!body.symbol) return showErr("give it a ticker"); if (!logoId) return showErr("every layer needs a logo"); if (!launchParent) return showErr("pick a base layer");
   try {
-    const r = await fetch("/api/grow", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    const r = await fetch("/api/launch", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
     const j = await r.json(); if (!r.ok) throw new Error(j.error || "launch refused");
     launchId = j.launchId; deposit = j;
-    $("payMsg").innerHTML = `Send <b>${j.expectedSol} SOL</b> to the coin's fresh wallet: ${j.gasSol} SOL covers the create, the fees and the wallet's permanent gas reserve${j.devBuySol ? `, ${j.devBuySol} SOL is your dev buy` : ""}. $${esc(j.parent)} → <b>$${esc(body.symbol)}</b> at depth ${j.depth}. The launch fires as soon as it lands.`;
+    $("payMsg").innerHTML = `Send <b>${j.expectedSol} SOL</b> to the coin's fresh wallet: ${j.gasSol} SOL covers the create, the fees and the wallet's permanent gas reserve${j.devBuySol ? `, ${j.devBuySol} SOL is your dev buy` : ""}. $${esc(j.parent)} → <b>$${esc(body.symbol)}</b> as an ${layerName(j.depth)}. The launch fires as soon as it lands.`;
     $("payAmt").textContent = j.expectedSol; $("mAmt").textContent = j.expectedSol; $("mAddr").textContent = j.depositAddress; $("mMin").textContent = j.timeoutMin;
     showStep(4);
   } catch (e) { showErr(e.message); }
@@ -742,8 +742,8 @@ async function waitForLaunch() {
   for (;;) {
     await new Promise((r) => setTimeout(r, 4000));
     try {
-      const j = await (await fetch(`/api/grow/${launchId}`)).json();
-      $("waitMsg").textContent = j.status === "awaiting_deposit" ? "watching the deposit wallet…" : j.status === "launching" ? "SOL landed — creating the coin on pump.fun and routing the dev buy up the tree…" : j.status;
+      const j = await (await fetch(`/api/launch/${launchId}`)).json();
+      $("waitMsg").textContent = j.status === "awaiting_deposit" ? "watching the deposit wallet…" : j.status === "launching" ? "SOL landed — creating the coin on pump.fun and routing the dev buy up the stack…" : j.status;
       if (j.status === "live" && j.mint) { $("g-wait").hidden = true; $("g-live").hidden = false; setTimeout(() => { location.hash = "#c/" + j.mint; }, 1500); return; }
       if (["failed", "expired", "refunded"].includes(j.status)) { showErr(`launch ${j.status}: ${j.error || "the deposit window closed"}${j.refundTx ? " · refunded ↗ " + j.refundTx : ""}`); return; }
     } catch {}
@@ -753,35 +753,35 @@ async function waitForLaunch() {
 // ------------------------------------------------------------- docs
 function renderDocs() {
   const R = T ? T.rules : { taxBps: 100, intervalSec: 600, split: { selfBps: 5000, downBps: 5000, opsBps: 0 }, minSapUsd: 0.25 };
-  const md = T && T.maxDepth ? T.maxDepth : 2, root = T && T.root ? "$" + T.root.symbol : "$ROOT";
+  const md = T && T.maxDepth ? T.maxDepth : 2, l1 = T && T.l1 ? "$" + T.l1.symbol : "$L1";
   const S = [
-    ["what-root-is", "What ROOT is", `<p><b>ROOT</b> is a launchpad on pump.fun where every coin is paired with another coin on the tree instead of SOL. <b>${root}</b> is the trunk: a standard pump.fun coin paired with SOL, depth 0. A coin paired with ${root} is a <b>branch</b> (depth 1). A coin paired with a branch is a <b>twig</b> (depth 2). pump.fun enabled depth 1 last week and depth 2 on October 13; the program allows up to 5, and this tree follows pump.fun's gate (right now: depth ≤ ${md}).</p>
-      <p>Why does this matter? Because a coin high on the tree is bought <i>through</i> every coin below it. Buying a twig from SOL is one <b>multi-hop swap</b>: SOL → ${root} → the branch → the twig. Every buy up the tree is a buy of every coin under it. The whole branch moves together.</p>`],
-    ["the-tax", "The tax", `<p>Every coin grown here is born with a creator fee of <b>${R.taxBps / 100}%</b> on every trade, on top of pump.fun's own fee, and it is paid in the <b>coin it grows on</b>: a branch's tax is paid in ${root}, a twig's tax is paid in its branch. The coin's creator is its own engine wallet, so the launchpad is the one that claims it. The rate is fixed at creation and cannot be changed (pump.fun's own rule).</p>
-      <p>${root} itself has pump.fun's standard creator fee, in SOL.</p>`],
-    ["the-sap-run", "The sap run", `<p>One clock for the whole tree. Every <b>${ivTxt(R.intervalSec)}</b>, for every coin:</p>
+    ["what-layers-is", "What LAYERS is", `<p><b>LAYERS</b> is a launchpad on pump.fun where every coin is paired with another coin on the stack instead of SOL. <b>${l1}</b> is the base layer: a standard pump.fun coin paired with SOL, depth 0. A coin paired with ${l1} is an <b>L2</b> (depth 1). A coin paired with an L2 is an <b>L3</b> (depth 2). pump.fun enabled pump-coin quotes in early October and depth 2 on October 13; the program allows up to 5 levels, and this stack follows pump.fun's gate (right now: up to ${layerName(md)}).</p>
+      <p>Why does this matter? Because a coin high on the stack is bought <i>through</i> every layer below it. Buying an L3 from SOL is one <b>multi-hop swap</b>: SOL → ${l1} → the L2 → the L3. Every buy up the stack is a buy of every layer under it. The whole stack moves together.</p>`],
+    ["the-fee", "The fee", `<p>Every coin launched here is born with a creator fee of <b>${R.taxBps / 100}%</b> on every trade, on top of pump.fun's own fee, and it is paid in the <b>layer it runs on</b>: an L2's fee is paid in ${l1}, an L3's fee is paid in its L2. The coin's creator is its own sequencer wallet, so the launchpad is the one that claims it. The rate is fixed at creation and cannot be changed (pump.fun's own rule).</p>
+      <p>${l1} itself has pump.fun's standard creator fee, in SOL.</p>`],
+    ["the-settlement", "The settlement", `<p>One clock for the whole stack. Every <b>${ivTxt(R.intervalSec)}</b>, for every layer:</p>
       <table><tr><th>Step</th><th>What happens</th></tr>
-      <tr><td>1 claim</td><td>sweep the fees v3 trades left on the curve, then collect <b>100%</b> of the creator vault (and the PumpSwap vault after graduation). A branch collects ${root}; a twig collects its branch; the trunk collects SOL.</td></tr>
+      <tr><td>1 claim</td><td>sweep the fees v3 trades left on the curve, then collect <b>100%</b> of the creator vault (and the PumpSwap vault after graduation). An L2 collects ${l1}; an L3 collects its L2; ${l1} collects SOL.</td></tr>
       <tr><td>2 self · ${R.split.selfBps / 100}%</td><td>one buy of the coin itself, on its curve or its pool, paid in its quote — then every token that buy brought in is <b>burned</b>.</td></tr>
-      <tr><td>3 down · ${R.split.downBps / 100}%</td><td>the parent coin is <b>burned</b> on the spot: sap flows down. The trunk has no parent, so for ${root} this half buys ${root} back and burns it too.</td></tr>
+      <tr><td>3 below · ${R.split.downBps / 100}%</td><td>the layer below is <b>burned</b> on the spot: fees settle down. ${l1} has nothing below it, so for ${l1} this half buys ${l1} back and burns it too.</td></tr>
       ${R.split.opsBps ? `<tr><td>4 ops · ${R.split.opsBps / 100}%</td><td>to the ops wallet, in the coin's quote.</td></tr>` : ""}</table>
-      <p>A pot worth less than <b>$${R.minSapUsd}</b> waits in the coin's wallet for the next run. A failed step is retried next run — the sap is still there. Nothing is ever sold. Every run is a row in the ledger with every transaction.</p>`],
-    ["sap-flows-down", "Sap flows down", `<p>Follow one twig. Its holders trade. ${R.taxBps / 100}% of every trade lands as its branch's token. Half of that buys the twig back and burns it; the other half burns the branch. The branch's own traders do the same to it and to ${root}. ${root}'s own fees buy ${root} back and burn it. Everything that grows on the tree ends up burning the coins beneath it, all the way down to the trunk.</p>
-      <p>So the more that is built on a coin, the scarcer that coin gets. Hold low on the tree and everything above you works for you. Grow high on the tree and you ride every coin below you.</p>`],
-    ["growing", "Growing a coin", `<p>Connect a wallet, pick a parent (any coin on the tree whose children would still be within pump.fun's depth gate), name your coin, drop a logo and send SOL to a fresh wallet the launchpad creates for it. That SOL covers the create, the fees, the wallet's permanent gas reserve and, if you want one, a dev buy.</p>
-      <p>The launchpad resolves the parent as a <b>pump-coin quote</b>: pump.fun's SDK walks the parent's whole chain down to ${root} and returns the extra accounts <span class="muted">create_v2</span> needs (the parent's curve or pool, then one group per coin below it). The coin is created paired with the parent, carrying the tax. The dev buy is one multi-hop swap from SOL up the chain into your new coin, and the tokens are sent to your wallet.</p>
-      <p>A new coin's starting price is not a fixed number: pump.fun computes it from the live reserves of every coin on the chain so that your coin raises about as much as a normal SOL launch, counted in its parent.</p>
+      <p>A pot worth less than <b>$${R.minSapUsd}</b> waits in the coin's wallet for the next settlement. A failed step is retried next time — the fees are still there. Nothing is ever sold. Every settlement is a row in the ledger with every transaction.</p>`],
+    ["everything-settles-down", "Everything settles to the base layer", `<p>Follow one L3. Its holders trade. ${R.taxBps / 100}% of every trade lands as its L2's token. Half of that buys the L3 back and burns it; the other half burns the L2. The L2's own traders do the same to it and to ${l1}. ${l1}'s own fees buy ${l1} back and burn it. Everything launched on the stack ends up burning the layers beneath it, all the way down to ${l1}.</p>
+      <p>So the more that is built on a layer, the scarcer that layer gets. Hold low on the stack and everything above you works for you. Launch high on the stack and you ride every layer below you.</p>`],
+    ["launching", "Launching a layer", `<p>Connect a wallet, pick a base layer (any coin on the stack whose layers would still be within pump.fun's gate), name your coin, drop a logo and send SOL to a fresh wallet the launchpad creates for it. That SOL covers the create, the fees, the wallet's permanent gas reserve and, if you want one, a dev buy.</p>
+      <p>The launchpad resolves the base layer as a <b>pump-coin quote</b>: pump.fun's SDK walks its whole chain down to ${l1} and returns the extra accounts <span class="muted">create_v2</span> needs (the base layer's curve or pool, then one group per layer below it). The coin is created paired with the base layer, carrying the fee. The dev buy is one multi-hop swap from SOL up the stack into your new coin, and the tokens are sent to your wallet.</p>
+      <p>A new coin's starting price is not a fixed number: pump.fun computes it from the live reserves of every coin on the chain so that your coin raises about as much as a normal SOL launch, counted in the layer below.</p>
       <p>If the launch fails for any reason the SOL goes back to your wallet. If the dev buy fails after the create, that SOL goes back too.</p>`],
-    ["rings", "The rings", `<p>The tree on the front page grows with the sap burned (USD) and with the coins on it: ${LEVEL_NAMES.map((n, i) => `${n} at ${usd((T ? T.levels : [0, 50, 250, 1000, 5000, 25000, 100000, 500000])[i])} or ${(T ? T.levelsCoins : [0, 1, 3, 6, 12, 25, 50, 100])[i]} coins`).join(" · ")}. Every branch is a real coin, with its logo as the fruit; twigs grow on branches. Sap drops run down the limbs when a coin's run fires; SOL sinks into the soil when the trunk drinks.</p>`],
-    ["prices", "Prices", `<p>Nested coins are on no candle API, so the page reads prices from the chain: a coin's price in its quote comes from its curve's virtual reserves (or its pool's vaults after graduation), and its USD price is that times the quote's USD price, up the chain to SOL. The charts are the engine's own samples.</p>`],
-    ["what-the-engine-can-and-cannot-do", "What the engine can and cannot do", `<table><tr><th>Can</th><td>create coins paired with coins on the tree; claim their tax; buy them back and burn them; burn the parent coin; pause itself (kill switch: the page stays up, nothing moves); change the clock, the split and the thresholds for future runs.</td></tr>
-      <tr><th>Cannot</th><td>sell anything; change a coin's tax after creation; mint tokens; freeze or block a holder; change pump.fun's fee; grow deeper than pump.fun allows.</td></tr></table>
+    ["epochs", "The epochs", `<p>The stack on the front page grows with the fees settled (USD) and with the layers on it: ${LEVEL_NAMES.map((n, i) => `${n} at ${usd((T ? T.levels : [0, 50, 250, 1000, 5000, 25000, 100000, 500000])[i])} or ${(T ? T.levelsCoins : [0, 1, 3, 6, 12, 25, 50, 100])[i]} layers`).join(" · ")}. Every block is a real coin with its logo on the front; L3s sit on their L2. Packets fall down the stack when a layer settles; SOL sinks into the board when ${l1} finalizes.</p>`],
+    ["prices", "Prices", `<p>Nested coins are on no candle API, so the page reads prices from the chain: a coin's price in its quote comes from its curve's virtual reserves (or its pool's vaults after graduation), and its USD price is that times the quote's USD price, down the stack to SOL. The charts are the engine's own samples.</p>`],
+    ["what-the-engine-can-and-cannot-do", "What the sequencer can and cannot do", `<table><tr><th>Can</th><td>create coins paired with coins on the stack; claim their fee; buy them back and burn them; burn the layer below; pause itself (kill switch: the page stays up, nothing moves); change the clock, the split and the thresholds for future settlements.</td></tr>
+      <tr><th>Cannot</th><td>sell anything; change a coin's fee after creation; mint tokens; freeze or block a holder; change pump.fun's fee; go higher than pump.fun allows.</td></tr></table>
       <p>This is an off-chain engine over plain pump.fun coins, not a program: the promise is in the code and in the transaction history, and the history is public. Read it before you trust it.</p>`],
-    ["risks-plainly", "Risks, plainly", `<ul><li>These are memecoins. A coin's sap is fed only by its trading: no volume, no sap, no burn.</li>
-      <li>A coin high on the tree is priced through every coin below it. If a branch dies, its twigs die with it.</li>
-      <li>Every grown coin's creator wallet lives on the engine's server (keys encrypted at rest). If the server stops, fees wait in the vaults until it runs again — nobody else can take them.</li>
-      <li>pump.fun's depth gate, the SDK, Solana's RPCs are outside dependencies; a run can fail and be retried.</li>
-      <li>Burns reduce supply, not your bags. Nothing here is financial advice. The tree does not care about your bags.</li></ul>`],
+    ["risks-plainly", "Risks, plainly", `<ul><li>These are memecoins. A layer's fees are fed only by its trading: no volume, no fees, no burn.</li>
+      <li>A coin high on the stack is priced through every layer below it. If an L2 dies, its L3s die with it.</li>
+      <li>Every layer's creator wallet lives on the engine's server (keys encrypted at rest). If the server stops, fees wait in the vaults until it runs again — nobody else can take them.</li>
+      <li>pump.fun's depth gate, the SDK, Solana's RPCs are outside dependencies; a settlement can fail and be retried.</li>
+      <li>Burns reduce supply, not your bags. Nothing here is financial advice. The stack does not care about your bags.</li></ul>`],
   ];
   $("docIndex").innerHTML = S.map(([id, t]) => `<a href="#docs" onclick="setTimeout(()=>document.getElementById('doc-${id}').scrollIntoView({behavior:'smooth'}),30)">${t}</a>`).join("");
   $("docBody").innerHTML = S.map(([id, t, body]) => `<h4 id="doc-${id}">${t}</h4>${body}`).join("");

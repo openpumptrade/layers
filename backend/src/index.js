@@ -1,29 +1,29 @@
 import { config, mode } from "./config.js";
 import { ensureSchema, acquireEngineLock } from "./db.js";
-import { loadRegistry, rootCoin, liveCoins } from "./tree.js";
+import { loadRegistry, l1Coin, liveCoins } from "./stack.js";
 import { startTracker } from "./tracker.js";
 import { startLauncher } from "./launcher.js";
-import { startSap } from "./sap.js";
+import { startSettlement } from "./settlement.js";
 import { startApi } from "./api.js";
 
-/// ROOT. A launchpad where every coin grows on another coin. One process: the tree (registry) +
-/// tracker (prices through the chain) + grow (launches with pump-coin quotes) + the sap run + API + page.
+/// LAYERS. Launch your L2 on a memecoin. One process: the stack (registry) + tracker (prices through
+/// the chain) + launcher (create_v2 with pump-coin quotes) + the settlement + API + page.
 
 async function main() {
   await ensureSchema();
-  if (!config.rootMint) {
+  if (!config.l1Mint) {
     startApi(false);
-    console.log("[boot] no ROOT_MINT — serving the page in 'not planted yet' mode");
+    console.log("[boot] no L1_MINT — serving the page in 'genesis pending' mode");
     return;
   }
   await loadRegistry();
-  const root = rootCoin();
-  console.log(`[boot] $${root.symbol} ${root.mint} · trunk wallet ${root.wallet} · ${liveCoins().length - 1} coins grown · mode ${mode()} · dryRun ${config.dryRun} · scheduler ${config.schedulerEnabled}`);
+  const l1 = l1Coin();
+  console.log(`[boot] $${l1.symbol} ${l1.mint} · L1 wallet ${l1.wallet} · ${liveCoins().length - 1} layers launched · mode ${mode()} · dryRun ${config.dryRun} · scheduler ${config.schedulerEnabled}`);
   startApi(true);
   await startTracker();
   await acquireEngineLock();
   startLauncher();
-  await startSap();
+  await startSettlement();
 }
 
 main().catch((err) => { console.error("[boot] fatal:", err); process.exit(1); });

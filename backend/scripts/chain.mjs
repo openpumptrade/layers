@@ -11,7 +11,7 @@ const mint = process.argv[2];
 if (!mint) { console.error("usage: node scripts/chain.mjs <mint>"); process.exit(1); }
 
 const g = await pumpGlobals();
-console.log(`pump.fun Global.max_curve_depth = ${g.maxCurveDepth} (program cap ${PROGRAM_MAX_DEPTH}) · this tree allows depth ≤ ${await maxDepthAllowed()}\n`);
+console.log(`pump.fun Global.max_curve_depth = ${g.maxCurveDepth} (program cap ${PROGRAM_MAX_DEPTH}) · this stack allows depth ≤ ${await maxDepthAllowed()}\n`);
 const curve = await loadCurve(mint);
 const chain = await readChain(mint);
 console.log(`${mint}\n  depth ${curve.depth} · quote ${curve.quoteIsSol ? "SOL" : curve.quoteMintPk.toBase58()} · tax ${curve.taxBps / 100}% · ${curve.complete ? "graduated" : "on the curve"} · creator ${curve.creator}`);

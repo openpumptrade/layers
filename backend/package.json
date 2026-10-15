@@ -1,5 +1,5 @@
 {
-  "name": "root-backend",
+  "name": "layers-backend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -7,8 +7,8 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "check": "node --check src/*.js && node --check scripts/*.mjs",
-    "launch-root": "node scripts/launch-root.mjs",
-    "grow": "node scripts/grow.mjs",
+    "launch-l1": "node scripts/launch-l1.mjs",
+    "rollup": "node scripts/rollup.mjs",
     "chain": "node scripts/chain.mjs"
   },
   "dependencies": {

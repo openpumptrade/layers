@@ -4,46 +4,36 @@
   body { margin: 0; background: transparent; }
   canvas { image-rendering: pixelated; display: block; }
   #logo { width: 1024px; height: 1024px; }
-  #og { width: 1200px; height: 630px; position: relative; background: #12231a; background-image: repeating-conic-gradient(#172d21 0 25%, transparent 0 50%); background-size: 40px 40px; overflow: hidden; }
-  #og .t { position: absolute; left: 70px; top: 120px; font-family: Silkscreen, monospace; font-weight: 700; font-size: 130px; line-height: 1; color: #63c15a; text-shadow: 7px 0 #2a2823, -7px 0 #2a2823, 0 7px #2a2823, 0 -7px #2a2823, 7px 7px #2a2823, -7px -7px #2a2823, 7px -7px #2a2823, -7px 7px #2a2823, 18px 18px 0 #0a1510; }
-  #og .s { position: absolute; left: 76px; top: 290px; font-family: "Pixelify Sans", monospace; font-weight: 600; font-size: 36px; color: #fff6d6; text-shadow: 5px 5px 0 #0a1510; width: 500px; line-height: 1.2; }
-  #og .k { position: absolute; left: 76px; top: 480px; display: flex; gap: 16px; }
-  #og .k span { font-family: Silkscreen, monospace; font-size: 22px; text-transform: uppercase; background: #f7c948; color: #2a2823; border: 6px solid #2a2823; padding: 12px 18px; box-shadow: 8px 8px 0 #2a2823; }
-  #og .k span.b { background: #b58cf0; } #og .k span.c { background: #7ccf6a; }
+  #og { width: 1200px; height: 630px; position: relative; background: #0b1020; background-image: linear-gradient(#111a33 2px, transparent 2px), linear-gradient(90deg, #111a33 2px, transparent 2px); background-size: 40px 40px; overflow: hidden; }
+  #og .t { position: absolute; left: 70px; top: 110px; font-family: Silkscreen, monospace; font-weight: 700; font-size: 118px; line-height: 1; color: #5ef2ff; text-shadow: 7px 0 #1c2240, -7px 0 #1c2240, 0 7px #1c2240, 0 -7px #1c2240, 7px 7px #1c2240, -7px -7px #1c2240, 7px -7px #1c2240, -7px 7px #1c2240, 18px 18px 0 #060a16; }
+  #og .s { position: absolute; left: 76px; top: 270px; font-family: "Pixelify Sans", monospace; font-weight: 600; font-size: 36px; color: #f3f6ff; text-shadow: 5px 5px 0 #060a16; width: 520px; line-height: 1.2; }
+  #og .k { position: absolute; left: 76px; top: 470px; display: flex; gap: 16px; }
+  #og .k span { font-family: Silkscreen, monospace; font-size: 22px; text-transform: uppercase; background: #f7c948; color: #1c2240; border: 6px solid #1c2240; padding: 12px 18px; box-shadow: 8px 8px 0 #1c2240; }
+  #og .k span.b { background: #b58cf0; } #og .k span.c { background: #3ddc6a; }
   #og canvas { position: absolute; right: 40px; top: 40px; width: 560px; height: 560px; }
 </style></head><body>
 <canvas id="logo" width="256" height="256"></canvas>
-<div id="og"><div class="t">ROOT</div><div class="s">a launchpad where every coin grows on another coin. depth 0 → 1 → 2. sap flows down.</div><div class="k"><span>grow</span><span class="b">sap</span><span class="c">burn</span></div><canvas id="ogc" width="256" height="256"></canvas></div>
-<canvas id="grid" width="2560" height="2400" style="display:block"></canvas>
+<div id="og"><div class="t">LAYERS</div><div class="s">launch your L2 on a memecoin. depth 0 → 1 → 2. everything settles to $L1.</div><div class="k"><span>launch</span><span class="b">settle</span><span class="c">burn</span></div><canvas id="ogc" width="256" height="256"></canvas></div>
 <script src="sprite.js"></script>
 <script src="scene.js"></script>
 <script>
+/// the logo: a stack of blocks on a board — $L1 slab, two L2s, one L3, SOL pads in the board
 function logo(c, framed) {
   const ctx = c.getContext("2d"), W = c.width, H = c.height; ctx.imageSmoothingEnabled = false;
-  ctx.fillStyle = "#fff6d6"; ctx.fillRect(0, 0, W, H);
-  if (framed) { ctx.fillStyle = "#2a2823"; ctx.fillRect(0, 0, W, 12); ctx.fillRect(0, H - 12, W, 12); ctx.fillRect(0, 0, 12, H); ctx.fillRect(W - 12, 0, 12, H); ctx.fillStyle = "#f7c948"; ctx.fillRect(12, 12, W - 24, 6); }
-  ctx.fillStyle = "#3a2615"; ctx.fillRect(12, H - 60, W - 24, 48); ctx.fillStyle = "#3f8f3a"; ctx.fillRect(12, H - 66, W - 24, 8);
-  const cx = W / 2, base = H - 66, s = 4;
-  ctx.fillStyle = "#2a2823"; ctx.fillRect(cx - 18, base - 120, 36, 124);
-  ctx.fillStyle = "#9a6b3c"; ctx.fillRect(cx - 14, base - 116, 28, 120); ctx.fillStyle = "#5e3f22"; for (let y = base - 110; y < base; y += 16) ctx.fillRect(cx - 10 + ((y / 16) % 2) * 8, y, 6, 8);
-  drawLimb(ctx, cx - 10, base - 70, cx - 70, base - 110, 10, s); drawLimb(ctx, cx + 10, base - 90, cx + 74, base - 128, 10, s); drawLimb(ctx, cx - 50, base - 96, cx - 66, base - 140, 5, s);
-  drawBlob(ctx, cx - 72, base - 118, 26, s, null, 2); drawBlob(ctx, cx + 76, base - 136, 26, s, null, 5); drawBlob(ctx, cx - 68, base - 146, 16, s, null, 11); drawBlob(ctx, cx, base - 150, 44, s, null, 9);
-  for (const [x, y, col] of [[cx - 76, base - 122, "#e5473f"], [cx + 72, base - 140, "#62a8ea"], [cx - 4, base - 160, "#f7c948"]]) { ctx.fillStyle = "#2a2823"; ctx.fillRect(x - 2, y - 2, 20, 20); ctx.fillStyle = col; ctx.fillRect(x, y, 16, 16); ctx.fillStyle = "#ffffff"; ctx.fillRect(x + 3, y + 3, 4, 4); }
-  ctx.fillStyle = "#5e3f22"; for (const [dx, len] of [[-1, 60], [1, 66], [0, 40]]) for (let k = 0; k < len; k += 4) ctx.fillRect(cx + dx * (k * 0.9 + 14) - 3, base + 6 + k * 0.5 + (dx === 0 ? k : 0) * 0.3, 6, 4);
+  ctx.fillStyle = "#0b1020"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#111a33"; for (let x = 0; x < W; x += 32) ctx.fillRect(x, 0, 2, H); for (let y = 0; y < H; y += 32) ctx.fillRect(0, y, W, 2);
+  if (framed) { ctx.fillStyle = "#1c2240"; ctx.fillRect(0, 0, W, 12); ctx.fillRect(0, H - 12, W, 12); ctx.fillRect(0, 0, 12, H); ctx.fillRect(W - 12, 0, 12, H); ctx.fillStyle = "#5ef2ff"; ctx.fillRect(12, 12, W - 24, 6); }
+  ctx.fillStyle = "#141a2e"; ctx.fillRect(12, H - 60, W - 24, 48); ctx.fillStyle = "#1c2240"; ctx.fillRect(12, H - 62, W - 24, 4);
+  ctx.fillStyle = "#1f2a4a"; for (let i = 0; i < 8; i++) { const x = 20 + i * 30; ctx.fillRect(x, H - 50 + (i % 3) * 8, 22, 3); ctx.fillRect(x + 22, H - 50 + (i % 3) * 8, 3, 10); }
+  const cx = W / 2, base = H - 62, s = 4;
+  drawBlock(ctx, cx - 92, base - 44, 184, 40, s, skinFor(5));
+  ctx.fillStyle = "#0b1020"; ctx.font = "bold 22px Silkscreen, monospace"; ctx.textAlign = "center"; ctx.fillText("$L1", cx, base - 14);
+  drawBlock(ctx, cx - 76, base - 44 - 14 - 34, 60, 34, s, depthSkin(1)); drawBlock(ctx, cx + 8, base - 44 - 14 - 34, 60, 34, s, depthSkin(1));
+  drawBlock(ctx, cx + 20, base - 44 - 14 - 34 - 12 - 26, 36, 26, s, depthSkin(2));
+  for (const [x, y, col] of [[cx - 54, base - 84, "#ff5c5c"], [cx + 30, base - 84, "#62a8ea"], [cx + 32, base - 124, "#f7c948"]]) { ctx.fillStyle = "#1c2240"; ctx.fillRect(x - 2, y - 2, 20, 20); ctx.fillStyle = col; ctx.fillRect(x, y, 16, 16); ctx.fillStyle = "#ffffff"; ctx.fillRect(x + 3, y + 3, 4, 4); }
+  // a packet falling into the slab
+  drawPix(ctx, PACKET, cx - 10, base - 44 - 14 - 34 - 60, 4);
   drawPix(ctx, COIN, 30, H - 40, 2.4, SOLCOIN); drawPix(ctx, COIN, W - 54, H - 36, 2.4, SOLCOIN);
 }
 logo(document.getElementById("logo"), true); logo(document.getElementById("ogc"), true);
-// animated gif frames: a 4 x 8 grid of scene frames
-(function () {
-  const off = document.createElement("canvas"); off.width = 640; off.height = 300;
-  const sc = new RootScene(off); let seed = 7; sc.rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-  sc.sky = () => ({ a: "#3b7fc4", b: "#8fd0ff", night: false, sun: true });
-  const coins = [["A", 1, ""], ["B", 1, ""], ["C", 1, ""], ["D", 2, "A"], ["E", 2, "A"], ["F", 2, "B"], ["G", 1, ""], ["H", 2, "G"]].map(([s, d, p], i) => ({ mint: "m" + s, symbol: s, depth: d, parent: p ? "m" + p : "root", chain: p ? ["root", "m" + p] : ["root"], children: 0, launchedAt: i, image: "" }));
-  sc.set({ started: true, level: 5, coins, rootSym: "ROOT", burnedUsd: 1234, status: "idle" });
-  sc.birdAt = 10;
-  for (let i = 0; i < 8; i++) sc.tick();
-  sc.sap("mD", 5); sc.drink(6);
-  const g = document.getElementById("grid").getContext("2d"); g.imageSmoothingEnabled = false;
-  for (let i = 0; i < 32; i++) { sc.tick(); sc.tick(); g.drawImage(off, (i % 4) * 640, Math.floor(i / 4) * 300); }
-})();
 </script></body></html>

@@ -3,9 +3,9 @@ import { config } from "./config.js";
 import { sql } from "./db.js";
 import { getSolUsd, getSolBalance } from "./solana.js";
 import { loadCurve, curvePriceInQuote, poolPriceInQuote, creatorFeesRaw, totalSupply, tokenBalanceRaw, quoteBalance, fetchCoinInfo, fromRaw, pumpGlobals, maxDepthAllowed, DECIMALS } from "./pumpfun.js";
-import { coins, liveCoins, quoteOf, usdOfQuote } from "./tree.js";
+import { coins, liveCoins, quoteOf, usdOfQuote } from "./stack.js";
 
-/// The tracker. Every POLL_SEC it walks the tree from the trunk up (a coin's USD price is its price
+/// The tracker. Every POLL_SEC it walks the stack from $L1 up (a coin's USD price is its price
 /// in its quote × the quote's USD price, so parents go first) and refreshes, per coin: the curve
 /// (graduation, depth, the v3 creator bucket), the price, the supply, the pot (creator fees waiting +
 /// what sits in the engine wallet) and a price sample. Nested coins are on no candle API: the chain
@@ -20,8 +20,8 @@ export async function startTracker() {
   console.log(`[tracker] ${liveCoins().length} coins · SOL $${market.solUsd} · pump.fun max depth ${market.maxCurveDepth} (we allow ${market.maxDepthAllowed}) · polling every ${config.pollSec}s`);
 }
 
-/// Spendable sap of a coin right now (UI units of its quote): unclaimed + what the wallet holds − the ops debt.
-export const fuelOf = (c) => Math.max(0, (c.pot.unclaimed || 0) + (c.isRoot ? Math.max(0, (c.pot.walletSol || 0) - config.rules.gasReserveSol) : (c.pot.walletQuote || 0)) - (c.opsOwedQuote || 0));
+/// Spendable fees of a coin right now (UI units of its quote): unclaimed + what the wallet holds − the ops debt.
+export const fuelOf = (c) => Math.max(0, (c.pot.unclaimed || 0) + (c.isL1 ? Math.max(0, (c.pot.walletSol || 0) - config.rules.gasReserveSol) : (c.pot.walletQuote || 0)) - (c.opsOwedQuote || 0));
 
 async function tick() {
   if (running) return;
@@ -56,7 +56,7 @@ export async function refreshCoin(c, t = 0) {
   const [fees, walletSol, walletQuote, walletTokens] = await Promise.all([
     creatorFeesRaw(c.wallet, quote, curve).catch(() => null),
     getSolBalance(c.wallet).catch(() => c.pot.walletSol),
-    c.isRoot ? Promise.resolve(0) : quoteBalance(c.wallet, quote).catch(() => c.pot.walletQuote),
+    c.isL1 ? Promise.resolve(0) : quoteBalance(c.wallet, quote).catch(() => c.pot.walletQuote),
     tokenBalanceRaw(c.wallet, c.mint, new PublicKey(c.tokenProgram || "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb")).then((r) => fromRaw(r, DECIMALS)).catch(() => c.pot.walletTokens),
   ]);
   if (fees) { c.pot.unclaimed = fromRaw(fees.total, quote.decimals); c.pot.error = null; }

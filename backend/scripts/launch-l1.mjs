@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-/// Plant $ROOT on pump.fun: a standard coin paired with SOL (depth 0) — the creator wallet becomes the trunk.
+/// Deploy $L1 on pump.fun: a standard coin paired with SOL (depth 0) — the creator wallet becomes the L1 wallet.
 ///
-///   node scripts/launch-root.mjs --name ROOT --symbol ROOT --image public/logo.png \
-///     --description "a launchpad where every coin grows on another coin" \
+///   node scripts/launch-l1.mjs --name L1 --symbol L1 --image public/icon.png \
+///     --description "launch your L2 on a memecoin" \
 ///     [--website https://…] [--twitter https://x.com/…] [--telegram https://t.me/…] [--dev-buy 0.5] [--grind pump] [--live]
 ///
 /// DRY RUN by default: builds create_v2 and simulates it (no keys needed). `--live` uploads the metadata
-/// to IPFS and sends the transactions with ROOT_WALLET_PRIVATE_KEY from .env; that wallet = the trunk.
-/// Launching from the pump.fun site with the trunk wallet as creator works just as well (SOL pair,
+/// to IPFS and sends the transactions with L1_WALLET_PRIVATE_KEY from .env; that wallet = the L1 wallet.
+/// Launching from the pump.fun site with the L1 wallet as creator works just as well (SOL pair,
 /// Creator Fee coin — NOT Holder Rewards: the engine needs to claim the fees).
 import fs from "node:fs";
 import path from "node:path";
@@ -31,12 +31,12 @@ function grind(suffix) {
 async function main() {
   const o = args();
   const live = o.live === "true";
-  const name = o.name || "ROOT", symbol = o.symbol || "ROOT";
+  const name = o.name || "L1", symbol = o.symbol || "L1";
   if (symbol.length > 13) throw new Error("symbol max 13 chars");
-  const wallet = config.rootWallet;
-  if (live && !wallet) throw new Error("--live needs ROOT_WALLET_PRIVATE_KEY in backend/.env (that wallet becomes the creator = the trunk)");
+  const wallet = config.l1Wallet;
+  if (live && !wallet) throw new Error("--live needs L1_WALLET_PRIVATE_KEY in backend/.env (that wallet becomes the creator = the L1 wallet)");
   const payer = wallet ? wallet.publicKey : new PublicKey(FUNDED_PUBLIC_PAYER);
-  console.log(`\n$${symbol} · "${name}" · paired with SOL (depth 0 — the trunk)\ncreator / trunk wallet: ${payer.toBase58()}${wallet ? "" : " (public stand-in, dry run)"}`);
+  console.log(`\n$${symbol} · "${name}" · paired with SOL (depth 0 — the base layer)\ncreator / L1 wallet: ${payer.toBase58()}${wallet ? "" : " (public stand-in, dry run)"}`);
   const mintKp = o.grind ? (console.log(`grinding a mint ending in "${o.grind}"…`), grind(o.grind)) : Keypair.generate();
   const mint = mintKp.publicKey;
   let uri = "https://pump.fun";
@@ -50,7 +50,7 @@ async function main() {
   console.log(`simulate create_v2: ${sim.ok ? "OK" : "FAILED"}${sim.error ? ` — ${sim.error}` : ""} · ${sim.units} CU · ${sim.bytes} bytes`);
   if (!sim.ok) { console.log(sim.logs.slice(-8).join("\n")); process.exit(1); }
   const devBuy = Number(o["dev-buy"] || 0);
-  if (!live) { console.log(`\nDRY RUN — nothing sent. Mint would be ${mint.toBase58()}. Add --live (and --image) to plant for real.`); return; }
+  if (!live) { console.log(`\nDRY RUN — nothing sent. Mint would be ${mint.toBase58()}. Add --live (and --image) to deploy for real.`); return; }
   const sol = (await connection.getBalance(wallet.publicKey)) / LAMPORTS;
   if (sol < 0.03 + devBuy) throw new Error(`fund the wallet first (≥ ${(0.03 + devBuy).toFixed(3)} SOL)`);
   const createIx = await buildCreate({ mint, name, symbol, uri, creator: wallet.publicKey, user: wallet.publicKey, quote: SOL_QUOTE });
@@ -61,6 +61,6 @@ async function main() {
     const { sig: b } = await curveBuy({ wallet, mint: mint.toBase58(), quote: SOL_QUOTE, quoteAmountRaw: BigInt(Math.floor(devBuy * LAMPORTS)), programId });
     console.log(`   dev buy ${devBuy} SOL · ${b}`);
   }
-  console.log(`\nNow set in backend/.env (and Railway):\n   ROOT_MINT=${mint.toBase58()}\nThe trunk wallet is this wallet — its key claims the SOL fees, buys $ROOT back and burns it every run.`);
+  console.log(`\nNow set in backend/.env (and Railway):\n   L1_MINT=${mint.toBase58()}\nThe L1 wallet is this wallet — its key claims the SOL fees, buys $L1 back and burns it every settlement.`);
 }
 main().catch((e) => { console.error("✖", e.message); process.exit(1); });

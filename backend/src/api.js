@@ -9,9 +9,9 @@ import { sql } from "./db.js";
 import { encryptSecret } from "./crypto.js";
 import { connection, newWallet } from "./solana.js";
 import { estimateCurveBuy, fetchTrades, toRaw, taxConfig } from "./pumpfun.js";
-import { coins, liveCoins, rootCoin, childrenOf, treeStats, quoteOf, LEVELS, LEVEL_NAMES, LEVELS_COINS } from "./tree.js";
+import { coins, liveCoins, l1Coin, childrenOf, stackStats, quoteOf, LEVELS, LEVEL_NAMES, LEVELS_COINS } from "./stack.js";
 import { market, fuelOf } from "./tracker.js";
-import { state as sap, rowToJson } from "./sap.js";
+import { state as settlement, rowToJson } from "./settlement.js";
 import { adminRefund, auditLaunches, deliverToUser, resolveParent } from "./launcher.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -29,17 +29,17 @@ const validPk = (s) => { try { return Boolean(new PublicKey(s)); } catch { retur
 function coinJson(c, full = false) {
   const q = quoteOf(c);
   const base = {
-    mint: c.mint, isRoot: c.isRoot, launchId: c.launchId, name: c.name, symbol: c.symbol, image: c.image, description: c.description,
+    mint: c.mint, isL1: c.isL1, launchId: c.launchId, name: c.name, symbol: c.symbol, image: c.image, description: c.description,
     twitter: c.twitter, telegram: c.telegram, website: c.website,
     parent: c.parent, depth: c.depth, chain: c.chain, children: childrenOf(c.mint).length,
-    quote: { mint: q.mint, symbol: q.symbol, decimals: q.decimals, isSol: q.isSol, priceUsd: c.isRoot ? market.solUsd : coins.get(c.parent)?.priceUsd || 0 },
+    quote: { mint: q.mint, symbol: q.symbol, decimals: q.decimals, isSol: q.isSol, priceUsd: c.isL1 ? market.solUsd : coins.get(c.parent)?.priceUsd || 0 },
     launchedAt: c.launchedAt, launchTx: c.launchTx, devBuySol: c.devBuySol, taxBps: c.taxBps || c.creatorTaxBps, userWallet: c.userWallet, wallet: c.wallet,
     tokenProgram: c.tokenProgram, createdTs: c.createdTs, pool: c.pool, graduated: c.graduated,
     priceQuote: c.priceQuote, priceUsd: c.priceUsd, mcapUsd: c.mcapUsd, realMcapUsd: c.priceUsd * c.supply,
     supply0: c.supply0, supply: c.supply, burned: c.burned, burnedPct: c.supply0 ? c.burned / c.supply0 : 0,
     holders: c.holders || 0, volume24hUsd: c.volume24hUsd || 0, marketUpdatedAt: c.priceUpdatedAt,
-    pot: { ...c.pot, fuel: fuelOf(c), fuelUsd: fuelOf(c) * (c.isRoot ? market.solUsd : coins.get(c.parent)?.priceUsd || 0), opsOwedQuote: c.opsOwedQuote || 0, bucket: c.creatorBucket || 0 },
-    cyclesRun: c.cyclesRun, totalClaimedQuote: c.totalClaimedQuote, totalSelfQuote: c.totalSelfQuote, totalSelfBurned: c.totalSelfBurned, totalDownQuote: c.totalDownQuote, totalOpsQuote: c.totalOpsQuote, totalSapUsd: c.totalSapUsd,
+    pot: { ...c.pot, fuel: fuelOf(c), fuelUsd: fuelOf(c) * (c.isL1 ? market.solUsd : coins.get(c.parent)?.priceUsd || 0), opsOwedQuote: c.opsOwedQuote || 0, bucket: c.creatorBucket || 0 },
+    cyclesRun: c.cyclesRun, totalClaimedQuote: c.totalClaimedQuote, totalSelfQuote: c.totalSelfQuote, totalSelfBurned: c.totalSelfBurned, totalDownQuote: c.totalDownQuote, totalOpsQuote: c.totalOpsQuote, totalFeesUsd: c.totalFeesUsd,
     lastCycleAt: c.lastCycleAt, lastNote: c.lastNote, progress: c.progressState,
   };
   if (!full) return base;
@@ -54,33 +54,33 @@ export function startApi(started) {
   app.use("/api", (_req, res, next) => { res.set("cache-control", "no-store"); next(); });
 
   const common = () => {
-    const root = rootCoin();
+    const l1 = l1Coin();
     return {
       started, brand: config.brand, rules: { ...config.rules, split: config.split, taxBps: config.creatorTaxBps, intervalSec: config.rules.intervalSec }, chain: "Solana", launchpad: "pump.fun",
       mode: mode(), dryRun: config.dryRun, schedulerEnabled: config.schedulerEnabled,
       solUsd: market.solUsd, maxCurveDepth: market.maxCurveDepth, maxDepth: market.maxDepthAllowed, taxGate: market.taxGate,
-      sap: { nextAt: sap.nextCycleAt, genesis: sap.genesis, cycle: sap.cycle, firing: sap.firing, lastRunAt: sap.lastRunAt, last: sap.lastSummary },
-      root: root ? coinJson(root) : null,
-      tree: treeStats(), levels: LEVELS, levelsCoins: LEVELS_COINS, levelNames: LEVEL_NAMES,
+      settlement: { nextAt: settlement.nextCycleAt, genesis: settlement.genesis, cycle: settlement.cycle, firing: settlement.firing, lastRunAt: settlement.lastRunAt, last: settlement.lastSummary },
+      l1: l1 ? coinJson(l1) : null,
+      stack: stackStats(), levels: LEVELS, levelsCoins: LEVELS_COINS, levelNames: LEVEL_NAMES,
       launch: { gasSol: config.launchGasSol, maxDevBuySol: config.maxDevBuySol, timeoutMin: config.depositTimeoutMin, taxBps: config.creatorTaxBps },
       now: now(),
     };
   };
 
-  app.get("/api/health", (_req, res) => res.json({ ok: true, started, coins: coins.size, cycle: sap.cycle, nextCycleAt: sap.nextCycleAt, scheduler: config.schedulerEnabled, dryRun: config.dryRun, mode: mode(), maxDepth: market.maxDepthAllowed }));
+  app.get("/api/health", (_req, res) => res.json({ ok: true, started, coins: coins.size, cycle: settlement.cycle, nextCycleAt: settlement.nextCycleAt, scheduler: config.schedulerEnabled, dryRun: config.dryRun, mode: mode(), maxDepth: market.maxDepthAllowed }));
 
-  /// the whole tree: every live coin with its place — what the scene draws
-  app.get("/api/tree", async (_req, res) => {
+  /// the whole stack: every live coin with its place — what the scene draws
+  app.get("/api/stack", async (_req, res) => {
     const list = liveCoins().sort((a, b) => a.depth - b.depth || a.launchedAt - b.launchedAt).map((c) => coinJson(c));
     const [agg] = started ? await sql`select count(*)::int as n, coalesce(sum((self_quote + down_quote + ops_quote) * coalesce(quote_usd, 0)), 0) as sap_usd, coalesce(sum(self_burned), 0) as self_burned from runs where status = 'done' and dry = false` : [{ n: 0, sap_usd: 0, self_burned: 0 }];
     const [pend] = started ? await sql`select count(*)::int as n from coins where status in ('awaiting_deposit', 'launching')` : [{ n: 0 }];
-    res.json({ ...common(), coins: list, totals: { runs: agg.n, sapUsd: Number(agg.sap_usd), selfBurned: Number(agg.self_burned), pendingLaunches: pend.n } });
+    res.json({ ...common(), coins: list, totals: { runs: agg.n, feesUsd: Number(agg.sap_usd), selfBurned: Number(agg.self_burned), pendingLaunches: pend.n } });
   });
 
   app.get("/api/coins", (req, res) => {
     const sort = String(req.query.sort || "new");
-    let list = liveCoins().filter((c) => !c.isRoot).map((c) => coinJson(c));
-    const key = { new: (c) => c.launchedAt, mcap: (c) => c.mcapUsd || 0, burned: (c) => c.burnedPct, depth: (c) => c.depth, sap: (c) => c.totalSapUsd, fuel: (c) => c.pot.fuelUsd, children: (c) => c.children }[sort] || ((c) => c.launchedAt);
+    let list = liveCoins().filter((c) => !c.isL1).map((c) => coinJson(c));
+    const key = { new: (c) => c.launchedAt, mcap: (c) => c.mcapUsd || 0, burned: (c) => c.burnedPct, depth: (c) => c.depth, fees: (c) => c.totalFeesUsd, fuel: (c) => c.pot.fuelUsd, children: (c) => c.children }[sort] || ((c) => c.launchedAt);
     list.sort((a, b) => key(b) - key(a));
     const q = String(req.query.q || "").trim().toLowerCase();
     if (q) list = list.filter((c) => c.name.toLowerCase().includes(q) || c.symbol.toLowerCase().includes(q) || c.mint.toLowerCase().includes(q));
@@ -89,14 +89,14 @@ export function startApi(started) {
     res.json({ ...common(), coins: list.slice(0, 300) });
   });
 
-  /// global ledger of the latest sap runs across the tree
+  /// global ledger of the latest settlements across the stack
   app.get("/api/runs", async (req, res) => {
     const limit = Math.min(200, Number(req.query.limit || 40));
     const mint = String(req.query.mint || "");
     const rows = mint
       ? await sql`select * from runs where mint = ${mint} and status in ('done', 'skipped', 'failed') order by id desc limit ${limit}`
       : await sql`select * from runs where status = 'done' order by id desc limit ${limit}`;
-    res.json(rows.map((r) => ({ ...rowToJson(r), symbol: coins.get(r.mint)?.symbol || "", image: coins.get(r.mint)?.image || "", isRoot: Boolean(coins.get(r.mint)?.isRoot), quoteSymbol: coins.get(r.mint) ? quoteOf(coins.get(r.mint)).symbol : "", depth: coins.get(r.mint)?.depth ?? 0 })));
+    res.json(rows.map((r) => ({ ...rowToJson(r), symbol: coins.get(r.mint)?.symbol || "", image: coins.get(r.mint)?.image || "", isL1: Boolean(coins.get(r.mint)?.isL1), quoteSymbol: coins.get(r.mint) ? quoteOf(coins.get(r.mint)).symbol : "", depth: coins.get(r.mint)?.depth ?? 0 })));
   });
 
   // ------------------------------------------------------------ per coin
@@ -106,7 +106,7 @@ export function startApi(started) {
     const c = coinOr404(req, res); if (!c) return;
     const out = { ...common(), ...coinJson(c, true), childrenList: childrenOf(c.mint).map((k) => coinJson(k)) };
     const q = quoteOf(c);
-    const fuel = fuelOf(c) * (c.isRoot ? 1 : config.split.selfBps / 10_000);
+    const fuel = fuelOf(c) * (c.isL1 ? 1 : config.split.selfBps / 10_000);
     try { out.pot.estTokens = fuel > 0 ? (c.graduated ? fuel / (c.priceQuote || 1) : (await estimateCurveBuy(c.mint, toRaw(fuel, q.decimals))) ?? 0) : 0; } catch { out.pot.estTokens = 0; }
     res.json(out);
   });
@@ -139,24 +139,24 @@ export function startApi(started) {
     } catch { res.json([]); }
   });
 
-  // ---------------------------------------------------------------- grow (launch)
-  /// what the grow form needs: the parents one can grow on right now, the depth gate, the tax
-  app.get("/api/grow/options", async (_req, res) => {
+  // ---------------------------------------------------------------- launch (roll up)
+  /// what the launch form needs: the layers one can launch on right now, the depth gate, the tax
+  app.get("/api/launch/options", async (_req, res) => {
     const maxDepth = market.maxDepthAllowed;
-    const parents = liveCoins().filter((c) => c.depth < maxDepth).sort((a, b) => a.depth - b.depth || b.mcapUsd - a.mcapUsd).map((c) => ({ mint: c.mint, symbol: c.symbol, name: c.name, image: c.image, depth: c.depth, mcapUsd: c.mcapUsd, children: childrenOf(c.mint).length, isRoot: c.isRoot, graduated: c.graduated }));
+    const parents = liveCoins().filter((c) => c.depth < maxDepth).sort((a, b) => a.depth - b.depth || b.mcapUsd - a.mcapUsd).map((c) => ({ mint: c.mint, symbol: c.symbol, name: c.name, image: c.image, depth: c.depth, mcapUsd: c.mcapUsd, children: childrenOf(c.mint).length, isL1: c.isL1, graduated: c.graduated }));
     const gate = await cached("tax-gate", 60_000, () => taxConfig()).catch(() => null);
     res.json({ ...common(), parents, maxDepth, taxBps: config.creatorTaxBps, taxGate: gate });
   });
 
   /// pre-flight: can this parent take a child right now? (walks the chain through the SDK, no keys)
-  app.get("/api/grow/check/:mint", async (req, res) => {
+  app.get("/api/launch/check/:mint", async (req, res) => {
     try { const { parent, quote } = await resolveParent(String(req.params.mint)); res.json({ ok: true, parent: parent.symbol, depth: quote.depth, chainLength: (quote.pumpQuote?.accounts?.chain || []).length + 1, migratedQuote: Boolean(quote.pumpQuote?.accounts?.pool) }); }
     catch (err) { res.json({ ok: false, error: String(err.message).slice(0, 240) }); }
   });
 
-  app.post("/api/grow", async (req, res) => {
+  app.post("/api/launch", async (req, res) => {
     try {
-      if (!started) return res.status(400).json({ error: "the tree is not planted yet" });
+      if (!started) return res.status(400).json({ error: "$L1 has no genesis yet" });
       const b = req.body || {};
       const name = String(b.name || "").trim();
       const symbol = String(b.symbol || "").trim().toUpperCase();
@@ -180,12 +180,12 @@ export function startApi(started) {
           ${String(b.twitter || "").trim().slice(0, 200)}, ${String(b.telegram || "").trim().slice(0, 200)}, ${parent.mint}, ${quote.depth}, ${JSON.stringify([...parent.chain, parent.mint])}, ${parent.mint}, ${quote.decimals}, ${quote.tokenProgram.toBase58()}, ${devBuySol}, ${expected}, ${config.creatorTaxBps})`;
       res.json({ launchId, depositAddress: address, expectedSol: expected, gasSol: config.launchGasSol, devBuySol, timeoutMin: config.depositTimeoutMin, taxBps: config.creatorTaxBps, parent: parent.symbol, depth: quote.depth });
     } catch (err) {
-      console.error("[api] grow:", err.message);
+      console.error("[api] launch:", err.message);
       res.status(400).json({ error: String(err.message).slice(0, 240) });
     }
   });
 
-  app.get("/api/grow/:id", async (req, res) => {
+  app.get("/api/launch/:id", async (req, res) => {
     const [row] = await sql`select launch_id, status, mint, error, wallet, deposit_expected_sol, refund_tx, symbol, parent_mint, depth from coins where launch_id = ${req.params.id}`;
     if (!row) return res.status(404).json({ error: "not found" });
     res.json({ launchId: row.launch_id, status: row.status, mint: row.mint, error: row.error, depositAddress: row.wallet, expectedSol: Number(row.deposit_expected_sol), refundTx: row.refund_tx, symbol: row.symbol, parent: row.parent_mint, depth: row.depth });
@@ -229,7 +229,7 @@ export function startApi(started) {
     const [row] = await sql`select mint from coins where launch_id = ${req.params.id}`;
     res.redirect(302, row?.mint ? `/c/${row.mint}` : "/");
   });
-  app.get(["/c/:mint", "/grow", "/coins", "/sap", "/docs"], (_req, res) => res.sendFile(path.join(pub, "index.html")));
+  app.get(["/c/:mint", "/launch", "/coins", "/settlement", "/docs"], (_req, res) => res.sendFile(path.join(pub, "index.html")));
   app.use(express.static(pub, { etag: false, maxAge: 0 }));
   app.listen(config.port, () => console.log(`[api] listening on :${config.port}`));
 }
