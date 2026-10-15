@@ -2,7 +2,7 @@
 /// Deploy $L1 on pump.fun: a standard coin paired with SOL (depth 0) — the creator wallet becomes the L1 wallet.
 ///
 ///   node scripts/launch-l1.mjs --name L1 --symbol L1 --image public/icon.png \
-///     --description "launch your L2 on a memecoin" \
+///     --description "stack coins on coins — launch a layer on a memecoin" \
 ///     [--website https://…] [--twitter https://x.com/…] [--telegram https://t.me/…] [--dev-buy 0.5] [--grind pump] [--live]
 ///
 /// DRY RUN by default: builds create_v2 and simulates it (no keys needed). `--live` uploads the metadata

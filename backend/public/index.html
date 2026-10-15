@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LAYERS · launch your L2 on a memecoin</title>
+<title>LAYERS · stack coins on coins</title>
 <meta name="description" content="LAYERS is a launchpad on pump.fun. $L1 is the base layer, paired with SOL. Every coin launched here is paired with a coin already on the stack — an L2 on $L1, an L3 on an L2 — and pays its fee in the layer it runs on. Every settlement: half buys the coin back and burns it, half burns the layer below. Everything settles to $L1.">
-<meta property="og:title" content="LAYERS · launch your L2 on a memecoin">
+<meta property="og:title" content="LAYERS · stack coins on coins">
 <meta property="og:description" content="pump.fun coins paired with pump.fun coins, nested. Every buy of an L3 buys its L2 and $L1 first. Every settlement burns the coin and the layer it runs on. Everything settles to $L1.">
 <link rel="icon" href="/icon.png" type="image/png">
 <link rel="apple-touch-icon" href="/icon.png">
@@ -219,7 +219,7 @@
     <div class="hero">
       <div>
         <div class="lbl"><span class="dot" id="liveDot"></span>&nbsp; <span id="liveTxt">sequencer</span></div>
-        <h1 style="margin-top:12px">launch your <em>L2</em><br>on a memecoin.</h1>
+        <h1 style="margin-top:12px">launch a <em>layer</em><br>on a memecoin.</h1>
         <p id="l1Blurb">$L1 is a pump.fun coin paired with SOL: the base layer. Every coin launched here is paired with a coin on the stack and pays its fee in it. Every settlement: half buys the coin back and burns it, half burns the layer below. Everything settles to $L1.</p>
         <div class="ca" style="margin-top:18px"><span class="lbl" style="flex:none">CA</span><span id="ca">genesis pending</span><button class="btn sm" id="copyKey">copy</button></div>
         <div class="acts">
@@ -495,7 +495,7 @@ function render() {
   $("mkCoins").textContent = fmt(T.stack.coins);
   if (!T.started || !l1) {
     $("ca").textContent = "genesis pending"; $("footMode").textContent = "genesis pending"; $("mkStatus").textContent = "genesis pending"; $("hudStatus").textContent = "genesis"; $("hudStatus").className = "chip"; $("sceneCap").textContent = "$L1 has not been deployed yet"; $("runCd").textContent = "--:--"; $("liveTxt").textContent = "genesis pending"; $("liveDot").className = "dot off";
-    $("ticker").innerHTML = Array(2).fill(`<span>genesis pending</span><span>launch your L2 on a memecoin</span><span>pump.fun depth gate <b>${T.maxDepth ? layerName(T.maxDepth) : "—"}</b></span><span>fee <b>${R.taxBps / 100}%</b> paid in the layer below</span><span>settlement every <b>${ivTxt(R.intervalSec)}</b></span><span>nothing is ever sold</span>`).join("");
+    $("ticker").innerHTML = Array(2).fill(`<span>genesis pending</span><span>stack coins on coins</span><span>an L2 on $L1 · an L3 on an L2 · as high as pump.fun allows</span><span>pump.fun depth gate <b>${T.maxDepth ? layerName(T.maxDepth) : "—"}</b></span><span>fee <b>${R.taxBps / 100}%</b> paid in the layer below</span><span>settlement every <b>${ivTxt(R.intervalSec)}</b></span><span>nothing is ever sold</span>`).join("");
     return;
   }
   $("ca").textContent = l1.mint;

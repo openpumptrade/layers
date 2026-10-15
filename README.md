@@ -1,4 +1,4 @@
-# LAYERS — launch your L2 on a memecoin
+# LAYERS — stack coins on coins
 
 pump.fun lets a coin be **paired with another pump.fun coin** instead of SOL, and since **October 13** that
 quote can itself be a coin paired with a coin: a coin paired with SOL is depth 0, a coin paired with a depth-0

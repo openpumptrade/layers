@@ -6,7 +6,7 @@ import { startLauncher } from "./launcher.js";
 import { startSettlement } from "./settlement.js";
 import { startApi } from "./api.js";
 
-/// LAYERS. Launch your L2 on a memecoin. One process: the stack (registry) + tracker (prices through
+/// LAYERS. Stack coins on coins. One process: the stack (registry) + tracker (prices through
 /// the chain) + launcher (create_v2 with pump-coin quotes) + the settlement + API + page.
 
 async function main() {

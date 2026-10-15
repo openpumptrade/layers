@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Keypair } from "@solana/web3.js";
 import bs58 from "bs58";
 
-/// LAYERS — launch your L2 on a memecoin.
+/// LAYERS — stack coins on coins. Launch a layer on a memecoin: an L2 on $L1, an L3 on an L2, as high as pump.fun allows.
 ///
 /// The stack: $L1 is the base layer, a standard pump.fun coin paired with SOL (depth 0). Every coin
 /// launched here is created with pump.fun's `create_v2` quoted in a coin that is already on the stack:
