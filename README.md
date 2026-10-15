@@ -43,9 +43,10 @@ Nothing is ever sold. Everything launched on a layer ends up burning the layers 
 - `backend/scripts` — `launch-l1.mjs` (deploy `$L1`, dry run by default), `rollup.mjs` (launch a layer on a
   base coin from the CLI — simulates `create_v2` with the pump-quote accounts for free), `chain.mjs <mint>` (a
   coin's chain, depth, the depth gate, what a layer on it would get).
-- `backend/public` — the page: `index.html` (STACK · LAUNCH · LAYERS · coin page · SETTLEMENT · DOCS),
-  `sprite.js` (palette, sprites, icons), `scene.js` (the stack: the `$L1` slab, a block per layer, logos on the
-  blocks, packets settling down, burns), `brand.html` → `icon.png`, `og.png`.
+- `backend/public` — the page, block-explorer style (dark, monospace, 1px borders): `index.html` (STACK ·
+  LAUNCH · LAYERS · coin page · SETTLEMENT · DOCS), `stack.js` (the stack explorer: lanes L1 → L4, a block per
+  layer sized by market cap, fees flowing down the connectors, a live `tail -f` log), `brand.html` → `icon.png`,
+  `og.png`.
 
 ## Run
 
