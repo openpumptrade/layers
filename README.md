@@ -1,5 +1,7 @@
 # LAYERS — stack coins on coins
 
+> **Live:** https://www.layersprotocol.com · **CA `$L1`:** [`2X4adMyPS1pcTEqiD8zQhm2d8NwCvLqUHN28Sj3ipump`](https://pump.fun/coin/2X4adMyPS1pcTEqiD8zQhm2d8NwCvLqUHN28Sj3ipump) · [Solscan](https://solscan.io/token/2X4adMyPS1pcTEqiD8zQhm2d8NwCvLqUHN28Sj3ipump) · [DexScreener](https://dexscreener.com/solana/2X4adMyPS1pcTEqiD8zQhm2d8NwCvLqUHN28Sj3ipump)
+
 pump.fun lets a coin be **paired with another pump.fun coin** instead of SOL, and since **October 13** that
 quote can itself be a coin paired with a coin: a coin paired with SOL is depth 0, a coin paired with a depth-0
 coin is depth 1, a coin paired with a depth-1 coin is depth 2. Same trading, same quotes; only `create_v2`
